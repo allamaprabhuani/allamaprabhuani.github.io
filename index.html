@@ -77,17 +77,17 @@
 </nav>
 
 <aside class="toc" aria-label="Section navigation">
-  <p class="toc-label">contents</p>
+  <p class="toc-label">contents <span class="toc-progress" id="toc-progress">·</span></p>
   <ul>
-    <li><a href="#about">about</a></li>
-    <li><a href="#shipped">shipped</a></li>
-    <li><a href="#trueform">trueform</a></li>
-    <li><a href="#mottos">mottos</a></li>
-    <li><a href="#papers">papers</a></li>
-    <li><a href="#awards">bragspace</a></li>
-    <li><a href="#bucket">bucket list</a></li>
-    <li><a href="#recommend">places</a></li>
-    <li><a href="#elsewhere">find me</a></li>
+    <li><a href="#about"><span class="toc-dot"></span><span class="toc-name">about</span></a></li>
+    <li><a href="#shipped"><span class="toc-dot"></span><span class="toc-name">shipped</span></a></li>
+    <li><a href="#trueform"><span class="toc-dot"></span><span class="toc-name">trueform</span></a></li>
+    <li><a href="#mottos"><span class="toc-dot"></span><span class="toc-name">mottos</span></a></li>
+    <li><a href="#papers"><span class="toc-dot"></span><span class="toc-name">papers</span></a></li>
+    <li><a href="#awards"><span class="toc-dot"></span><span class="toc-name">bragspace</span></a></li>
+    <li><a href="#bucket"><span class="toc-dot"></span><span class="toc-name">bucket list</span></a></li>
+    <li><a href="#recommend"><span class="toc-dot"></span><span class="toc-name">places</span></a></li>
+    <li><a href="#elsewhere"><span class="toc-dot"></span><span class="toc-name">find me</span></a></li>
   </ul>
 </aside>
 
@@ -299,20 +299,26 @@
         .catch(function(){});
     }
 
-    // ---- Sidebar TOC scrollspy ----
+    // ---- Sidebar TOC scrollspy + progress counter ----
     var tocLinks = document.querySelectorAll('.toc a');
     var tocMap = {};
-    tocLinks.forEach(function(a){ tocMap[a.getAttribute('href').slice(1)] = a; });
+    tocLinks.forEach(function(a, i){
+      tocMap[a.getAttribute('href').slice(1)] = { link: a, index: i };
+    });
     var sections = document.querySelectorAll('main > section[id]');
+    var progressEl = document.getElementById('toc-progress');
+    var totalSections = tocLinks.length;
+    function setActive(id) {
+      tocLinks.forEach(function(a){ a.classList.remove('active'); });
+      var entry = tocMap[id];
+      if (entry) {
+        entry.link.classList.add('active');
+        if (progressEl) progressEl.textContent = (entry.index + 1) + '/' + totalSections;
+      }
+    }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if (e.isIntersecting) {
-            tocLinks.forEach(function(a){ a.classList.remove('active'); });
-            var link = tocMap[e.target.id];
-            if (link) link.classList.add('active');
-          }
-        });
+        entries.forEach(function(e){ if (e.isIntersecting) setActive(e.target.id); });
       }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
       sections.forEach(function(s){ io.observe(s); });
     }
