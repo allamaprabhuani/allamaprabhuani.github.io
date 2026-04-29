@@ -157,7 +157,20 @@ p { margin: 0 0 14px; }
   color: var(--muted);
   letter-spacing: 0.02em;
 }
-.mark { margin-bottom: 4px; }
+.mark { margin-bottom: 6px; line-height: 0; }
+.mark svg { overflow: visible; }
+.mark .spark {
+  opacity: 0;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+.mark .spark.s-a { animation: spark 3.2s ease-in-out 0s infinite; }
+.mark .spark.s-b { animation: spark 3.2s ease-in-out 0.7s infinite; }
+.mark .spark.s-c { animation: spark 3.2s ease-in-out 1.4s infinite; }
+@keyframes spark {
+  0%   { opacity: 0; transform: translateY(0); }
+  20%  { opacity: 0.95; }
+  100% { opacity: 0; transform: translateY(-22px); }
+}
 
 /* Shooting-stars cosmic background */
 .cosmos {

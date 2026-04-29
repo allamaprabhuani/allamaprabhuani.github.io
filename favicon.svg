@@ -1,0 +1,31 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="phx" x1="0.5" y1="1" x2="0.5" y2="0">
+      <stop offset="0"   stop-color="#7c3aed"/>
+      <stop offset="0.5" stop-color="#c026d3"/>
+      <stop offset="1"   stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="phxGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.4"/>
+    </filter>
+  </defs>
+  <!-- dark rounded background -->
+  <rect width="64" height="64" fill="#0a0a14" rx="12"/>
+  <!-- left wing -->
+  <path d="M22 30 C 14 32, 9 36, 11 46 C 18 41, 22 38, 24 36 Z"
+        fill="url(#phx)" opacity="0.55"/>
+  <!-- right wing -->
+  <path d="M42 30 C 50 32, 55 36, 53 46 C 46 41, 42 38, 40 36 Z"
+        fill="url(#phx)" opacity="0.55"/>
+  <!-- main flame body / phoenix silhouette -->
+  <path d="M32 8 C 26 18, 22 22, 22 30 C 22 38, 26 44, 32 48 C 38 44, 42 38, 42 30 C 42 22, 38 18, 32 8 Z"
+        fill="url(#phx)" filter="url(#phxGlow)"/>
+  <!-- inner cool void to suggest depth -->
+  <path d="M32 20 C 29 26, 28 30, 29 35 C 30 39, 31 40, 32 40 C 33 40, 34 39, 35 35 C 36 30, 35 26, 32 20 Z"
+        fill="#0a0a14" opacity="0.55"/>
+  <!-- crest / head spark -->
+  <circle cx="32" cy="9" r="1.4" fill="#fff" opacity="0.95"/>
+  <!-- ascending sparks -->
+  <circle cx="26" cy="14" r="0.8" fill="#ec4899" opacity="0.6"/>
+  <circle cx="38" cy="14" r="0.8" fill="#ec4899" opacity="0.6"/>
+</svg>
