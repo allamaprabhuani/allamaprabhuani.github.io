@@ -145,6 +145,19 @@ ul.links li:first-child::before { content: ""; }
 
 .footer-note { margin-top: 28px; font-size: 0.85rem; }
 
+/* Mottos */
+ul.mottos { list-style: none; padding: 0; margin: 0; }
+ul.mottos li {
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent-2);
+  background: linear-gradient(90deg, var(--card), transparent);
+  margin-bottom: 10px;
+  font-style: italic;
+  font-size: 1.02rem;
+  border-radius: 0 4px 4px 0;
+}
+ul.mottos li:nth-child(even) { border-left-color: var(--accent); }
+
 /* Mobile */
 @media (max-width: 600px) {
   main { padding: 40px 18px 64px; }
