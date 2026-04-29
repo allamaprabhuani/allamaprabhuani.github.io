@@ -157,8 +157,69 @@ p { margin: 0 0 14px; }
   color: var(--muted);
   letter-spacing: 0.02em;
 }
-.mark { margin-bottom: 4px; color: var(--accent); }
 .hero .tag { font-size: 1.04rem; line-height: 1.6; color: var(--ink); }
+
+/* Two-letter marks: career (Latin A) and personal (Kannada ಅ) */
+.hero-marks {
+  display: flex; gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.mark-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.7rem;
+  line-height: 1;
+  text-decoration: none;
+  border-bottom: none;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  flex-shrink: 0;
+}
+.mark-pill:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-bottom: none;
+  filter: saturate(1.15);
+}
+
+/* Career: solid neon, white letter */
+.mark-latin {
+  background: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #7c3aed 100%);
+  color: #ffffff;
+  font-family: 'Open Sans', sans-serif;
+  box-shadow: 0 6px 22px rgba(168, 85, 247, 0.40), 0 0 0 1px rgba(255,255,255,0.12) inset;
+}
+.mark-latin:hover {
+  box-shadow: 0 10px 32px rgba(168, 85, 247, 0.55), 0 0 0 1px rgba(255,255,255,0.20) inset;
+}
+
+/* Personal: bright HDR-white pill, gradient-clipped Kannada text */
+.mark-kannada {
+  background: #ffffff;
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  box-shadow: 0 6px 22px rgba(236, 72, 153, 0.18), 0 0 0 1px rgba(255,255,255,0.6) inset;
+  font-family: 'Noto Sans Kannada', sans-serif;
+  font-size: 1.85rem;
+}
+.mark-kannada:hover {
+  box-shadow: 0 10px 32px rgba(236, 72, 153, 0.28), 0 0 0 1px rgba(255,255,255,0.8) inset;
+}
+.ka-text {
+  background: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  display: inline-block;
+  line-height: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .mark-kannada {
+    background: #ffffff;  /* keep HDR-white even in dark mode for contrast */
+  }
+}
 .kannada {
   font-family: 'Noto Sans Kannada', 'Open Sans', sans-serif;
   font-size: 1.15rem;
