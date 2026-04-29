@@ -270,6 +270,20 @@ p { margin: 0 0 14px; }
   color: var(--muted);
   margin: 0 0 10px;
 }
+.blink-dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  background: #ff6b3a;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  box-shadow: 0 0 10px rgba(255,107,58,0.65), 0 0 18px rgba(255,107,58,0.30);
+  animation: blink 1.6s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.30; }
+}
 .obsessions { list-style: none; padding: 0; margin: 0; }
 .obsessions li {
   padding: 8px 0;
