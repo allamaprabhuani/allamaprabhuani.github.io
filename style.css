@@ -378,18 +378,20 @@ ul.links li:first-child::before { content: ""; }
 .upvote.voted:hover { transform: none; }
 .upvote.voted .up-arrow { transform: none; }
 
-/* Floating hit counter (always visible) */
-.hit-counter-fixed {
+/* Quiet visit tally (for the owner; reads like a faint number) */
+.visit-tally {
   position: fixed;
-  bottom: 14px;
-  right: 14px;
+  bottom: 10px;
+  right: 12px;
+  font-family: Monaco, "Courier New", monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  opacity: 0.30;
   z-index: 5;
-  opacity: 0.55;
-  border-bottom: none;
-  transition: opacity .2s ease;
+  pointer-events: none;
+  letter-spacing: 0.04em;
+  user-select: none;
 }
-.hit-counter-fixed:hover { opacity: 1; border-bottom: none; }
-.hit-counter-fixed img { height: 22px; display: block; }
 
 /* ---- Landing mode (initial): show hero + find-me only; hide everything in between ---- */
 body.landing main > section:not(.hero):not(#elsewhere) { display: none; }

@@ -257,9 +257,7 @@
 
 </main>
 
-<a class="hit-counter-fixed" href="#" aria-label="Visit counter">
-  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fallamaprabhuani.github.io%2F&count_bg=%237C3AED&title_bg=%23252525&title=visits&edge_flat=true" alt="visits">
-</a>
+<div class="visit-tally" aria-hidden="true"><span id="visit-count">·</span></div>
 
 <script>
 (function(){
@@ -283,6 +281,23 @@
     document.querySelectorAll('.topnav a, a[href^="#"]').forEach(function(a){
       a.addEventListener('click', function(){ reveal(); });
     });
+
+    // ---- Visit counter (quiet, just a number) ----
+    var visitEl = document.getElementById('visit-count');
+    if (visitEl) {
+      // increment once per browser session via sessionStorage flag
+      var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
+      var endpoint = bumped
+        ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits'
+        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up';
+      fetch(endpoint)
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d && d.count !== undefined) visitEl.textContent = d.count;
+          if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
+        })
+        .catch(function(){});
+    }
 
     // ---- Sidebar TOC scrollspy ----
     var tocLinks = document.querySelectorAll('.toc a');
