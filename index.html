@@ -28,10 +28,18 @@
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
     <div class="hero-photo">
-      <img src="assets/me.jpg" alt="Allamaprabhu Ani" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');">
-      <div class="photo-fallback" aria-hidden="true">A</div>
+      <a href="#about" class="photo" aria-label="Scroll to about">
+        <img src="assets/me.jpg" alt="Allamaprabhu Ani" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');">
+        <span class="photo-fallback" aria-hidden="true">A</span>
+      </a>
+      <span class="photo-caption">click on me</span>
     </div>
   </div>
+
+  <figure class="pullquote">
+    <p>"When I am working on a problem, I never think about beauty &mdash; but when I have finished, if the solution is not beautiful, I know it is wrong."</p>
+    <cite>— R. Buckminster Fuller</cite>
+  </figure>
 
   <div class="now-block">
     <p class="now-label">currently obsessed with two things</p>
@@ -78,7 +86,6 @@
   <ul class="mottos">
     <li>Theory makes the world go round. Creativity makes it worth living in.</li>
     <li>Engineering should feel like play &mdash; play with consequences, but play.</li>
-    <li>If learning isn't fun, you're either missing the punchline or the wrong teacher.</li>
     <li>I'd rather ship a small honest tool today than a perfect speculative one in five years.</li>
     <li>Imagination first, equations second. Most interesting ideas start with a sketch and a stupid question.</li>
   </ul>
