@@ -18,19 +18,13 @@
     <div class="hero-text">
       <div class="mark" aria-hidden="true">
         <svg viewBox="0 0 60 60" width="42" height="42">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#7c3aed"/>
-              <stop offset="1" stop-color="#ec4899"/>
-            </linearGradient>
-          </defs>
-          <path d="M8 50 L30 8 L52 50" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18 38 Q30 32 42 38" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 3"/>
-          <circle cx="30" cy="8" r="2.4" fill="#7c3aed"/>
+          <path d="M8 50 L30 8 L52 50" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 38 Q30 32 42 38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.55"/>
+          <circle cx="30" cy="8" r="2.2" fill="currentColor"/>
         </svg>
       </div>
-      <h1>hi, I'm Allamaprabhu &mdash; <span class="wave">👋</span></h1>
-      <p class="tag">I make small mechanical-engineering tools, a few papers, and one increasingly ambitious AI design partner. Davangere kid &rarr; London PhD student &rarr; trying to fuse Bruhn with PyTorch and see what happens.</p>
+      <h1>Allamaprabhu Ani</h1>
+      <p class="tag">PhD student in computational mechanics &amp; deep learning. I build small mechanical-engineering tools, write the occasional paper, and am currently trying to fuse Bruhn-era classical structural analysis with modern PyTorch &mdash; and see what happens.</p>
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
     <div class="hero-photo">
@@ -40,7 +34,7 @@
   </div>
 
   <div class="now-block">
-    <p class="now-label">🔥 currently obsessed with two things</p>
+    <p class="now-label">currently obsessed with two things</p>
     <ul class="obsessions">
       <li>
         <b><a href="https://allamaprabhuani.github.io/trueform/">Trueform</a></b> &mdash; an AI design partner bound by the rules of mechanics. Imagine a child snaps a photo of a broken kitchen-chair clip and minutes later a 3D printer is producing a stronger one. That's the smallest version of the dream &mdash; the largest version is anyone, anywhere, designing real engineered components from a sentence.
@@ -53,14 +47,14 @@
 </header>
 
 <section id="about">
-  <h2>🧭 about</h2>
-  <p>I grew up in Davangere, a smallish town in Karnataka, and somehow ended up doing a PhD in computational mechanics in London. In between, I read every Bruhn / Niu / ESDU page I could find while my classmates were learning ANSYS, founded a tiny engineering company called <b>Aeroknacks</b> at 22 (it sold a real tool to a real firm &mdash; I'm still slightly amazed about that), did an MTech at NIT Silchar (9.88/10, but who's counting), and somewhere along the way picked up Hindustani classical music and a stubborn opinion that engineering software should be open and stay open.</p>
-  <p>I'm currently a doctoral researcher at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, supervised by <a href="https://www.saponnusami.com/">Dr Sathiskumar Anusuya Ponnusami</a>. PhD wraps June 2026. After that I'm hoping to spend a year on Trueform full-time, hosted at his <b>CEMS Lab</b> at Queen Mary University of London.</p>
+  <h2>about</h2>
+  <p>I read every Bruhn / Niu / ESDU page I could find while my classmates were learning ANSYS, founded a small engineering company called <b>Aeroknacks</b> at 22 that sold a real structural-analysis tool to a real firm, did an MTech at NIT Silchar (9.88/10, but who's counting), and along the way picked up Hindustani classical music and a stubborn opinion that engineering software should be open and stay open. Aeroknacks is on the shelf while I focus on the PhD; the bolted-joint tool that paid the bills is now MIT-licensed on GitHub.</p>
+  <p>I'm currently a doctoral researcher at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, supervised by <a href="https://www.saponnusami.com/">Dr Sathiskumar Anusuya Ponnusami</a>. PhD wraps June 2026. After that I'm hoping to spend a year on Trueform full-time, hosted at Sathis's <b>CEMS Lab</b> at Queen Mary University of London.</p>
   <p>In 2025 I spent some time at <a href="https://www.epfl.ch/labs/lsms/">EPFL's Computational Solid Mechanics lab</a> with Prof. Jean-Fran&ccedil;ois Molinari, working on what became our <i>Engineering Fracture Mechanics</i> review. Closest I've ever come to being starstruck.</p>
 </section>
 
 <section id="shipped">
-  <h2>🛠️ things I've shipped</h2>
+  <h2>things I've shipped</h2>
   <p class="muted">working software &gt; published papers, in my opinion, but I'll let you decide.</p>
   <ul class="stack">
     <li><a href="https://github.com/allamaprabhuani/bjsfm"><b>BJSFM</b></a> &mdash; a bolted-joint stress-field tool I wrote during my MTech, sold under a 2-year commercial licence through Aeroknacks, and recently re-opened on GitHub with the upstream MIT attribution properly restored. The Lekhnitskii / de Jong analytical solution, in plain Python, for anyone who wants it.</li>
@@ -71,7 +65,7 @@
 </section>
 
 <section id="trueform">
-  <h2>🧱 currently building</h2>
+  <h2>currently building</h2>
   <div class="card">
     <h3><a href="https://allamaprabhuani.github.io/trueform/">Trueform</a> &mdash; an AI design partner bound by the rules of mechanics</h3>
     <p>Describe a part in words, sketch it, photograph a broken one, or just upload your CAD &mdash; Trueform builds the geometry with you, runs the classical sizing checks (Bruhn, Niu, ESDU, Lekhnitskii), and emits a manufacturer-ready package: GD&amp;T-annotated drawing, citation-grounded analysis report, and the machine-shop or 3D-printer code. <b>Every number is computed by a validated solver, never invented by the language model.</b></p>
@@ -80,7 +74,7 @@
 </section>
 
 <section id="mottos">
-  <h2>⚡ things I tell myself</h2>
+  <h2>things I tell myself</h2>
   <ul class="mottos">
     <li>Theory makes the world go round. Creativity makes it worth living in.</li>
     <li>Engineering should feel like play &mdash; play with consequences, but play.</li>
@@ -91,7 +85,7 @@
 </section>
 
 <section id="papers">
-  <h2>📜 papers I've put my name on</h2>
+  <h2>papers I've put my name on</h2>
   <ol class="papers">
     <li>
       R. Nakka, <b>A. S. Ani</b>, G. Subhash, J.-F. Molinari, S. A. Ponnusami.
@@ -114,18 +108,19 @@
 </section>
 
 <section id="awards">
-  <h2>🏆 awards I'm legitimately surprised about</h2>
+  <h2>awards I'm legitimately surprised about</h2>
   <ul class="stack">
     <li><b>2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship + Yeoman status</b> &mdash; one of three winners across all London universities, for "AI-accelerated modelling for fracture prediction." I had to look up what a livery company was.</li>
     <li><b>2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's &mdash; nominated by my own students. Still the one I'm proudest of.</li>
     <li><b>2024</b> &middot; Associate Fellow of the Higher Education Academy (AFHEA).</li>
     <li><b>2023</b> &middot; Best Student Award, MTech, NIT Silchar.</li>
+    <li><b>2023</b> &middot; <b>Fully-funded PhD scholarship</b> &mdash; <i>Modelling for Failure Analysis</i> studentship, City, St George's, University of London. The reason I get to spend three years thinking carefully about fracture.</li>
     <li><b>2020</b> &middot; Inspiring Student Award for Mechanical Engineering, VTU.</li>
   </ul>
 </section>
 
 <section id="bucket">
-  <h2>🌱 things I want to build (someday, hopefully soon)</h2>
+  <h2>things I want to build (someday, hopefully soon)</h2>
   <ul class="stack">
     <li>An open-source Trueform v1.0 that any engineering student in the world can run locally to design and certify a real part.</li>
     <li>A foundation model for fracture &mdash; trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</li>
@@ -137,7 +132,7 @@
 </section>
 
 <section id="recommend">
-  <h2>🔭 places I send people</h2>
+  <h2>places I send people</h2>
   <p class="muted">A growing list of sites and people I think are doing something genuinely interesting.</p>
   <ul class="stack">
     <li><a href="https://basavaprabhuani.github.io/">basavaprabhuani.github.io</a> &mdash; my brother's science scrapbook. The small one's already smarter than me.</li>
@@ -149,7 +144,7 @@
 </section>
 
 <section id="elsewhere">
-  <h2>📫 find me</h2>
+  <h2>find me</h2>
   <ul class="links">
     <li><a href="mailto:allamaprabhuani@gmail.com">allamaprabhuani@gmail.com</a></li>
     <li><a href="https://github.com/allamaprabhuani">GitHub</a></li>
