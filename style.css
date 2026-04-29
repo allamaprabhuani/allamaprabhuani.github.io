@@ -391,8 +391,8 @@ ul.links li:first-child::before { content: ""; }
 .hit-counter-fixed:hover { opacity: 1; border-bottom: none; }
 .hit-counter-fixed img { height: 22px; display: block; }
 
-/* ---- Landing mode (initial): show full hero block; hide deeper sections only ---- */
-body.landing main > section:not(.hero) { display: none; }
+/* ---- Landing mode (initial): show hero + find-me only; hide everything in between ---- */
+body.landing main > section:not(.hero):not(#elsewhere) { display: none; }
 body.landing .pullquote { display: none; }
 body.landing .hero-photo .photo-caption {
   animation: pulseCaption 2.4s ease-in-out infinite;
