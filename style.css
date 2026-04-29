@@ -352,6 +352,7 @@ ul.links li::before { content: "\2022\00a0"; color: var(--muted); }
 ul.links li:first-child::before { content: ""; }
 
 .footer-note { margin-top: 28px; font-size: 0.85rem; }
+.brag-aside { display: block; margin-top: 4px; font-size: 0.85rem; color: var(--muted); font-style: italic; }
 
 /* Upvote buttons on bucket list */
 .bucket-list li { display: flex; align-items: flex-start; gap: 12px; }
