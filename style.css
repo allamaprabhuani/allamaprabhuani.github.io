@@ -326,34 +326,43 @@ ul.links li:first-child::before { content: ""; }
 
 .footer-note { margin-top: 28px; font-size: 0.85rem; }
 
-/* Ping-me buttons on bucket list */
-.bucket-list li { position: relative; padding-right: 36px; }
-.ping-me {
+/* Upvote buttons on bucket list */
+.bucket-list li { display: flex; align-items: flex-start; gap: 12px; }
+.bucket-list .bucket-text { flex: 1; }
+.upvote {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 6px;
-  font-size: 1rem;
-  text-decoration: none;
-  border-bottom: none;
-  background: var(--card);
-  color: var(--ink);
-  margin-left: 6px;
-  transition: transform .15s ease, background .15s ease;
-  vertical-align: middle;
+  gap: 4px;
+  min-width: 52px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.86rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+  transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
-.ping-me:hover {
-  background: linear-gradient(135deg, #c026d3, #a855f7);
+.upvote .up-arrow { font-size: 0.85rem; line-height: 1; transition: transform .15s ease; }
+.upvote:hover {
+  border-color: #a855f7;
+  color: #7c3aed;
+  transform: translateY(-1px);
+}
+.upvote:hover .up-arrow { transform: translateY(-1px); }
+.upvote.voted {
+  background: linear-gradient(135deg, #c026d3, #7c3aed);
+  border-color: transparent;
   color: #fff;
-  transform: translateY(-1px) scale(1.08);
-  border-bottom: none;
+  cursor: default;
+  box-shadow: 0 2px 12px rgba(168, 85, 247, 0.30);
 }
-.ping-icon {
-  display: inline-block;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: var(--card);
-  font-size: 0.9rem;
-}
+.upvote.voted:hover { transform: none; }
+.upvote.voted .up-arrow { transform: none; }
 
 /* Floating hit counter (always visible) */
 .hit-counter-fixed {

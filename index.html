@@ -205,14 +205,14 @@
 
 <section id="bucket">
   <h2>things I want to build (someday, hopefully soon)</h2>
-  <p class="muted">Treating this as a public to-do list. If you don't see something shipped, click the <span class="ping-icon" aria-hidden="true">📨</span> next to it and remind me.</p>
+  <p class="muted">Treating this as a public to-do list. Upvote the things you want me to ship next, the count is real and lives forever (one vote per browser; honor system).</p>
   <ul class="stack bucket-list">
-    <li>An open-source Trueform v1.0 that any engineering student in the world can run locally to design and certify a real part. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20Trueform%20v1.0&body=Hey%20Allamaprabhu%2C%20what%27s%20the%20status%20on%20open-sourcing%20Trueform%20v1.0%3F" title="Ping me to do this">📨</a></li>
-    <li>A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20Fracture%20foundation%20model&body=Hey%20Allamaprabhu%2C%20how%27s%20the%20fracture%20foundation%20model%20coming%3F" title="Ping me to do this">📨</a></li>
-    <li>A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20Bruhn%2FNiu%2FESDU%20video%20series&body=Hey%20Allamaprabhu%2C%20when%27s%20the%20Bruhn%20series%20launching%3F" title="Ping me to do this">📨</a></li>
-    <li>An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20GD%26T%20mistakes%20dataset&body=Hey%20Allamaprabhu%2C%20status%20on%20the%20GD%26T%20mistakes%20dataset%3F" title="Ping me to do this">📨</a></li>
-    <li>A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20Solved%20Bruhn%20problems&body=Hey%20Allamaprabhu%2C%20any%20progress%20on%20the%20solved%20Bruhn%20library%3F" title="Ping me to do this">📨</a></li>
-    <li>One day, a raga concert in front of an audience that includes engineers I admire. Adventurous goal. <a class="ping-me" href="mailto:allamaprabhuani@gmail.com?subject=Ping%3A%20Raga%20concert&body=Hey%20Allamaprabhu%2C%20when%27s%20the%20raga%20concert%3F" title="Ping me to do this">📨</a></li>
+    <li><span class="bucket-text">An open-source Trueform v1.0 that any engineering student in the world can run locally to design and certify a real part.</span> <button class="upvote" data-key="trueform-v1" aria-label="Upvote: Trueform v1.0"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text">A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span> <button class="upvote" data-key="fracture-foundation" aria-label="Upvote: Fracture foundation model"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text">A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span> <button class="upvote" data-key="bruhn-niu-esdu-videos" aria-label="Upvote: Bruhn / Niu / ESDU video series"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text">An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span> <button class="upvote" data-key="gdt-mistakes-dataset" aria-label="Upvote: GD&T mistakes dataset"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text">A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</span> <button class="upvote" data-key="solved-bruhn-library" aria-label="Upvote: Solved Bruhn library"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text">One day, a raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span> <button class="upvote" data-key="raga-concert" aria-label="Upvote: Raga concert"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
   </ul>
 </section>
 
@@ -264,9 +264,38 @@
         }
       });
     }
-    // Any nav-link click also reveals
     document.querySelectorAll('.topnav a, a[href^="#"]').forEach(function(a){
       a.addEventListener('click', function(){ reveal(); });
+    });
+
+    // ---- Upvote buttons (counterapi.dev + localStorage honor system) ----
+    var ns = 'allamaprabhu-bucket';
+    var buttons = document.querySelectorAll('.upvote');
+    buttons.forEach(function(btn){
+      var key = btn.getAttribute('data-key');
+      var countEl = btn.querySelector('.up-count');
+      var voted = localStorage.getItem('voted-' + key) === '1';
+      if (voted) btn.classList.add('voted');
+
+      // fetch current count (no increment)
+      fetch('https://api.counterapi.dev/v1/' + ns + '/' + key)
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if (d && (d.count !== undefined)) countEl.textContent = d.count; })
+        .catch(function(){ countEl.textContent = '·'; });
+
+      btn.addEventListener('click', function(){
+        if (btn.classList.contains('voted')) return;
+        btn.classList.add('voted');
+        localStorage.setItem('voted-' + key, '1');
+        // optimistic increment
+        var current = parseInt(countEl.textContent, 10);
+        if (!isNaN(current)) countEl.textContent = current + 1;
+        // fire-and-forget increment
+        fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up')
+          .then(function(r){ return r.json(); })
+          .then(function(d){ if (d && (d.count !== undefined)) countEl.textContent = d.count; })
+          .catch(function(){ /* ignore */ });
+      });
     });
   });
 })();
