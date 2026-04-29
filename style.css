@@ -1,145 +1,107 @@
-:root{
-  --ink:#1a1a1a;
-  --paper:#fbfaf6;
-  --muted:#6b6b6b;
-  --rule:#e6e2d8;
-  --accent:#d23a6f;
-  --accent2:#e85d3a;
-  --link:#1e4fd9;
+:root {
+  --bg: #fbfaf6;
+  --ink: #1d1d1f;
+  --muted: #6b6b6f;
+  --rule: #e6e3da;
+  --accent: #e85d3a;
+  --card: #f4f1ea;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
-body{
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
-  font-size:17px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#15161a; --ink:#ebe9e2; --muted:#8a8985; --rule:#2a2b30; --accent:#ff7a55; --card:#1d1e23; }
 }
-main{
-  max-width:720px;
-  margin:0 auto;
-  padding:48px 22px 72px;
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
 }
-a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(30,79,217,.25)}
-a:hover{border-bottom-color:var(--link)}
-h1{
-  font-size:2.1rem;
-  margin:.4em 0 .15em;
-  letter-spacing:-.01em;
-  font-weight:700;
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
 }
-h2{
-  font-size:1.05rem;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  font-weight:600;
-  color:var(--muted);
-  margin:2.6em 0 .8em;
-  padding-bottom:.4em;
-  border-bottom:1px solid var(--rule);
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s ease; }
+a:hover { border-bottom-color: var(--accent); }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
+h1 { font-size: 2.1rem; margin: 8px 0 20px; }
+h2 {
+  font-size: 1.05rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  text-transform: lowercase;
+  color: var(--muted);
+  margin: 56px 0 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--rule);
 }
-.hero{padding-top:8px}
-.mark{margin-bottom:6px}
-.tag{
-  font-size:1.05rem;
-  color:#333;
-  margin:.2em 0 .8em;
+h3 { font-size: 1.1rem; margin: 0 0 8px; }
+
+p { margin: 0 0 14px; }
+.muted { color: var(--muted); font-size: 0.95em; }
+
+.hero { padding-bottom: 8px; }
+.hero .tag { font-size: 1.05rem; line-height: 1.55; color: var(--ink); }
+.hero .now {
+  margin-top: 22px;
+  padding: 14px 18px;
+  background: var(--card);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  font-size: 0.95rem;
 }
-.bio-lead{
-  color:#444;
-  margin:.4em 0 1.2em;
+.hero .dot {
+  display: inline-block; width: 8px; height: 8px;
+  background: var(--accent); border-radius: 50%;
+  margin-right: 8px; vertical-align: middle;
+  animation: pulse 2.4s ease-in-out infinite;
 }
-.now{
-  display:inline-block;
-  font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;
-  font-size:.86rem;
-  background:#fff;
-  border:1px solid var(--rule);
-  padding:.55em .85em;
-  border-radius:8px;
-  color:#333;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
-.now .dot{
-  display:inline-block;
-  width:.55em;height:.55em;
-  background:var(--accent2);
-  border-radius:50%;
-  margin-right:.5em;
-  vertical-align:middle;
-  box-shadow:0 0 0 0 rgba(232,93,58,.6);
-  animation:pulse 2.2s infinite;
+
+.mark { margin-bottom: 4px; }
+
+ul.stack, ol.papers { list-style: none; padding: 0; margin: 0; }
+ul.stack li, ol.papers li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
 }
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(232,93,58,.5)}
-  70%{box-shadow:0 0 0 10px rgba(232,93,58,0)}
-  100%{box-shadow:0 0 0 0 rgba(232,93,58,0)}
+ul.stack li:last-child, ol.papers li:last-child { border-bottom: none; }
+ol.papers { counter-reset: paper; }
+ol.papers li { counter-increment: paper; padding-left: 28px; position: relative; }
+ol.papers li::before {
+  content: counter(paper);
+  position: absolute; left: 0; top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
-ul.stack,ol.papers{
-  list-style:none;
-  padding:0;
-  margin:0;
+
+.card {
+  padding: 18px 20px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--rule);
 }
-ul.stack li,ol.papers li{
-  padding:.7em 0;
-  border-bottom:1px dashed var(--rule);
-}
-ul.stack li:last-child,ol.papers li:last-child{border-bottom:none}
-ol.papers{counter-reset:p}
-ol.papers li{
-  counter-increment:p;
-  position:relative;
-  padding-left:2em;
-}
-ol.papers li::before{
-  content:counter(p);
-  position:absolute;
-  left:0;top:.7em;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  color:var(--accent);
-  font-weight:600;
-}
-.muted{color:var(--muted);font-size:.92rem}
-code{
-  font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;
-  font-size:.88em;
-  background:#f0ece2;
-  padding:.05em .35em;
-  border-radius:3px;
-}
-footer{
-  margin-top:3em;
-  padding-top:1.2em;
-}
-footer .links{
-  list-style:none;
-  padding:0;margin:.4em 0 1.6em;
-  display:flex;
-  flex-wrap:wrap;
-  gap:.4em 1.2em;
-}
-footer .links li{font-size:.95rem}
-.colophon{
-  font-size:.8rem;
-  color:var(--muted);
-  font-family:'JetBrains Mono',monospace;
-  margin-top:2.2em;
-  padding-top:1.2em;
-  border-top:1px solid var(--rule);
-}
-@media (max-width:520px){
-  main{padding:30px 18px 56px}
-  h1{font-size:1.75rem}
-  body{font-size:16px}
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --ink:#ececec;
-    --paper:#15140f;
-    --muted:#9a958a;
-    --rule:#2c2a24;
-    --link:#7aa2ff;
-  }
-  .now{background:#1d1c17}
-  code{background:#26241e;color:#ececec}
+.card h3 a { color: var(--ink); border-bottom: 1px solid var(--accent); }
+.card h3 a:hover { color: var(--accent); }
+
+ul.links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 18px; }
+ul.links li::before { content: "\2022\00a0"; color: var(--muted); }
+ul.links li:first-child::before { content: ""; }
+
+.footer-note { margin-top: 28px; font-size: 0.85rem; }
+
+@media (max-width: 540px) {
+  main { padding: 40px 18px 64px; }
+  h1 { font-size: 1.7rem; }
+  body { font-size: 16px; }
 }

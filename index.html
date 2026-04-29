@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Allamaprabhu S Ani</title>
-<meta name="description" content="Allamaprabhu S Ani — doctoral researcher in computational mechanics and deep learning at City, St George's, University of London.">
+<title>Allamaprabhu Ani — somewhere between Bruhn and PyTorch</title>
+<meta name="description" content="A scrapbook of half-finished ideas, finished tools, papers, and the occasional raga. Doctoral researcher at City, St George's, University of London. Currently building Trueform.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,35 +27,44 @@
       <circle cx="30" cy="8" r="2.4" fill="#e85d3a"/>
     </svg>
   </div>
-  <h1>Allamaprabhu S Ani</h1>
-  <p class="tag">Doctoral researcher in computational mechanics &times; deep learning &middot; Davangere &rarr; London &middot; Building <a href="https://allamaprabhuani.github.io/trueform/">Trueform</a>.</p>
-  <p class="bio-lead">Fusing classical structural engineering with modern AI. PhD wraps June 2026.</p>
-  <p class="now"><span class="dot"></span> Currently building <a href="https://allamaprabhuani.github.io/trueform/">Trueform</a> &mdash; differentiable structural sizing for the next generation of aircraft.</p>
+  <h1>hi, I'm Allamaprabhu.</h1>
+  <p class="tag">I make small mechanical-engineering tools, a few papers, and one increasingly ambitious AI design partner. Davangere kid &rarr; London PhD student &rarr; trying to fuse Bruhn with PyTorch and see what happens.</p>
+  <p class="now"><span class="dot"></span> Currently obsessed with: <a href="https://allamaprabhuani.github.io/trueform/"><b>Trueform</b></a> &mdash; an AI design partner bound by the rules of mechanics. Imagine a child snaps a photo of a broken kitchen-chair clip and minutes later a 3D printer is producing a stronger one. That's the smallest version of the dream.</p>
 </header>
 
 <section id="about">
-  <h2>About</h2>
-  <p>Allamaprabhu grew up in Davangere, Karnataka. He read Mechanical Engineering at GMIT Davangere (BE, 8.47/10), did an MTech in Design &amp; Manufacturing at NIT Silchar (9.88/10, Best Student), and is finishing his PhD in Mechanical Engineering at <a href="https://www.city.ac.uk/">City, St George's, University of London</a> (Jul 2023 &ndash; Jun 2026), supervised by <a href="https://www.city.ac.uk/about/people/academics/sathiskumar-anusuya-ponnusami">Dr Sathiskumar Anusuya Ponnusami</a>. He is also a Hindustani classical vocalist.</p>
+  <h2>about</h2>
+  <p>I grew up in Davangere, a smallish town in Karnataka, and somehow ended up doing a PhD in computational mechanics in London. In between, I read every Bruhn / Niu / ESDU page I could find while my classmates were learning ANSYS, founded a tiny engineering company called <b>Aeroknacks</b> at 22 (it sold a real tool to a real firm &mdash; I'm still slightly amazed about that), did an MTech at NIT Silchar (9.88/10, but who's counting), and somewhere along the way picked up Hindustani classical music and a stubborn opinion that engineering software should be open and stay open.</p>
+  <p>I'm currently a doctoral researcher at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, supervised by <a href="https://www.city.ac.uk/about/people/academics/sathiskumar-anusuya-ponnusami">Dr Sathiskumar Anusuya Ponnusami</a>. PhD wraps June 2026. After that I'm hoping to spend a year on Trueform full-time.</p>
 </section>
 
-<section id="awards">
-  <h2>Awards &amp; honours</h2>
+<section id="shipped">
+  <h2>things I've shipped</h2>
+  <p class="muted">working software &gt; published papers, in my opinion, but I'll let you decide.</p>
   <ul class="stack">
-    <li><b>2026</b> &middot; Worshipful Company of Tin Plate Workers Travelling Scholarship + Yeoman status &mdash; one of three citywide winners across all London universities, for "AI-accelerated modelling for fracture prediction".</li>
-    <li><b>2026</b> &middot; SST Dean's Award for Outstanding Teaching Support, City, St George's &mdash; student-nominated.</li>
-    <li><b>2024</b> &middot; Associate Fellow of the Higher Education Academy (AFHEA), Advance HE.</li>
-    <li><b>2023</b> &middot; Best Student Award, MTech, NIT Silchar.</li>
-    <li><b>2020</b> &middot; Inspiring Student Award for Mechanical Engineering, VTU.</li>
+    <li><a href="https://github.com/allamaprabhuani/bjsfm"><b>BJSFM</b></a> &mdash; a bolted-joint stress-field tool I wrote during my MTech, sold under a 2-year commercial licence through Aeroknacks, and recently re-opened on GitHub with the upstream MIT attribution properly restored. The Lekhnitskii / de Jong analytical solution, in plain Python, for anyone who wants it.</li>
+    <li><a href="https://github.com/allamaprabhuani/geometric-transformations"><b>Geometric Transformations</b></a> &mdash; a MATLAB Live Script for 2D/3D affine transforms, originally written to teach my classmates and apparently still useful.</li>
+    <li><b>A differentiable phase-field fracture solver</b> &mdash; PyTorch-native, runs on a single GPU, ~10&times; faster than the standard reference codes, validated against four of them. Open-source release coming with the next paper. The technical receipts behind Trueform's inverse-design layer.</li>
+    <li><b>A small library of classical hand-calculation tools</b> &mdash; lug strength, Cozzone plastic-bending, fastener load-transfer, ABD matrices, column buckling. Most still in private repos; rolling them out as Trueform absorbs them.</li>
   </ul>
 </section>
 
+<section id="trueform">
+  <h2>currently building</h2>
+  <div class="card">
+    <h3><a href="https://allamaprabhuani.github.io/trueform/">Trueform</a> &mdash; an AI design partner bound by the rules of mechanics</h3>
+    <p>Describe a part in words, sketch it, photograph a broken one, or just upload your CAD &mdash; Trueform builds the geometry with you, runs the classical sizing checks (Bruhn, Niu, ESDU, Lekhnitskii), and emits a manufacturer-ready package: GD&amp;T-annotated drawing, citation-grounded analysis report, and the machine-shop or 3D-printer code. <b>Every number is computed by a validated solver, never invented by the language model.</b></p>
+    <p class="muted">In active development. Currently pitching it for the O'Shaughnessy Fellowship 2026.</p>
+  </div>
+</section>
+
 <section id="papers">
-  <h2>Selected publications</h2>
+  <h2>papers I've put my name on</h2>
   <ol class="papers">
     <li>
       R. Nakka, <b>A. S. Ani</b>, G. Subhash, J.-F. Molinari, S. A. Ponnusami.
       <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">Machine learning for computational fracture and damage mechanics: status and perspectives</a>.
-      <i>Engineering Fracture Mechanics</i>, Dec 2025.
+      <i>Engineering Fracture Mechanics</i>, Dec 2025. <span class="muted">&mdash; the field's first comprehensive review. I still occasionally get to write to Jean-Fran&ccedil;ois Molinari about it, which is mildly disorienting.</span>
     </li>
     <li>
       <b>A. S. Ani</b>, A. B. Deoghare. Leveraging machine learning for enhanced fatigue life prediction in aluminium alloys. <i>Lecture Notes in Mechanical Engineering</i>, Dec 2024.
@@ -69,43 +78,43 @@
       <i>IOP Conf. Ser. Mater. Sci. Eng.</i>, 2020.
     </li>
   </ol>
-  <p class="muted">Full list on <a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a>.</p>
+  <p class="muted">Full list (and the citation count, if you're into that) on <a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a>.</p>
 </section>
 
-<section id="code">
-  <h2>Open-source code</h2>
+<section id="awards">
+  <h2>awards I'm legitimately surprised about</h2>
   <ul class="stack">
-    <li><a href="https://github.com/allamaprabhuani/bjsfm"><b>BJSFM</b></a> &mdash; bolted-joint stress-field model for anisotropic plates. Lekhnitskii / de Jong solutions, derived from Benjamin E. Taylor's MIT-licensed <code>bjsfm</code> with full upstream attribution restored.</li>
-    <li><a href="https://github.com/allamaprabhuani/geometric-transformations"><b>Geometric Transformations</b></a> &mdash; 2D/3D affine transforms, MATLAB Live Script.</li>
+    <li><b>2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship + Yeoman status</b> &mdash; one of three winners across all London universities, for "AI-accelerated modelling for fracture prediction." I had to look up what a livery company was.</li>
+    <li><b>2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's &mdash; nominated by my own students. Still the one I'm proudest of.</li>
+    <li><b>2024</b> &middot; Associate Fellow of the Higher Education Academy (AFHEA).</li>
+    <li><b>2023</b> &middot; Best Student Award, MTech, NIT Silchar.</li>
+    <li><b>2020</b> &middot; Inspiring Student Award for Mechanical Engineering, VTU.</li>
   </ul>
 </section>
 
-<section id="founder">
-  <h2>Founder note</h2>
-  <p>Founded <b>Aeroknacks India Ltd</b> at 22 while finishing his Master's; built and sold a commercial structural-analysis tool under a two-year licence. The source has since been opened on GitHub with full upstream attribution restored.</p>
-</section>
-
-<section id="teaching">
-  <h2>Teaching &amp; outreach</h2>
+<section id="bucket">
+  <h2>things I want to build (someday, hopefully soon)</h2>
   <ul class="stack">
-    <li>Graduate Teaching Assistant, City, St George's &mdash; 2023 to present.</li>
-    <li>Teaching Assistant, NIT Silchar &mdash; 2021 to 2023.</li>
-    <li>Co-organiser, <i>Mechanics &amp; Machine Learning</i> (M2L) Workshop at City &mdash; 2024 and 2025.</li>
-    <li>YouTube: <b>MechCADemy</b> &mdash; FEA, CAD, and mechanics-of-materials explainers. (More channels via <a href="https://github.com/allamaprabhuani">GitHub</a>.)</li>
+    <li>An open-source Trueform v1.0 that any engineering student in the world can run locally to design and certify a real part.</li>
+    <li>A foundation model for fracture &mdash; trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</li>
+    <li>A YouTube series on MechCADemy explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</li>
+    <li>An open dataset of GD&amp;T mistakes from production drawings &mdash; the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</li>
+    <li>A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</li>
+    <li>One day, a raga concert in front of an audience that includes engineers I admire. Adventurous goal.</li>
   </ul>
 </section>
 
-<footer>
-  <h2>Get in touch</h2>
+<section id="elsewhere">
+  <h2>find me</h2>
   <ul class="links">
     <li><a href="mailto:allamaprabhuani@gmail.com">allamaprabhuani@gmail.com</a></li>
-    <li><a href="https://www.linkedin.com/in/allamaprabhu-ani">LinkedIn</a></li>
     <li><a href="https://github.com/allamaprabhuani">GitHub</a></li>
     <li><a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a></li>
-    <li>YouTube: MechCADemy</li>
+    <li><a href="https://www.linkedin.com/in/allamaprabhu-ani">LinkedIn</a></li>
+    <li>YouTube: <b>MechCADemy</b> (link coming &mdash; channel handle pending)</li>
   </ul>
-  <p class="colophon">Hand-coded in a single HTML file. Inter + JetBrains Mono. London, 2026.</p>
-</footer>
+  <p class="muted footer-note">Built in London, 2026. No analytics, no cookies, just HTML.</p>
+</section>
 
 </main>
 </body>
