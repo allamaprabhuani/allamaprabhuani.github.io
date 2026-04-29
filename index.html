@@ -54,7 +54,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="landing">
 <div class="cosmos" aria-hidden="true">
   <span class="star s1"></span>
   <span class="star s2"></span>
@@ -237,11 +237,39 @@
     <li><a href="https://www.linkedin.com/in/allamaprabhu-ani">LinkedIn</a></li>
   </ul>
   <p class="muted footer-note">Built in London, 2026. No analytics, no cookies, just HTML.</p>
-  <p class="hit-counter">
-    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fallamaprabhuani.github.io%2F&count_bg=%237C3AED&title_bg=%23252525&title=visits&edge_flat=true" alt="visits to this page">
-  </p>
 </section>
 
 </main>
+
+<a class="hit-counter-fixed" href="#" aria-label="Visit counter">
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fallamaprabhuani.github.io%2F&count_bg=%237C3AED&title_bg=%23252525&title=visits&edge_flat=true" alt="visits">
+</a>
+
+<script>
+(function(){
+  function reveal(){
+    document.body.classList.remove('landing');
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var photo = document.querySelector('.hero-photo .photo');
+    if (photo) {
+      photo.addEventListener('click', function(e){
+        if (document.body.classList.contains('landing')) {
+          e.preventDefault();
+          reveal();
+          setTimeout(function(){
+            var about = document.getElementById('about');
+            if (about) about.scrollIntoView({behavior:'smooth', block:'start'});
+          }, 220);
+        }
+      });
+    }
+    // Any nav-link click also reveals
+    document.querySelectorAll('.topnav a, a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(){ reveal(); });
+    });
+  });
+})();
+</script>
 </body>
 </html>
