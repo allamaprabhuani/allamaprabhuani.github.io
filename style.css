@@ -29,7 +29,7 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-feature-settings: "ss01", "cv11";
   line-height: 1.65;
   font-size: 17px;
@@ -157,7 +157,7 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
   gap: 18px;
 }
 .nav-home {
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-weight: 600;
   color: var(--ink);
   font-size: 1.05rem;
@@ -170,7 +170,7 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
   display: flex; gap: 18px;
   list-style: none; padding: 0; margin: 0;
   font-size: 0.84rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   text-transform: lowercase;
 }
 .topnav ul a { color: var(--muted); border-bottom: none; }
@@ -210,6 +210,7 @@ main {
   position: relative;
   z-index: 1;
 }
+main > section[id] { scroll-margin-top: 72px; }
 
 /* ---- Type ---- */
 a {
@@ -221,14 +222,14 @@ a {
 a:hover { border-bottom-color: var(--accent); }
 
 h1, h2, h3 {
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-weight: 600;
   letter-spacing: -0.012em;
   line-height: 1.2;
 }
 h1 { font-size: 2.4rem; margin: 4px 0 14px; }
 h2 {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.76rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -270,7 +271,7 @@ p { margin: 0 0 14px; }
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   color: var(--muted);
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-weight: 600;
   font-size: 3rem;
   z-index: 0;
@@ -279,7 +280,7 @@ p { margin: 0 0 14px; }
 .hero-photo .photo-caption {
   display: block;
   margin-top: 10px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.68rem;
   color: var(--muted);
   letter-spacing: 0.08em;
@@ -289,7 +290,7 @@ p { margin: 0 0 14px; }
 .hero h1 { margin-top: 0; }
 .hero .tag { font-size: 1.06rem; line-height: 1.6; color: var(--ink); max-width: 52ch; }
 .hero .lede {
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 1.32rem;
   font-style: italic;
   color: var(--ink);
@@ -298,7 +299,7 @@ p { margin: 0 0 14px; }
   max-width: 50ch;
 }
 .kannada {
-  font-family: 'Noto Sans Kannada', 'Source Serif 4', serif;
+  font-family: 'Noto Sans Kannada', 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 1.1rem;
   color: var(--muted);
   margin: -6px 0 18px;
@@ -315,7 +316,7 @@ p { margin: 0 0 14px; }
   border-radius: 0 6px 6px 0;
 }
 .now-label {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -324,16 +325,19 @@ p { margin: 0 0 14px; }
 }
 .blink-dot {
   display: inline-block;
-  width: 8px; height: 8px;
+  width: 9px; height: 9px;
   background: var(--accent);
   border-radius: 50%;
   margin-right: 8px;
   vertical-align: middle;
-  animation: blink 2s ease-in-out infinite;
+  box-shadow:
+    0 0 6px var(--accent),
+    0 0 14px var(--accent-soft);
+  animation: blink 1.6s ease-in-out infinite;
 }
 @keyframes blink {
-  0%, 100% { box-shadow: 0 0 0 0 var(--accent-soft); }
-  50%      { box-shadow: 0 0 0 6px transparent; }
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
 }
 .obsessions { list-style: none; padding: 0; margin: 0; }
 .obsessions li {
@@ -353,7 +357,7 @@ ol.papers li { counter-increment: paper; padding-left: 32px; position: relative;
 ol.papers li::before {
   content: counter(paper, decimal-leading-zero);
   position: absolute; left: 0; top: 16px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   color: var(--accent);
   font-size: 0.78rem;
   font-weight: 500;
@@ -376,7 +380,7 @@ ul.mottos li {
   padding: 10px 18px;
   border-left: 2px solid var(--rule);
   margin-bottom: 6px;
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-style: italic;
   color: var(--ink);
   font-size: 1.04rem;
@@ -394,7 +398,7 @@ ul.links li:first-child::before { content: ""; }
 .brag-aside { display: block; margin-top: 4px; font-size: 0.86rem; color: var(--muted); }
 .roadmap-target {
   display: inline-block;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   color: var(--accent);
@@ -417,7 +421,7 @@ ul.links li:first-child::before { content: ""; }
   cursor: pointer;
   font: inherit;
   font-size: 0.82rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
   flex-shrink: 0;
   margin-top: 2px;
@@ -438,7 +442,7 @@ ul.links li:first-child::before { content: ""; }
   position: fixed;
   bottom: 10px;
   right: 12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.66rem;
   color: var(--muted);
   opacity: 0.4;
@@ -468,7 +472,7 @@ body:not(.landing) main > section:not(.hero) { animation: revealFade 0.45s ease-
   top: 50%;
   transform: translateY(-50%);
   z-index: 4;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: 0.7rem;
   color: var(--muted);
   display: none;
