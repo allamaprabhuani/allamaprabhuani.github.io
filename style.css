@@ -489,6 +489,34 @@ p { margin: 0 0 14px; }
   letter-spacing: 0.01em;
 }
 
+/* ---- Hover-image proof (e.g. EFM most-downloaded screenshot) ---- */
+.proof-hover {
+  position: relative;
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  font-weight: 500;
+}
+.proof-img {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: 640px;
+  max-width: min(92vw, 720px);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  background: var(--bg);
+  z-index: 50;
+  pointer-events: none;
+}
+.proof-hover:hover .proof-img,
+.proof-hover:focus .proof-img,
+.proof-hover:focus-within .proof-img { display: block; }
+@media (max-width: 640px) {
+  .proof-img { left: 50%; transform: translateX(-50%); }
+}
+
 /* ---- Latest-from-blog (homepage, between intro and now-block) ---- */
 .latest-posts {
   margin-top: 26px;
