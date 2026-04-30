@@ -51,43 +51,102 @@
 }
 </script>
 
+<!-- Inline theme + background bootstrap (runs before CSS paint to avoid flash) -->
+<script>
+(function(){
+  var TZ_LAT = {
+    'Europe/London':51,'Europe/Dublin':53,'Europe/Paris':48,'Europe/Berlin':52,'Europe/Madrid':40,
+    'Europe/Rome':41,'Europe/Amsterdam':52,'Europe/Stockholm':59,'Europe/Helsinki':60,'Europe/Athens':37,
+    'Europe/Moscow':55,'Europe/Istanbul':41,'Asia/Kolkata':20,'Asia/Calcutta':22,'Asia/Karachi':24,
+    'Asia/Dubai':25,'Asia/Tehran':35,'Asia/Tokyo':35,'Asia/Seoul':37,'Asia/Shanghai':31,
+    'Asia/Hong_Kong':22,'Asia/Singapore':1,'Asia/Bangkok':13,'Asia/Jakarta':-6,
+    'Australia/Sydney':-33,'Australia/Melbourne':-37,'Australia/Perth':-31,'Pacific/Auckland':-36,
+    'America/New_York':40,'America/Toronto':43,'America/Chicago':41,'America/Denver':39,
+    'America/Los_Angeles':34,'America/Vancouver':49,'America/Mexico_City':19,'America/Sao_Paulo':-23,
+    'America/Buenos_Aires':-34,'Africa/Cairo':30,'Africa/Lagos':6,'Africa/Johannesburg':-26
+  };
+  function isAfterSunset() {
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var lat = TZ_LAT[tz] != null ? TZ_LAT[tz] : 40;
+      var now = new Date();
+      var doy = Math.floor((now - new Date(now.getFullYear(),0,0))/86400000);
+      var dec = 23.45 * Math.sin(2*Math.PI*(284+doy)/365) * Math.PI/180;
+      var latR = lat * Math.PI/180;
+      var cosH = -Math.tan(latR) * Math.tan(dec);
+      var H = cosH > 1 ? 0 : cosH < -1 ? Math.PI : Math.acos(cosH);
+      var dayH = H * 24 / Math.PI;
+      var sunrise = 12 - dayH/2, sunset = 12 + dayH/2;
+      var hr = now.getHours() + now.getMinutes()/60;
+      return hr < sunrise || hr > sunset;
+    } catch(e) { return false; }
+  }
+  // Theme: localStorage override > sunset estimate
+  var theme;
+  try { theme = localStorage.getItem('theme'); } catch(e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = isAfterSunset() ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+
+  // Background: ?bg=name override > sessionStorage > random pick
+  var BGS = ['aurora','grid','contours','constellation','sunrise','linen'];
+  var bg;
+  try {
+    var p = new URL(location.href).searchParams.get('bg');
+    if (p && BGS.indexOf(p) !== -1) bg = p;
+  } catch(e) {}
+  if (!bg) {
+    try { bg = sessionStorage.getItem('bg'); } catch(e) {}
+    if (!bg || BGS.indexOf(bg) === -1) {
+      bg = BGS[Math.floor(Math.random()*BGS.length)];
+      try { sessionStorage.setItem('bg', bg); } catch(e) {}
+    }
+  }
+  document.documentElement.setAttribute('data-bg', bg);
+})();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="landing">
-<div class="cosmos" aria-hidden="true">
-  <span class="star s1"></span>
-  <span class="star s2"></span>
-  <span class="star s3"></span>
-  <span class="star s4"></span>
-  <span class="star s5"></span>
-  <span class="star s6"></span>
-</div>
+<div class="bg-layer" aria-hidden="true"></div>
+
 <nav class="topnav">
   <div class="nav-inner">
     <a href="#" class="nav-home">allamaprabhu</a>
-    <ul>
-      <li><a href="#about">about</a></li>
-      <li><a href="#shipped">work</a></li>
-      <li><a href="#synacad">synacad</a></li>
-      <li><a href="#papers">papers</a></li>
-      <li><a href="#elsewhere">contact</a></li>
-    </ul>
+    <div class="nav-cluster">
+      <ul>
+        <li><a href="#shipped">work</a></li>
+        <li><a href="#synacad">synacad</a></li>
+        <li><a href="#papers">papers</a></li>
+        <li><a href="#about">about</a></li>
+        <li><a href="#elsewhere">contact</a></li>
+      </ul>
+      <button class="nav-btn shuffle-btn" id="shuffle-bg" aria-label="Shuffle background" title="Shuffle background">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+      </button>
+      <button class="nav-btn theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
   </div>
 </nav>
 
 <aside class="toc" aria-label="Section navigation">
   <p class="toc-label">contents <span class="toc-progress" id="toc-progress">·</span></p>
   <ul>
-    <li><a href="#about"><span class="toc-dot"></span><span class="toc-name">about</span></a></li>
     <li><a href="#shipped"><span class="toc-dot"></span><span class="toc-name">shipped</span></a></li>
     <li><a href="#synacad"><span class="toc-dot"></span><span class="toc-name">synacad</span></a></li>
-    <li><a href="#mottos"><span class="toc-dot"></span><span class="toc-name">mottos</span></a></li>
     <li><a href="#papers"><span class="toc-dot"></span><span class="toc-name">papers</span></a></li>
     <li><a href="#awards"><span class="toc-dot"></span><span class="toc-name">bragspace</span></a></li>
-    <li><a href="#bucket"><span class="toc-dot"></span><span class="toc-name">bucket list</span></a></li>
+    <li><a href="#about"><span class="toc-dot"></span><span class="toc-name">about</span></a></li>
+    <li><a href="#mottos"><span class="toc-dot"></span><span class="toc-name">mottos</span></a></li>
+    <li><a href="#bucket"><span class="toc-dot"></span><span class="toc-name">roadmap</span></a></li>
     <li><a href="#recommend"><span class="toc-dot"></span><span class="toc-name">places</span></a></li>
     <li><a href="#elsewhere"><span class="toc-dot"></span><span class="toc-name">find me</span></a></li>
   </ul>
@@ -98,39 +157,13 @@
 <header class="hero">
   <div class="hero-row">
     <div class="hero-text">
-      <div class="mark" aria-hidden="true">
-        <svg viewBox="0 0 60 60" width="56" height="56">
-          <defs>
-            <linearGradient id="cosmic" x1="0.5" y1="1" x2="0.5" y2="0">
-              <stop offset="0"   stop-color="#7c3aed"/>
-              <stop offset="0.5" stop-color="#c026d3"/>
-              <stop offset="1"   stop-color="#ec4899"/>
-            </linearGradient>
-            <filter id="neonGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="2.2" result="blur"/>
-              <feMerge>
-                <feMergeNode in="blur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          <!-- ascending sparks beneath the A -->
-          <circle class="spark s-a" cx="14" cy="56" r="0.9" fill="#ec4899"/>
-          <circle class="spark s-b" cx="46" cy="56" r="0.9" fill="#c026d3"/>
-          <circle class="spark s-c" cx="30" cy="56" r="0.7" fill="#a855f7"/>
-          <!-- the A -->
-          <path d="M6 52 L30 6 L54 52" fill="none" stroke="url(#cosmic)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGlow)"/>
-          <path d="M16 38 Q30 32 44 38" fill="none" stroke="url(#cosmic)" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.7"/>
-          <circle cx="30" cy="6" r="2.6" fill="#ec4899" filter="url(#neonGlow)"/>
-        </svg>
-      </div>
       <h1>Allamaprabhu Ani</h1>
       <p class="kannada" lang="kn" aria-label="Allamaprabhu in Kannada">ಅಲ್ಲಮಪ್ರಭು</p>
-      <p class="tag">PhD student in computational mechanics &amp; deep learning. I build small mechanical-engineering tools, write the occasional paper, and am currently trying to fuse Bruhn-era classical structural analysis with modern PyTorch, and see what happens.</p>
+      <p class="tag">PhD researcher in computational mechanics &amp; deep learning at <a href="https://www.city.ac.uk/">City, St George's</a>, with <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> at <a href="https://github.com/CEMS-Lab">CEMS Lab</a>. Co-author of the field's <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">first comprehensive review</a> of ML for fracture mechanics (<i>EFM</i>, Dec 2025).</p>
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
     <div class="hero-photo">
-      <a href="#about" class="photo" aria-label="Scroll to about">
+      <a href="#shipped" class="photo" aria-label="Scroll to shipped work">
         <img src="assets/me.jpg" alt="Allamaprabhu Ani" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');">
         <span class="photo-fallback" aria-hidden="true">A</span>
       </a>
@@ -138,27 +171,18 @@
     </div>
   </div>
 
-
   <div class="now-block">
     <p class="now-label"><span class="blink-dot" aria-hidden="true"></span>currently obsessed with two things</p>
     <ul class="obsessions">
       <li>
-        <b><a href="https://allamaprabhuani.github.io/synacad/">SynaCAD</a></b>, an AI design partner bound by the rules of mechanics. Imagine a child snaps a photo of a broken kitchen-chair clip and minutes later a 3D printer is producing a stronger one. That's the smallest version of the dream, the largest version is anyone, anywhere, designing real engineered components from a sentence.
+        <b><a href="https://allamaprabhuani.github.io/synacad/">SynaCAD</a></b>, an AI design partner bound by the rules of mechanics. Snap a photo of a broken kitchen-chair clip and minutes later a 3D printer is producing a stronger one. The largest version: anyone, anywhere, designing real engineered components from a sentence.
       </li>
       <li>
-        <b>Accelerating fracture mechanics</b>, making fracture solvers ~8&times; faster on a single GPU and end-to-end differentiable in PyTorch. This is the technical bedrock under SynaCAD's inverse-design layer. The code goes fully public the moment the paper does. This is what I'm actually doing right now.
+        <b>Accelerating fracture mechanics</b>: a PyTorch-native phase-field solver, ~8&times; faster on a single GPU and end-to-end differentiable, validated against four reference codes. The technical bedrock under SynaCAD's inverse-design layer. Code goes public the moment the paper does.
       </li>
     </ul>
   </div>
 </header>
-
-<section id="about">
-  <h2>about</h2>
-  <p>This is my little scrapbook of work, half-finished ideas, and the things I keep coming back to.</p>
-  <p>I'm a doctoral researcher in computational mechanics at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, working with <a href="https://www.saponnusami.com/">Dr Sathiskumar Anusuya Ponnusami</a> at his <a href="https://github.com/CEMS-Lab">CEMS Lab</a>.</p>
-  <p>Before the PhD I read a lot of Bruhn and Niu while my classmates were learning ANSYS, did an MTech at NIT Silchar, founded a small engineering company called <b>Aeroknacks</b> that shipped a real structural-analysis tool to a real firm at 24, and started Hindustani classical singing at 3 (I know the ragas, the riyaz is another story). Aeroknacks is on the shelf while I focus on the PhD; the bolted-joint tool that paid the bills is now MIT-licensed on GitHub.</p>
-  <p>In 2025 I spent some time at <a href="https://www.epfl.ch/labs/lsms/">EPFL's Computational Solid Mechanics lab</a> with Prof. Jean-Fran&ccedil;ois Molinari, working on what became our <i>Engineering Fracture Mechanics</i> review.</p>
-</section>
 
 <section id="shipped">
   <h2>things I've shipped</h2>
@@ -192,17 +216,6 @@
   </div>
 </section>
 
-<section id="mottos">
-  <h2>things I tell myself</h2>
-  <ul class="mottos">
-    <li>Theory makes the world go round. Creativity makes it worth living in.</li>
-    <li>Engineering should feel like play, play with consequences, but play.</li>
-    <li>I'd rather ship a small honest tool today than a perfect speculative one in five years.</li>
-    <li>Imagination first, equations second. Most interesting ideas start with a sketch and a stupid question.</li>
-    <li>Result-oriented and relentless. The working solution, not the elegant excuse.</li>
-  </ul>
-</section>
-
 <section id="papers">
   <h2>papers I've put my name on</h2>
   <ol class="papers">
@@ -230,23 +243,42 @@
   <h2>bragspace</h2>
   <ul class="stack">
     <li><b>2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship + Yeoman status</b>. <span class="brag-aside">One of three winners across all London universities, for "AI-accelerated modelling for fracture prediction."</span></li>
-    <li><b>2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's. <span class="brag-aside">Nominated by my own students. Still the one I'm proudest of.</span></li>
+    <li><b>2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's. <span class="brag-aside">Nominated by my own students. The same instinct for making complex systems explainable is what SynaCAD is built on.</span></li>
     <li><b>2024</b> &middot; Associate Fellow of the Higher Education Academy (AFHEA).</li>
     <li><b>2023</b> &middot; <b>Fully-funded PhD scholarship</b>, <i>Modelling for Failure Analysis</i> studentship, City, St George's, University of London. <span class="brag-aside">The reason I get to spend three years thinking carefully about fracture.</span></li>
     <li><b>2020</b> &middot; Inspiring Student Award for Mechanical Engineering, VTU.</li>
   </ul>
 </section>
 
+<section id="about">
+  <h2>about</h2>
+  <p>This is my little scrapbook of work, half-finished ideas, and the things I keep coming back to.</p>
+  <p>Before the PhD I read a lot of Bruhn and Niu while my classmates were learning ANSYS, did an MTech at NIT Silchar, and at 24 founded a small engineering company called <b>Aeroknacks</b> that shipped a real structural-analysis tool to a real firm. Aeroknacks is on the shelf while I focus on the PhD; the bolted-joint tool that paid the bills is now MIT-licensed on GitHub.</p>
+  <p>In 2025 I spent some time at <a href="https://www.epfl.ch/labs/lsms/">EPFL's Computational Solid Mechanics lab</a> with Prof. Jean-Fran&ccedil;ois Molinari, working on what became our <i>Engineering Fracture Mechanics</i> review.</p>
+  <p>Outside the lab: Hindustani classical singing since I was 3, a discipline I keep returning to. The ragas are familiar; the riyaz is the lifelong part.</p>
+</section>
+
+<section id="mottos">
+  <h2>things I tell myself</h2>
+  <ul class="mottos">
+    <li>Theory makes the world go round. Creativity makes it worth living in.</li>
+    <li>Engineering should feel like play, play with consequences, but play.</li>
+    <li>I'd rather ship a small honest tool today than a perfect speculative one in five years.</li>
+    <li>Imagination first, equations second. Most interesting ideas start with a sketch and a stupid question.</li>
+    <li>Result-oriented and relentless. The working solution, not the elegant excuse.</li>
+  </ul>
+</section>
+
 <section id="bucket">
-  <h2>things I want to build (someday, hopefully soon)</h2>
-  <p class="muted">Treating this as a public to-do list. Upvote the things you want me to ship next, the count is real and lives forever (one vote per browser; honor system).</p>
+  <h2>roadmap</h2>
+  <p class="muted">A public to-do list. Upvote the things you want me to ship next, the count is real and lives forever (one vote per browser; honor system).</p>
   <ul class="stack bucket-list">
-    <li><span class="bucket-text">An open-source SynaCAD v1.0 that any engineering student in the world can run locally to design and certify a real part.</span> <button class="upvote" data-key="synacad-v1" aria-label="Upvote: SynaCAD v1.0"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text">A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span> <button class="upvote" data-key="fracture-foundation" aria-label="Upvote: Fracture foundation model"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text">A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span> <button class="upvote" data-key="bruhn-niu-esdu-videos" aria-label="Upvote: Bruhn / Niu / ESDU video series"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text">An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span> <button class="upvote" data-key="gdt-mistakes-dataset" aria-label="Upvote: GD&T mistakes dataset"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text">A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</span> <button class="upvote" data-key="solved-bruhn-library" aria-label="Upvote: Solved Bruhn library"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text">One day, a raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span> <button class="upvote" data-key="raga-concert" aria-label="Upvote: Raga concert"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">2026</span>SynaCAD v1.0, open-source, that any engineering student in the world can run locally to design and certify a real part.</span> <button class="upvote" data-key="synacad-v1" aria-label="Upvote: SynaCAD v1.0"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">2027+</span>A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span> <button class="upvote" data-key="fracture-foundation" aria-label="Upvote: Fracture foundation model"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span> <button class="upvote" data-key="bruhn-niu-esdu-videos" aria-label="Upvote: Bruhn / Niu / ESDU video series"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span> <button class="upvote" data-key="gdt-mistakes-dataset" aria-label="Upvote: GD&T mistakes dataset"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</span> <button class="upvote" data-key="solved-bruhn-library" aria-label="Upvote: Solved Bruhn library"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">one day</span>A raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span> <button class="upvote" data-key="raga-concert" aria-label="Upvote: Raga concert"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
   </ul>
 </section>
 
@@ -294,10 +326,12 @@
 
 <script>
 (function(){
-  function reveal(){
-    document.body.classList.remove('landing');
-  }
+  var BGS = ['aurora','grid','contours','constellation','sunrise','linen'];
+
+  function reveal(){ document.body.classList.remove('landing'); }
+
   document.addEventListener('DOMContentLoaded', function(){
+    // ---- Landing-gate reveal ----
     var photo = document.querySelector('.hero-photo .photo');
     if (photo) {
       photo.addEventListener('click', function(e){
@@ -305,8 +339,8 @@
           e.preventDefault();
           reveal();
           setTimeout(function(){
-            var about = document.getElementById('about');
-            if (about) about.scrollIntoView({behavior:'smooth', block:'start'});
+            var first = document.getElementById('shipped');
+            if (first) first.scrollIntoView({behavior:'smooth', block:'start'});
           }, 220);
         }
       });
@@ -315,10 +349,32 @@
       a.addEventListener('click', function(){ reveal(); });
     });
 
-    // ---- Visit counter (quiet, just a number) ----
+    // ---- Theme toggle ----
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function(){
+        var cur = document.documentElement.getAttribute('data-theme') || 'light';
+        var next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch(e) {}
+      });
+    }
+
+    // ---- Background shuffle ----
+    var shuffleBtn = document.getElementById('shuffle-bg');
+    if (shuffleBtn) {
+      shuffleBtn.addEventListener('click', function(){
+        var cur = document.documentElement.getAttribute('data-bg');
+        var pool = BGS.filter(function(b){ return b !== cur; });
+        var next = pool[Math.floor(Math.random()*pool.length)];
+        document.documentElement.setAttribute('data-bg', next);
+        try { sessionStorage.setItem('bg', next); } catch(e) {}
+      });
+    }
+
+    // ---- Visit counter ----
     var visitEl = document.getElementById('visit-count');
     if (visitEl) {
-      // increment once per browser session via sessionStorage flag
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
       var endpoint = bumped
         ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits'
@@ -329,10 +385,10 @@
           if (d && d.count !== undefined) visitEl.textContent = d.count;
           if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
         })
-        .catch(function(){});
+        .catch(function(){ visitEl.textContent = '—'; });
     }
 
-    // ---- Sidebar TOC scrollspy + progress counter ----
+    // ---- Sidebar TOC scrollspy ----
     var tocLinks = document.querySelectorAll('.toc a');
     var tocMap = {};
     tocLinks.forEach(function(a, i){
@@ -356,33 +412,29 @@
       sections.forEach(function(s){ io.observe(s); });
     }
 
-    // ---- Upvote buttons (counterapi.dev + localStorage honor system) ----
+    // ---- Upvote buttons ----
     var ns = 'allamaprabhu-bucket';
-    var buttons = document.querySelectorAll('.upvote');
-    buttons.forEach(function(btn){
+    document.querySelectorAll('.upvote').forEach(function(btn){
       var key = btn.getAttribute('data-key');
       var countEl = btn.querySelector('.up-count');
       var voted = localStorage.getItem('voted-' + key) === '1';
       if (voted) btn.classList.add('voted');
 
-      // fetch current count (no increment)
       fetch('https://api.counterapi.dev/v1/' + ns + '/' + key)
         .then(function(r){ return r.json(); })
-        .then(function(d){ if (d && (d.count !== undefined)) countEl.textContent = d.count; })
-        .catch(function(){ countEl.textContent = '·'; });
+        .then(function(d){ if (d && d.count !== undefined) countEl.textContent = d.count; })
+        .catch(function(){ countEl.textContent = '—'; });
 
       btn.addEventListener('click', function(){
         if (btn.classList.contains('voted')) return;
         btn.classList.add('voted');
         localStorage.setItem('voted-' + key, '1');
-        // optimistic increment
         var current = parseInt(countEl.textContent, 10);
         if (!isNaN(current)) countEl.textContent = current + 1;
-        // fire-and-forget increment
         fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up')
           .then(function(r){ return r.json(); })
-          .then(function(d){ if (d && (d.count !== undefined)) countEl.textContent = d.count; })
-          .catch(function(){ /* ignore */ });
+          .then(function(d){ if (d && d.count !== undefined) countEl.textContent = d.count; })
+          .catch(function(){});
       });
     });
   });
