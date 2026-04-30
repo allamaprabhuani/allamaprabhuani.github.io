@@ -528,35 +528,39 @@ p { margin: 0 0 14px; }
 /* ---- Latest-from-blog (homepage, between intro and now-block) ---- */
 .latest-posts {
   margin-top: 26px;
-  padding: 14px 18px;
-  border: 1px dashed var(--rule);
+  padding: 16px 20px;
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  background: color-mix(in srgb, var(--card) 50%, transparent);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
 }
 .latest-label {
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--muted);
-  margin: 0 0 8px;
+  color: var(--ink);
+  margin: 0 0 10px;
 }
-.latest-label a { color: var(--accent); border-bottom: 1px solid transparent; }
-.latest-label a:hover { border-bottom-color: var(--accent); }
+.latest-label a {
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom: 1px solid var(--accent);
+}
 .latest-posts ul { list-style: none; padding: 0; margin: 0; }
 .latest-posts li {
-  display: flex; align-items: baseline; gap: 12px;
-  padding: 4px 0;
-  font-size: 0.95rem;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 5px 0;
+  font-size: 0.97rem;
 }
 .latest-posts .post-date {
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-  font-size: 0.74rem;
-  color: var(--muted);
-  min-width: 84px;
+  font-size: 0.78rem;
+  color: var(--accent);
+  min-width: 96px;
   flex-shrink: 0;
 }
-.latest-posts a { color: var(--ink); border-bottom: 1px solid transparent; }
+.latest-posts a { color: var(--ink); border-bottom: 1px solid transparent; font-weight: 500; }
 .latest-posts a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* ---- Currently-obsessed-with block ---- */
@@ -720,17 +724,22 @@ ul.links li:first-child::before { content: ""; }
 /* ---- Quiet visit tally ---- */
 .visit-tally {
   position: fixed;
-  bottom: 10px;
-  right: 12px;
+  bottom: 12px;
+  right: 14px;
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   color: var(--muted);
-  opacity: 0.4;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 4px 10px;
+  opacity: 0.85;
   z-index: 5;
   pointer-events: none;
   letter-spacing: 0.06em;
   user-select: none;
 }
+.visit-tally::before { content: "visits "; opacity: 0.7; }
 
 /* ---- Landing mode ---- */
 body.landing main > section:not(.hero) { display: none; }
