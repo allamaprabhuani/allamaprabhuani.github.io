@@ -5,11 +5,8 @@
   --muted: #6e6a62;
   --rule: #e6e1d6;
   --accent: #6b2c3a;
-  --accent-soft: rgba(107, 44, 58, 0.12);
   --card: #f3eee3;
   --shadow: 0 6px 22px rgba(28, 22, 14, 0.06);
-  --bg-decor-1: rgba(107, 44, 58, 0.10);
-  --bg-decor-2: rgba(90, 58, 94, 0.10);
 }
 html[data-theme="dark"] {
   --bg: #14110d;
@@ -17,11 +14,31 @@ html[data-theme="dark"] {
   --muted: #8c867a;
   --rule: #2a2620;
   --accent: #b888bd;
-  --accent-soft: rgba(184, 136, 189, 0.18);
   --card: #1d1a14;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
-  --bg-decor-1: rgba(184, 136, 189, 0.10);
-  --bg-decor-2: rgba(199, 92, 117, 0.08);
+}
+
+/* Accent palettes: light + dark per accent */
+html[data-accent="wine"]                            { --accent: #6b2c3a; }
+html[data-theme="dark"][data-accent="wine"]         { --accent: #b888bd; }
+html[data-accent="burgundy-rose"]                   { --accent: #6b2c3a; }
+html[data-theme="dark"][data-accent="burgundy-rose"]{ --accent: #d68aa0; }
+html[data-accent="magenta"]                         { --accent: #a8336b; }
+html[data-theme="dark"][data-accent="magenta"]      { --accent: #e09bb8; }
+html[data-accent="eggplant"]                        { --accent: #5a3a5e; }
+html[data-theme="dark"][data-accent="eggplant"]     { --accent: #c8a5cc; }
+html[data-accent="forest"]                          { --accent: #3d6e4f; }
+html[data-theme="dark"][data-accent="forest"]       { --accent: #94c4a3; }
+html[data-accent="olive"]                           { --accent: #6b6f3a; }
+html[data-theme="dark"][data-accent="olive"]        { --accent: #c4c87a; }
+html[data-accent="steel"]                           { --accent: #3a5775; }
+html[data-theme="dark"][data-accent="steel"]        { --accent: #9bc0e0; }
+
+/* Derived tokens (computed from --accent so they stay in sync) */
+html {
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --bg-decor-1: color-mix(in srgb, var(--accent) 10%, transparent);
+  --bg-decor-2: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 
 * { box-sizing: border-box; }
