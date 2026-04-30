@@ -420,14 +420,34 @@ h1, h2, h3 {
 h1 { font-size: 2.4rem; margin: 4px 0 14px; }
 h2 {
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-  font-size: 0.76rem;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--muted);
+  color: var(--ink);
   margin: 64px 0 18px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--accent);
+  line-height: 1.1;
+}
+main > section > h2,
+.blog-header h1,
+.post-header .post-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+main > section > h2::before,
+.blog-header h1::before,
+.post-header .post-title::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--accent-soft);
 }
 h3 { font-size: 1.18rem; margin: 0 0 8px; }
 
