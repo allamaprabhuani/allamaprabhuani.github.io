@@ -323,11 +323,12 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
   justify-content: center;
   font-family: 'Noto Sans Kannada', serif;
   font-weight: 500;
-  font-size: 1.6rem;
+  font-size: 2.4rem;
   line-height: 1;
   color: var(--ink);
   transition: filter .25s ease, transform .25s ease, color .25s ease;
 }
+@media (max-width: 600px) { .nav-mark { font-size: 2rem; } }
 /* HDR-bright glyph in dark mode — uses display-p3 wide-gamut white where supported */
 html[data-theme="dark"] .nav-mark {
   color: #ffffff;
