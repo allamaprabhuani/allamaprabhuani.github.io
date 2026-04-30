@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    <p class="post-meta">{{ page.date | date: "%Y-%m-%d" }}{% if page.tags %} · {{ page.tags | join: ", " }}{% endif %}</p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% if page.subtitle %}<p class="post-subtitle">{{ page.subtitle }}</p>{% endif %}
+  </header>
+  <div class="post-body">
+    {{ content }}
+  </div>
+  <footer class="post-foot">
+    <p class="muted"><a href="/blog/">← back to all posts</a></p>
+  </footer>
+</article>

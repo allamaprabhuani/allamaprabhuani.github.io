@@ -1,0 +1,25 @@
+---
+layout: default
+title: blog
+description: Notes, half-finished ideas, working code from Allamaprabhu Ani.
+permalink: /blog/
+---
+<header class="blog-header">
+  <h1>blog</h1>
+  <p class="muted">Notes, working code, half-finished ideas. The longer-form version of the scrapbook.</p>
+</header>
+
+{% if site.posts.size == 0 %}
+<p class="muted">No posts yet. Check back soon.</p>
+{% else %}
+<ul class="post-list">
+  {% for post in site.posts %}
+  <li>
+    <p class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</p>
+    <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+    {% if post.subtitle %}<p class="muted">{{ post.subtitle }}</p>
+    {% elsif post.excerpt %}<p class="muted">{{ post.excerpt | strip_html | truncate: 200 }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

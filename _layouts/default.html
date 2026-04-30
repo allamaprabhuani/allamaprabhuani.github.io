@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{{ page.description | default: site.description }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+<!-- Phoenix favicon by Freepik / Flaticon (https://www.flaticon.com/free-icon/phoenix_3821117) -->
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+
+<meta property="og:type" content="{{ page.layout == 'post' | default: 'website' }}">
+<meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+<meta property="og:description" content="{{ page.description | default: site.description }}">
+<meta property="og:image" content="{{ '/assets/me.jpg' | absolute_url }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+<meta name="twitter:description" content="{{ page.description | default: site.description }}">
+
+<!-- Inline theme + background bootstrap (runs before CSS paint) -->
+<script>
+(function(){
+  var TZ_LAT = {
+    'Europe/London':51,'Europe/Dublin':53,'Europe/Paris':48,'Europe/Berlin':52,'Europe/Madrid':40,
+    'Europe/Rome':41,'Europe/Amsterdam':52,'Europe/Stockholm':59,'Europe/Helsinki':60,'Europe/Athens':37,
+    'Europe/Moscow':55,'Europe/Istanbul':41,'Asia/Kolkata':20,'Asia/Calcutta':22,'Asia/Karachi':24,
+    'Asia/Dubai':25,'Asia/Tehran':35,'Asia/Tokyo':35,'Asia/Seoul':37,'Asia/Shanghai':31,
+    'Asia/Hong_Kong':22,'Asia/Singapore':1,'Asia/Bangkok':13,'Asia/Jakarta':-6,
+    'Australia/Sydney':-33,'Australia/Melbourne':-37,'Australia/Perth':-31,'Pacific/Auckland':-36,
+    'America/New_York':40,'America/Toronto':43,'America/Chicago':41,'America/Denver':39,
+    'America/Los_Angeles':34,'America/Vancouver':49,'America/Mexico_City':19,'America/Sao_Paulo':-23,
+    'America/Buenos_Aires':-34,'Africa/Cairo':30,'Africa/Lagos':6,'Africa/Johannesburg':-26
+  };
+  function isAfterSunset() {
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var lat = TZ_LAT[tz] != null ? TZ_LAT[tz] : 40;
+      var now = new Date();
+      var doy = Math.floor((now - new Date(now.getFullYear(),0,0))/86400000);
+      var dec = 23.45 * Math.sin(2*Math.PI*(284+doy)/365) * Math.PI/180;
+      var latR = lat * Math.PI/180;
+      var cosH = -Math.tan(latR) * Math.tan(dec);
+      var H = cosH > 1 ? 0 : cosH < -1 ? Math.PI : Math.acos(cosH);
+      var dayH = H * 24 / Math.PI;
+      var sunrise = 12 - dayH/2, sunset = 12 + dayH/2;
+      var hr = now.getHours() + now.getMinutes()/60;
+      return hr < sunrise || hr > sunset;
+    } catch(e) { return false; }
+  }
+  var theme;
+  try { theme = localStorage.getItem('theme'); } catch(e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = isAfterSunset() ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+
+  // bg + accent: re-randomise on every refresh; ?bg=/?accent= URL params pin
+  var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
+  var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel'];
+  var qs;
+  try { qs = new URL(location.href).searchParams; } catch(e) { qs = null; }
+  var pinnedBg = qs && qs.get('bg');
+  var pinnedAccent = qs && qs.get('accent');
+  var bg     = (pinnedBg     && BGS.indexOf(pinnedBg)         !== -1) ? pinnedBg     : BGS[Math.floor(Math.random()*BGS.length)];
+  var accent = (pinnedAccent && ACCENTS.indexOf(pinnedAccent) !== -1) ? pinnedAccent : ACCENTS[Math.floor(Math.random()*ACCENTS.length)];
+  document.documentElement.setAttribute('data-bg', bg);
+  document.documentElement.setAttribute('data-accent', accent);
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+{% seo title=false %}
+{% feed_meta %}
+</head>
+<body{% if page.landing %} class="landing"{% endif %}>
+<div class="bg-layer" aria-hidden="true">
+  <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
+  <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
+  <svg class="neural-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+    <g class="nn-edges" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.35">
+      <line x1="120" y1="120" x2="320" y2="80"/><line x1="120" y1="120" x2="320" y2="180"/><line x1="120" y1="120" x2="320" y2="280"/>
+      <line x1="120" y1="240" x2="320" y2="80"/><line x1="120" y1="240" x2="320" y2="180"/><line x1="120" y1="240" x2="320" y2="280"/><line x1="120" y1="240" x2="320" y2="380"/>
+      <line x1="120" y1="360" x2="320" y2="180"/><line x1="120" y1="360" x2="320" y2="280"/><line x1="120" y1="360" x2="320" y2="380"/>
+      <line x1="320" y1="80"  x2="520" y2="160"/><line x1="320" y1="80"  x2="520" y2="320"/>
+      <line x1="320" y1="180" x2="520" y2="160"/><line x1="320" y1="180" x2="520" y2="320"/>
+      <line x1="320" y1="280" x2="520" y2="160"/><line x1="320" y1="280" x2="520" y2="320"/>
+      <line x1="320" y1="380" x2="520" y2="160"/><line x1="320" y1="380" x2="520" y2="320"/>
+      <line x1="520" y1="160" x2="700" y2="240"/><line x1="520" y1="320" x2="700" y2="240"/>
+    </g>
+    <g class="nn-nodes" fill="currentColor">
+      <circle cx="120" cy="120" r="4"/><circle cx="120" cy="240" r="4"/><circle cx="120" cy="360" r="4"/>
+      <circle cx="320" cy="80"  r="4" class="pulse pa"/><circle cx="320" cy="180" r="4"/><circle cx="320" cy="280" r="4" class="pulse pb"/><circle cx="320" cy="380" r="4"/>
+      <circle cx="520" cy="160" r="4"/><circle cx="520" cy="320" r="4" class="pulse pc"/>
+      <circle cx="700" cy="240" r="5"/>
+    </g>
+  </svg>
+</div>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <a href="/" class="nav-home" aria-label="Home">
+      <span class="nav-mark" lang="kn" aria-hidden="true">ಅ</span>
+      <span class="nav-word">allamaprabhu</span>
+    </a>
+    <div class="nav-cluster">
+      <ul>
+        <li><a href="/#shipped">work</a></li>
+        <li><a href="/#synacad">synacad</a></li>
+        <li><a href="/#papers">papers</a></li>
+        <li><a href="/blog/">blog</a></li>
+        <li><a href="/#about">about</a></li>
+        <li><a href="/#elsewhere">contact</a></li>
+      </ul>
+      <button class="nav-btn shuffle-btn" id="shuffle-bg" aria-label="Shuffle background" title="Shuffle background">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+      </button>
+      <button class="nav-btn theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  {{ content }}
+</main>
+
+<footer class="site-footer" id="elsewhere">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h2>find me</h2>
+      <ul class="links">
+        <li><a href="mailto:allamaprabhuani@gmail.com">allamaprabhuani@gmail.com</a></li>
+        <li><a href="https://github.com/allamaprabhuani">GitHub</a></li>
+        <li><a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a></li>
+        <li><a href="https://www.linkedin.com/in/allamaprabhu-ani">LinkedIn</a></li>
+      </ul>
+    </div>
+    <p class="footer-note">Built in London, 2026. No analytics, no cookies, just HTML.</p>
+  </div>
+</footer>
+
+<div class="visit-tally" aria-hidden="true"><span id="visit-count">·</span></div>
+
+<script src="/site.js"></script>
+</body>
+</html>
