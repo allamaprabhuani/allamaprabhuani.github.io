@@ -250,29 +250,32 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
 }
 .nav-home:hover { color: var(--accent); border-bottom: none; }
 .nav-home:hover .nav-mark {
-  background: var(--accent);
-  color: var(--bg);
-  transform: rotate(-6deg) scale(1.05);
-  box-shadow: 0 0 0 4px var(--accent-soft), 0 4px 14px var(--accent-soft);
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 6px var(--accent-soft));
 }
 .nav-mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  background: var(--card);
-  border: 1px solid var(--rule);
-  color: var(--accent);
   font-family: 'Noto Sans Kannada', serif;
   font-weight: 500;
-  font-size: 1.15rem;
+  font-size: 1.6rem;
   line-height: 1;
-  padding-bottom: 2px;
-  transition: background .2s ease, color .2s ease, transform .25s ease, box-shadow .25s ease;
+  color: var(--ink);
+  transition: filter .25s ease, transform .25s ease, color .25s ease;
 }
+/* HDR-bright glyph in dark mode — uses display-p3 wide-gamut white where supported */
 html[data-theme="dark"] .nav-mark {
-  box-shadow: 0 0 0 1px var(--accent-soft), 0 0 18px var(--accent-soft);
+  color: #ffffff;
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.55),
+    0 0 12px rgba(255, 255, 255, 0.35),
+    0 0 22px rgba(255, 255, 255, 0.18);
+}
+@supports (color: color(display-p3 1 1 1)) {
+  html[data-theme="dark"] .nav-mark {
+    color: color(display-p3 1.1 1.1 1.1);
+  }
 }
 .nav-word { display: inline-block; }
 @media (max-width: 480px) {
