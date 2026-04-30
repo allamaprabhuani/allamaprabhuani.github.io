@@ -6,7 +6,7 @@ date: 2026-04-30
 tags: [synacad, vision, mechanics, ai]
 ---
 
-<div class="word-reel" aria-hidden="true">
+<div class="word-reel" role="img" aria-label="A CAD that has cognition, intelligence, logic, memory, intent, structure, judgement, and taste.">
   <span class="reel-label">a CAD that has</span>
   <span class="reel-track">
     <span class="reel-word">cognition</span>

@@ -195,6 +195,7 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
 .nn-nodes .pulse.pa { animation-delay: 0s; }
 .nn-nodes .pulse.pb { animation-delay: 1.1s; }
 .nn-nodes .pulse.pc { animation-delay: 2.2s; }
+.nn-nodes .pulse.pd { animation-delay: 3.0s; }
 @keyframes nn-pulse {
   0%, 100% { opacity: 0.5; r: 4; }
   50%      { opacity: 1;   r: 6; }
@@ -487,6 +488,40 @@ p { margin: 0 0 14px; }
   font-weight: 400;
   letter-spacing: 0.01em;
 }
+
+/* ---- Latest-from-blog (homepage, between intro and now-block) ---- */
+.latest-posts {
+  margin-top: 26px;
+  padding: 14px 18px;
+  border: 1px dashed var(--rule);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--card) 50%, transparent);
+}
+.latest-label {
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.latest-label a { color: var(--accent); border-bottom: 1px solid transparent; }
+.latest-label a:hover { border-bottom-color: var(--accent); }
+.latest-posts ul { list-style: none; padding: 0; margin: 0; }
+.latest-posts li {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 4px 0;
+  font-size: 0.95rem;
+}
+.latest-posts .post-date {
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 0.74rem;
+  color: var(--muted);
+  min-width: 84px;
+  flex-shrink: 0;
+}
+.latest-posts a { color: var(--ink); border-bottom: 1px solid transparent; }
+.latest-posts a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* ---- Currently-obsessed-with block ---- */
 .now-block {

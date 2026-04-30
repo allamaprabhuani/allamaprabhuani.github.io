@@ -10,7 +10,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Allamaprabhu S Ani",
-  "alternateName": ["Allamaprabhu Ani", "ಅಲ್ಲಮಪ್ರಭು ಅಣೀ"],
+  "alternateName": ["Allamaprabhu Ani", "ಅಲ್ಲಮಪ್ರಭು ಅಣಿ"],
   "url": "https://allamaprabhuani.github.io/",
   "image": "https://allamaprabhuani.github.io/assets/me.jpg",
   "email": "allamaprabhuani@gmail.com",
@@ -48,7 +48,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
   <div class="hero-row">
     <div class="hero-text">
       <h1>Allamaprabhu Ani</h1>
-      <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣೀ</p>
+      <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
       <p class="tag">PhD researcher in computational mechanics &amp; deep learning at <a href="https://www.city.ac.uk/">City, St George's</a>, with <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> at <a href="https://github.com/CEMS-Lab">CEMS Lab</a>. Co-author of the field's <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">first comprehensive review</a> of ML for fracture mechanics (<i>EFM</i>, Dec 2025).</p>
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
@@ -60,6 +60,20 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
       <span class="photo-caption">click on me</span>
     </div>
   </div>
+
+  {% if site.posts.size > 0 %}
+  <div class="latest-posts">
+    <p class="latest-label">latest from the <a href="/blog/">blog</a> →</p>
+    <ul>
+      {% for post in site.posts limit: 3 %}
+      <li>
+        <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+        <a href="{{ post.url }}">{{ post.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
   <div class="now-block">
     <p class="now-label"><span class="blink-dot" aria-hidden="true"></span>currently obsessed with two things</p>
