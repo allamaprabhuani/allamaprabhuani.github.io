@@ -87,6 +87,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     <ul>
       {% for post in site.posts limit: 3 %}
       <li>
+        <span class="post-pulse pulse-{{ forloop.index }}" aria-hidden="true" title="{% if forloop.index == 1 %}newest{% elsif forloop.index == 2 %}recent{% else %}earlier{% endif %}"></span>
         <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
         <a href="{{ post.url }}">{{ post.title }}</a>
       </li>
