@@ -70,20 +70,22 @@
       });
     }
 
+    // shuffle button now steps to the next bg + accent in sequence
+    // (matches the per-refresh cycling behaviour, but without reload)
     var shuffleBtn = document.getElementById('shuffle-bg');
     if (shuffleBtn) {
       shuffleBtn.addEventListener('click', function(){
         var curBg = document.documentElement.getAttribute('data-bg');
-        var bgPool = BGS.filter(function(b){ return b !== curBg; });
-        var nextBg = bgPool[Math.floor(Math.random()*bgPool.length)];
+        var bi = BGS.indexOf(curBg); if (bi < 0) bi = -1;
+        var nextBg = BGS[(bi + 1) % BGS.length];
         document.documentElement.setAttribute('data-bg', nextBg);
-        try { sessionStorage.setItem('bg', nextBg); } catch(e) {}
+        try { localStorage.setItem('bg-i', BGS.indexOf(nextBg)); } catch(e) {}
 
         var curA = document.documentElement.getAttribute('data-accent');
-        var aPool = ACCENTS.filter(function(a){ return a !== curA; });
-        var nextA = aPool[Math.floor(Math.random()*aPool.length)];
+        var ai = ACCENTS.indexOf(curA); if (ai < 0) ai = -1;
+        var nextA = ACCENTS[(ai + 1) % ACCENTS.length];
         document.documentElement.setAttribute('data-accent', nextA);
-        try { sessionStorage.setItem('accent', nextA); } catch(e) {}
+        try { localStorage.setItem('accent-i', ACCENTS.indexOf(nextA)); } catch(e) {}
       });
     }
 

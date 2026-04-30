@@ -57,15 +57,24 @@
   }
   document.documentElement.setAttribute('data-theme', theme);
 
-  // bg + accent: re-randomise on every refresh; ?bg=/?accent= URL params pin
+  // bg + accent: first visit is random, every refresh after that cycles to the next.
+  // ?bg=/?accent= URL params still pin a specific value.
   var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
   var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel'];
+  function cycleNext(key, len) {
+    var i;
+    try { i = parseInt(localStorage.getItem(key), 10); } catch(e) {}
+    if (isNaN(i) || i < 0 || i >= len) i = Math.floor(Math.random() * len);
+    else i = (i + 1) % len;
+    try { localStorage.setItem(key, i); } catch(e) {}
+    return i;
+  }
   var qs;
   try { qs = new URL(location.href).searchParams; } catch(e) { qs = null; }
   var pinnedBg = qs && qs.get('bg');
   var pinnedAccent = qs && qs.get('accent');
-  var bg     = (pinnedBg     && BGS.indexOf(pinnedBg)         !== -1) ? pinnedBg     : BGS[Math.floor(Math.random()*BGS.length)];
-  var accent = (pinnedAccent && ACCENTS.indexOf(pinnedAccent) !== -1) ? pinnedAccent : ACCENTS[Math.floor(Math.random()*ACCENTS.length)];
+  var bg     = (pinnedBg     && BGS.indexOf(pinnedBg)         !== -1) ? pinnedBg     : BGS[cycleNext('bg-i', BGS.length)];
+  var accent = (pinnedAccent && ACCENTS.indexOf(pinnedAccent) !== -1) ? pinnedAccent : ACCENTS[cycleNext('accent-i', ACCENTS.length)];
   document.documentElement.setAttribute('data-bg', bg);
   document.documentElement.setAttribute('data-accent', accent);
 })();
@@ -82,22 +91,60 @@
 <div class="bg-layer" aria-hidden="true">
   <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
   <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
-  <svg class="neural-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
-    <g class="nn-edges" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.35">
-      <line x1="120" y1="120" x2="320" y2="80"/><line x1="120" y1="120" x2="320" y2="180"/><line x1="120" y1="120" x2="320" y2="280"/>
-      <line x1="120" y1="240" x2="320" y2="80"/><line x1="120" y1="240" x2="320" y2="180"/><line x1="120" y1="240" x2="320" y2="280"/><line x1="120" y1="240" x2="320" y2="380"/>
-      <line x1="120" y1="360" x2="320" y2="180"/><line x1="120" y1="360" x2="320" y2="280"/><line x1="120" y1="360" x2="320" y2="380"/>
-      <line x1="320" y1="80"  x2="520" y2="160"/><line x1="320" y1="80"  x2="520" y2="320"/>
-      <line x1="320" y1="180" x2="520" y2="160"/><line x1="320" y1="180" x2="520" y2="320"/>
-      <line x1="320" y1="280" x2="520" y2="160"/><line x1="320" y1="280" x2="520" y2="320"/>
-      <line x1="320" y1="380" x2="520" y2="160"/><line x1="320" y1="380" x2="520" y2="320"/>
-      <line x1="520" y1="160" x2="700" y2="240"/><line x1="520" y1="320" x2="700" y2="240"/>
+  <svg class="neural-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <!-- intra-cluster edges (short curves) -->
+    <g class="nn-edges" stroke="currentColor" stroke-width="0.7" fill="none" opacity="0.32">
+      <!-- cluster A -->
+      <path d="M130,150 Q165,130 200,130"/><path d="M200,130 Q240,140 280,170"/>
+      <path d="M130,150 Q140,190 150,230"/><path d="M150,230 Q185,235 220,250"/>
+      <path d="M220,250 Q255,245 295,245"/><path d="M280,170 Q290,205 295,245"/>
+      <path d="M150,230 Q165,275 180,310"/><path d="M180,310 Q215,300 250,300"/>
+      <path d="M220,250 Q235,275 250,300"/>
+      <!-- cluster B -->
+      <path d="M180,540 Q225,530 270,530"/><path d="M270,530 Q305,545 340,565"/>
+      <path d="M145,610 Q180,610 215,615"/><path d="M215,615 Q255,620 295,625"/>
+      <path d="M180,540 Q160,575 145,610"/><path d="M270,530 Q255,575 215,615"/>
+      <path d="M340,565 Q318,595 295,625"/><path d="M215,615 Q210,650 200,690"/>
+      <path d="M295,625 Q295,655 290,685"/><path d="M200,690 Q245,690 290,685"/>
+      <!-- cluster C -->
+      <path d="M800,300 Q835,285 870,280"/><path d="M870,280 Q910,290 950,310"/>
+      <path d="M950,310 Q985,300 1020,300"/><path d="M760,370 Q795,375 830,380"/>
+      <path d="M830,380 Q870,390 905,400"/><path d="M905,400 Q945,395 980,390"/>
+      <path d="M980,390 Q1020,385 1055,380"/><path d="M800,300 Q780,335 760,370"/>
+      <path d="M870,280 Q850,330 830,380"/><path d="M950,310 Q930,355 905,400"/>
+      <path d="M1020,300 Q1000,345 980,390"/><path d="M800,460 Q840,465 880,470"/>
+      <path d="M880,470 Q915,475 950,480"/><path d="M760,370 Q780,415 800,460"/>
+      <path d="M830,380 Q855,425 880,470"/><path d="M905,400 Q927,440 950,480"/>
     </g>
+    <!-- long-range inter-cluster edges (named so we can attach traveling pulses) -->
+    <g class="nn-bridges" stroke="currentColor" stroke-width="0.9" fill="none" opacity="0.22">
+      <path id="br-ac" d="M295,245 Q500,180 800,300"/>
+      <path id="br-ab" d="M250,300 Q220,420 215,615"/>
+      <path id="br-bc" d="M340,565 Q620,520 905,400"/>
+      <path id="br-ac2" d="M280,170 Q650,80 1020,300"/>
+      <path d="M295,625 Q580,720 980,480" opacity="0.6"/>
+    </g>
+    <!-- nodes -->
     <g class="nn-nodes" fill="currentColor">
-      <circle cx="120" cy="120" r="4"/><circle cx="120" cy="240" r="4"/><circle cx="120" cy="360" r="4"/>
-      <circle cx="320" cy="80"  r="4" class="pulse pa"/><circle cx="320" cy="180" r="4"/><circle cx="320" cy="280" r="4" class="pulse pb"/><circle cx="320" cy="380" r="4"/>
-      <circle cx="520" cy="160" r="4"/><circle cx="520" cy="320" r="4" class="pulse pc"/>
-      <circle cx="700" cy="240" r="5"/>
+      <!-- cluster A -->
+      <circle cx="130" cy="150" r="2.5"/><circle cx="200" cy="130" r="2.5"/><circle cx="280" cy="170" r="2.5" class="pulse pa"/>
+      <circle cx="150" cy="230" r="2.5"/><circle cx="220" cy="250" r="3.5"/><circle cx="295" cy="245" r="2.5"/>
+      <circle cx="180" cy="310" r="2.5"/><circle cx="250" cy="300" r="2.5"/>
+      <!-- cluster B -->
+      <circle cx="180" cy="540" r="2.5"/><circle cx="270" cy="530" r="2.5"/><circle cx="340" cy="565" r="2.5" class="pulse pb"/>
+      <circle cx="145" cy="610" r="2.5"/><circle cx="215" cy="615" r="3.5"/><circle cx="295" cy="625" r="2.5"/>
+      <circle cx="200" cy="690" r="2.5"/><circle cx="290" cy="685" r="2.5"/>
+      <!-- cluster C -->
+      <circle cx="800" cy="300" r="2.5"/><circle cx="870" cy="280" r="2.5"/><circle cx="950" cy="310" r="2.5"/><circle cx="1020" cy="300" r="2.5" class="pulse pc"/>
+      <circle cx="760" cy="370" r="2.5"/><circle cx="830" cy="380" r="2.5"/><circle cx="905" cy="400" r="3.5"/><circle cx="980" cy="390" r="2.5"/><circle cx="1055" cy="380" r="2.5"/>
+      <circle cx="800" cy="460" r="2.5"/><circle cx="880" cy="470" r="2.5" class="pulse pd"/><circle cx="950" cy="480" r="2.5"/>
+    </g>
+    <!-- traveling pulses along the bridges -->
+    <g class="nn-travel" fill="currentColor">
+      <circle r="3" opacity="0.85"><animateMotion dur="7s" repeatCount="indefinite" rotate="auto"><mpath href="#br-ac"/></animateMotion></circle>
+      <circle r="2.5" opacity="0.75"><animateMotion dur="9s" begin="2s" repeatCount="indefinite"><mpath href="#br-bc"/></animateMotion></circle>
+      <circle r="2.5" opacity="0.7"><animateMotion dur="8s" begin="4s" repeatCount="indefinite"><mpath href="#br-ab"/></animateMotion></circle>
+      <circle r="3" opacity="0.8"><animateMotion dur="11s" begin="1s" repeatCount="indefinite"><mpath href="#br-ac2"/></animateMotion></circle>
     </g>
   </svg>
 </div>
