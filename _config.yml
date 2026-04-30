@@ -18,6 +18,16 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
+collections:
+  tutorials:
+    output: true
+    permalink: /tutorials/:path/
+
+defaults:
+  - scope: { path: "", type: "tutorials" }
+    values:
+      layout: tutorial
+
 exclude:
   - README.md
   - Gemfile
@@ -25,3 +35,4 @@ exclude:
   - vendor
   - .sass-cache
   - .jekyll-cache
+  - notebooks/.ipynb_checkpoints

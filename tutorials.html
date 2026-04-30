@@ -1,0 +1,31 @@
+---
+layout: default
+title: tutorials
+description: Hands-on Jupyter tutorials on machine learning, neural networks, and physics-informed learning.
+permalink: /tutorials/
+---
+<header class="blog-header">
+  <h1>tutorials</h1>
+  <p class="muted">Notebooks + explainers, the way I wish they had been explained to me. Each tutorial has a runnable Colab/Binder link so you can try it without installing anything.</p>
+</header>
+
+<ul class="post-list tutorial-list">
+{% assign sorted = site.tutorials | sort: "order" %}
+{% for t in sorted %}
+<li class="tutorial-card">
+  <p class="post-meta">
+    <span class="t-level">{{ t.level | default: "intro" }}</span>
+    <span class="status status-{{ t.status | default: 'draft' }}">{{ t.status | default: "draft" }}</span>
+    {% if t.tags %} · {{ t.tags | join: " · " }}{% endif %}
+  </p>
+  <h3>
+    {% if t.status == 'coming-soon' %}
+      <span class="t-pending">{{ t.title }}</span>
+    {% else %}
+      <a href="{{ t.url }}">{{ t.title }}</a>
+    {% endif %}
+  </h3>
+  {% if t.subtitle %}<p class="muted">{{ t.subtitle }}</p>{% endif %}
+</li>
+{% endfor %}
+</ul>
