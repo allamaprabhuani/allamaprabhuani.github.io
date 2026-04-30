@@ -387,10 +387,24 @@ html[data-theme="dark"] .nav-mark {
 html[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
 html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
-@media (max-width: 600px) {
-  .nav-inner { padding: 10px 18px; gap: 10px; flex-wrap: wrap; }
-  .topnav ul { gap: 12px; font-size: 0.78rem; }
-  .nav-cluster { gap: 8px; }
+@media (max-width: 760px) {
+  .nav-inner { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
+  .nav-cluster { gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .topnav ul {
+    gap: 10px;
+    font-size: 0.74rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 4px;
+  }
+  .nav-btn { width: 28px; height: 28px; }
+}
+@media (max-width: 420px) {
+  /* drop secondary items so the row fits on a single line on small phones */
+  .topnav ul li:nth-child(3),  /* papers */
+  .topnav ul li:nth-child(6)   /* about */
+   { display: none; }
+  .topnav ul { gap: 8px; }
 }
 
 main {
