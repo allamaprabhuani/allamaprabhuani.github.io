@@ -852,6 +852,7 @@ ul.links li:first-child::before { content: ""; }
 
 /* ---- Landing mode ---- */
 body.landing main > section:not(.hero) { display: none; }
+body.landing .now-block { display: none; }
 body.landing .hero-photo .photo-caption { animation: pulseCaption 2.4s ease-in-out infinite; }
 @keyframes pulseCaption {
   0%, 100% { opacity: 0.7; }
