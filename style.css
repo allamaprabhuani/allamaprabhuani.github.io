@@ -507,7 +507,7 @@ p { margin: 0 0 14px; }
 .proof-img {
   display: none;
   position: absolute;
-  bottom: calc(100% + 10px);
+  top: calc(100% + 10px);
   left: 0;
   width: 380px;
   max-width: min(85vw, 420px);

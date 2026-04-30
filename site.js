@@ -90,7 +90,9 @@
     }
 
     var visitEl = document.getElementById('visit-count');
-    if (visitEl) {
+    var visitTally = document.querySelector('.visit-tally');
+    if (visitEl && visitTally) {
+      visitTally.style.opacity = '0'; // hide until we know the count
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
       var endpoint = bumped
         ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits'
@@ -98,10 +100,13 @@
       fetch(endpoint)
         .then(function(r){ return r.json(); })
         .then(function(d){
-          if (d && d.count !== undefined) visitEl.textContent = d.count;
-          if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
+          if (d && typeof d.count === 'number') {
+            visitEl.textContent = d.count;
+            visitTally.style.opacity = '';   // restore stylesheet opacity
+            if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
+          }
         })
-        .catch(function(){ visitEl.textContent = '—'; });
+        .catch(function(){ /* keep tally hidden on failure */ });
     }
 
     var tocLinks = document.querySelectorAll('.toc a');
