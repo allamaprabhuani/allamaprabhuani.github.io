@@ -20,15 +20,23 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     "name": "City, St George's, University of London"
   },
   "knowsAbout": ["Computational Mechanics", "Phase-Field Fracture", "Deep Learning", "PyTorch", "Bruhn structural analysis", "GD&T", "Composite materials", "Neural Operators", "Physics-Informed Neural Networks", "Fracture Mechanics"],
+  "worksFor": {
+    "@type": "CollegeOrUniversity",
+    "name": "City, St George's, University of London",
+    "url": "https://www.city.ac.uk/"
+  },
+  "mentor": {
+    "@type": "Person",
+    "name": "Sathiskumar Anusuya Ponnusami",
+    "alternateName": ["Sathiskumar Ponnusami", "S. A. Ponnusami", "Dr Sathiskumar"],
+    "jobTitle": "Senior Lecturer",
+    "url": "https://www.saponnusami.com/",
+    "affiliation": [
+      {"@type": "CollegeOrUniversity", "name": "Queen Mary University of London"},
+      {"@type": "Organization", "name": "CEMS Lab", "url": "https://github.com/CEMS-Lab"}
+    ]
+  },
   "colleague": [
-    {
-      "@type": "Person",
-      "name": "Sathiskumar Anusuya Ponnusami",
-      "alternateName": ["Sathiskumar Ponnusami", "S. A. Ponnusami"],
-      "jobTitle": "Senior Lecturer",
-      "url": "https://www.saponnusami.com/",
-      "affiliation": {"@type": "CollegeOrUniversity", "name": "City, St George's, University of London"}
-    },
     {
       "@type": "Person",
       "name": "Jean-François Molinari",
@@ -46,6 +54,33 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     "https://www.linkedin.com/in/allamaprabhu-ani",
     "https://allamaprabhuani.github.io/synacad/"
   ]
+}
+</script>
+
+<!-- ScholarlyArticle schema for the EFM most-downloaded review paper -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Machine learning for computational fracture and damage mechanics: status and perspectives",
+  "headline": "Machine learning for computational fracture and damage mechanics: status and perspectives",
+  "datePublished": "2026-02-07",
+  "isPartOf": {
+    "@type": "Periodical",
+    "name": "Engineering Fracture Mechanics",
+    "issn": "0013-7944",
+    "publisher": {"@type": "Organization", "name": "Elsevier"}
+  },
+  "author": [
+    {"@type": "Person", "name": "Allamaprabhu S Ani", "url": "https://allamaprabhuani.github.io/"},
+    {"@type": "Person", "name": "R. Nakka"},
+    {"@type": "Person", "name": "G. Subhash"},
+    {"@type": "Person", "name": "Jean-François Molinari", "url": "https://www.epfl.ch/labs/lsms/"},
+    {"@type": "Person", "name": "Sathiskumar Anusuya Ponnusami", "url": "https://www.saponnusami.com/"}
+  ],
+  "url": "https://www.sciencedirect.com/science/article/pii/S0013794425009798",
+  "identifier": "PII:S0013794425009798",
+  "keywords": "machine learning, fracture mechanics, damage mechanics, neural networks, review"
 }
 </script>
 
@@ -69,7 +104,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     <div class="hero-text">
       <h1>Allamaprabhu Ani</h1>
       <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
-      <p class="tag">PhD researcher in computational mechanics &amp; deep learning at <a href="https://www.city.ac.uk/">City, St George's</a>, with <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> at <a href="https://github.com/CEMS-Lab">CEMS Lab</a>. Co-author of the field's <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">first comprehensive review</a> of ML for fracture mechanics (<i>EFM</i>, Dec 2025) &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in <i>EFM</i><img class="proof-img" src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</p>
+      <p class="tag">PhD researcher in computational mechanics &amp; deep learning at <a href="https://www.city.ac.uk/">City, St George's</a>, with <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> of the <a href="https://github.com/CEMS-Lab">CEMS Lab</a> (Queen Mary). Co-author of the field's <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">first comprehensive review</a> of ML for fracture mechanics (<i>EFM</i>, Dec 2025) &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in <i>EFM</i><img class="proof-img" data-src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</p>
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
     <div class="hero-photo">
@@ -147,7 +182,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     <li>
       <b>A. S. Ani</b>, R. Nakka, G. Subhash, J.-F. Molinari, S. A. Ponnusami.
       <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">Machine learning for computational fracture and damage mechanics: status and perspectives</a>.
-      <i>Engineering Fracture Mechanics</i>, Dec 2025. <span class="muted">The field's first comprehensive review &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in the journal<img class="proof-img" src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</span>
+      <i>Engineering Fracture Mechanics</i>, Dec 2025. <span class="muted">The field's first comprehensive review &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in the journal<img class="proof-img" data-src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</span>
     </li>
     <li>
       <b>A. S. Ani</b>, A. B. Deoghare. Leveraging machine learning for enhanced fatigue life prediction in aluminium alloys. <i>Lecture Notes in Mechanical Engineering</i>, Dec 2024.

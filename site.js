@@ -1,10 +1,20 @@
 (function(){
-  var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
-  var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel','slate','navy','graphite'];
+  // Read pools from the bootstrap script (single source of truth).
+  var C = window.SITE_CONFIG || { BGS: [], ACCENTS: [], CURSORS: [] };
+  var BGS = C.BGS, ACCENTS = C.ACCENTS;
+  var INTERACTIVE_SELECTOR = 'a, button, .photo, .upvote, .nav-btn, .btn-action, [tabindex="0"]';
 
   function reveal(){ document.body.classList.remove('landing'); }
 
+  function persistIndex(qsKey, value, pool) {
+    try {
+      var idx = pool.indexOf(value);
+      if (idx >= 0) localStorage.setItem(qsKey + '-i-' + (C.KEY_VERSION || 'v1'), idx);
+    } catch(e) {}
+  }
+
   document.addEventListener('DOMContentLoaded', function(){
+    /* ---- Landing-gate reveal ---- */
     var photo = document.querySelector('.hero-photo .photo');
     if (photo) {
       photo.addEventListener('click', function(e){
@@ -19,20 +29,44 @@
       });
     }
     document.querySelectorAll('.topnav a, a[href^="#"]').forEach(function(a){
-      a.addEventListener('click', function(){ reveal(); });
+      a.addEventListener('click', reveal);
     });
 
-    function revealOnScroll(){
-      if (!document.body.classList.contains('landing')) return;
-      reveal();
+    function revealOnce(){
+      if (document.body.classList.contains('landing')) reveal();
     }
-    window.addEventListener('wheel',     revealOnScroll, { passive: true, once: true });
-    window.addEventListener('touchmove', revealOnScroll, { passive: true, once: true });
+    window.addEventListener('wheel',     revealOnce, { passive: true, once: true });
+    window.addEventListener('touchmove', revealOnce, { passive: true, once: true });
     window.addEventListener('keydown', function(e){
       if (!document.body.classList.contains('landing')) return;
-      if (['ArrowDown','PageDown','End',' ','Spacebar'].indexOf(e.key) !== -1) reveal();
+      if (['ArrowDown','PageDown','End',' ','Spacebar','Enter'].indexOf(e.key) !== -1) reveal();
+    });
+    // a11y: any keyboard focus into the page also reveals
+    window.addEventListener('focusin', function(e){
+      if (document.body.classList.contains('landing') && e.target !== photo) reveal();
     });
 
+    /* ---- Custom site cursor (desktop only, respects reduced motion) ---- */
+    var prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var coarse = window.matchMedia('(pointer: coarse)').matches;
+    if (!prm && !coarse) {
+      var cursor = document.createElement('div');
+      cursor.className = 'site-cursor';
+      document.body.appendChild(cursor);
+      var x = 0, y = 0, raf = null;
+      function paint(){ cursor.style.left = x + 'px'; cursor.style.top = y + 'px'; raf = null; }
+      document.addEventListener('mousemove', function(e){
+        x = e.clientX; y = e.clientY;
+        cursor.classList.add('active');
+        if (!raf) raf = requestAnimationFrame(paint);
+      }, { passive: true });
+      document.addEventListener('mouseleave', function(){ cursor.classList.remove('active'); });
+      function isInteractive(t){ return t.closest && t.closest(INTERACTIVE_SELECTOR); }
+      document.addEventListener('mouseover', function(e){ if (isInteractive(e.target)) cursor.classList.add('hover'); });
+      document.addEventListener('mouseout',  function(e){ if (isInteractive(e.target)) cursor.classList.remove('hover'); });
+    }
+
+    /* ---- Theme toggle ---- */
     var themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
       themeBtn.addEventListener('click', function(){
@@ -43,56 +77,57 @@
       });
     }
 
-    // ---- Custom site cursor (desktop only, respects reduced motion) ----
-    var prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var coarse = window.matchMedia('(pointer: coarse)').matches;
-    if (!prm && !coarse) {
-      var cursor = document.createElement('div');
-      cursor.className = 'site-cursor';
-      document.body.appendChild(cursor);
-      var x = 0, y = 0, raf = null;
-      function paint(){
-        cursor.style.left = x + 'px';
-        cursor.style.top  = y + 'px';
-        raf = null;
-      }
-      document.addEventListener('mousemove', function(e){
-        x = e.clientX; y = e.clientY;
-        cursor.classList.add('active');
-        if (!raf) raf = requestAnimationFrame(paint);
-      }, { passive: true });
-      document.addEventListener('mouseleave', function(){ cursor.classList.remove('active'); });
-      document.addEventListener('mouseover', function(e){
-        if (e.target.closest && e.target.closest('a, button, .photo, .upvote, .nav-btn')) cursor.classList.add('hover');
-      });
-      document.addEventListener('mouseout', function(e){
-        if (e.target.closest && e.target.closest('a, button, .photo, .upvote, .nav-btn')) cursor.classList.remove('hover');
-      });
-    }
-
-    // shuffle button now steps to the next bg + accent in sequence
-    // (matches the per-refresh cycling behaviour, but without reload)
+    /* ---- Shuffle: step bg + accent + cursor each click (matches refresh cycling) ---- */
     var shuffleBtn = document.getElementById('shuffle-bg');
     if (shuffleBtn) {
       shuffleBtn.addEventListener('click', function(){
-        var curBg = document.documentElement.getAttribute('data-bg');
-        var bi = BGS.indexOf(curBg); if (bi < 0) bi = -1;
-        var nextBg = BGS[(bi + 1) % BGS.length];
-        document.documentElement.setAttribute('data-bg', nextBg);
-        try { localStorage.setItem('bg-i', BGS.indexOf(nextBg)); } catch(e) {}
-
-        var curA = document.documentElement.getAttribute('data-accent');
-        var ai = ACCENTS.indexOf(curA); if (ai < 0) ai = -1;
-        var nextA = ACCENTS[(ai + 1) % ACCENTS.length];
-        document.documentElement.setAttribute('data-accent', nextA);
-        try { localStorage.setItem('accent-i', ACCENTS.indexOf(nextA)); } catch(e) {}
+        function step(attr, pool, qsKey) {
+          var i = pool.indexOf(document.documentElement.getAttribute(attr));
+          var next = pool[(i + 1) % pool.length];
+          document.documentElement.setAttribute(attr, next);
+          persistIndex(qsKey, next, pool);
+        }
+        step('data-bg',     BGS,     'bg');
+        step('data-accent', ACCENTS, 'accent');
+        step('data-cursor', C.CURSORS, 'cursor');
       });
     }
 
+    /* ---- Inject neural-net SVG only when active (and remove when not) ---- */
+    var bgLayer = document.querySelector('.bg-layer');
+    function syncNeuralNet() {
+      if (!bgLayer) return;
+      var on = document.documentElement.getAttribute('data-bg') === 'neural-net';
+      var existing = bgLayer.querySelector('.neural-svg');
+      if (on && !existing) {
+        var t = document.getElementById('neural-net-template');
+        if (t) bgLayer.appendChild(t.content.cloneNode(true));
+      } else if (!on && existing) {
+        existing.remove();
+      }
+    }
+    syncNeuralNet();
+    new MutationObserver(syncNeuralNet).observe(document.documentElement, { attributes: true, attributeFilter: ['data-bg'] });
+
+    /* ---- Visit counter (cached + hidden on failure) ---- */
     var visitEl = document.getElementById('visit-count');
     var visitTally = document.querySelector('.visit-tally');
     if (visitEl && visitTally) {
-      visitTally.style.opacity = '0'; // hide until we know the count
+      var CACHE_KEY = 'visit-count-cache';
+      var TTL_MS = 6 * 60 * 60 * 1000;  // 6 hours
+      var cached = null;
+      try {
+        var raw = localStorage.getItem(CACHE_KEY);
+        if (raw) {
+          var obj = JSON.parse(raw);
+          if (obj && typeof obj.count === 'number' && (Date.now() - obj.t) < TTL_MS) cached = obj.count;
+        }
+      } catch(e) {}
+      if (cached !== null) {
+        visitEl.textContent = cached;
+      } else {
+        visitTally.style.opacity = '0';
+      }
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
       var endpoint = bumped
         ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits'
@@ -102,19 +137,19 @@
         .then(function(d){
           if (d && typeof d.count === 'number') {
             visitEl.textContent = d.count;
-            visitTally.style.opacity = '';   // restore stylesheet opacity
+            visitTally.style.opacity = '';
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ count: d.count, t: Date.now() })); } catch(e) {}
             if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
           }
         })
-        .catch(function(){ /* keep tally hidden on failure */ });
+        .catch(function(){ /* if no cache, tally stays hidden */ });
     }
 
+    /* ---- Sidebar TOC scrollspy ---- */
     var tocLinks = document.querySelectorAll('.toc a');
     if (tocLinks.length) {
       var tocMap = {};
-      tocLinks.forEach(function(a, i){
-        tocMap[a.getAttribute('href').slice(1)] = { link: a, index: i };
-      });
+      tocLinks.forEach(function(a, i){ tocMap[a.getAttribute('href').slice(1)] = { link: a, index: i }; });
       var sections = document.querySelectorAll('main > section[id]');
       var progressEl = document.getElementById('toc-progress');
       var totalSections = tocLinks.length;
@@ -134,6 +169,7 @@
       }
     }
 
+    /* ---- Upvote buttons (rollback UI on API failure) ---- */
     var ns = 'allamaprabhu-bucket';
     document.querySelectorAll('.upvote').forEach(function(btn){
       var key = btn.getAttribute('data-key');
@@ -143,20 +179,48 @@
 
       fetch('https://api.counterapi.dev/v1/' + ns + '/' + key)
         .then(function(r){ return r.json(); })
-        .then(function(d){ if (d && d.count !== undefined) countEl.textContent = d.count; })
+        .then(function(d){ if (d && typeof d.count === 'number') countEl.textContent = d.count; })
         .catch(function(){ countEl.textContent = '—'; });
 
       btn.addEventListener('click', function(){
-        if (btn.classList.contains('voted')) return;
-        btn.classList.add('voted');
-        localStorage.setItem('voted-' + key, '1');
-        var current = parseInt(countEl.textContent, 10);
+        if (btn.classList.contains('voted') || btn.disabled) return;
+        btn.disabled = true;
+        var prevText = countEl.textContent;
+        var current = parseInt(prevText, 10);
         if (!isNaN(current)) countEl.textContent = current + 1;
+        btn.classList.add('voted');
+
         fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up')
           .then(function(r){ return r.json(); })
-          .then(function(d){ if (d && d.count !== undefined) countEl.textContent = d.count; })
-          .catch(function(){});
+          .then(function(d){
+            if (d && typeof d.count === 'number') {
+              countEl.textContent = d.count;
+              localStorage.setItem('voted-' + key, '1');
+            } else {
+              throw new Error('bad response');
+            }
+          })
+          .catch(function(){
+            // rollback: restore old count, allow retry, don't mark voted
+            countEl.textContent = prevText;
+            btn.classList.remove('voted');
+            btn.disabled = false;
+          });
       });
+    });
+
+    /* ---- Defer the heavy proof-img screenshot until first hover ---- */
+    /* HTML ships the URL as data-src; we promote to src on first interaction. */
+    document.querySelectorAll('.proof-hover').forEach(function(span){
+      var img = span.querySelector('.proof-img[data-src]');
+      if (!img) return;
+      function load(){
+        if (img.getAttribute('src')) return;
+        img.setAttribute('src', img.getAttribute('data-src'));
+      }
+      span.addEventListener('mouseenter', load, { once: true });
+      span.addEventListener('focusin',    load, { once: true });
+      span.addEventListener('touchstart', load, { once: true, passive: true });
     });
   });
 })();

@@ -1,3 +1,9 @@
+/* ---- Type stack tokens ---- */
+:root {
+  --font-mono: 'Courier Prime', 'Courier New', Courier, monospace;
+  --font-kannada: 'Noto Sans Kannada', var(--font-mono);
+}
+
 /* ---- Theme tokens ---- */
 :root {
   --bg: #fbfaf7;
@@ -51,10 +57,38 @@ html[data-theme="dark"] {
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+/* a11y: visible focus ring everywhere (custom cursor doesn't track keyboard) */
+*:focus { outline: none; }
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* skip-to-content link for keyboard / screen reader users */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 8px 14px;
+  border-radius: 4px;
+  z-index: 1000;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 12px;
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-feature-settings: "ss01", "cv11";
   line-height: 1.65;
   font-size: 17px;
@@ -314,7 +348,7 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   color: var(--ink);
   font-size: 1rem;
@@ -360,7 +394,7 @@ html[data-theme="dark"] .nav-mark {
   display: flex; gap: 18px;
   list-style: none; padding: 0; margin: 0;
   font-size: 0.84rem;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   text-transform: lowercase;
 }
 .topnav ul a { color: var(--muted); border-bottom: none; }
@@ -426,14 +460,14 @@ a {
 a:hover { border-bottom-color: var(--accent); }
 
 h1, h2, h3 {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-weight: 600;
   letter-spacing: -0.012em;
   line-height: 1.2;
 }
 h1 { font-size: 2.4rem; margin: 4px 0 14px; }
 h2 {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 1.05rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -495,7 +529,7 @@ p { margin: 0 0 14px; }
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   color: var(--muted);
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-weight: 600;
   font-size: 3rem;
   z-index: 0;
@@ -504,7 +538,7 @@ p { margin: 0 0 14px; }
 .hero-photo .photo-caption {
   display: block;
   margin-top: 10px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--muted);
   letter-spacing: 0.08em;
@@ -518,17 +552,8 @@ body:not(.landing) .hero-photo .photo-caption {
 
 .hero h1 { margin-top: 0; }
 .hero .tag { font-size: 1.06rem; line-height: 1.6; color: var(--ink); max-width: 52ch; }
-.hero .lede {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-  font-size: 1.32rem;
-  font-style: italic;
-  color: var(--ink);
-  line-height: 1.45;
-  margin: 14px 0 18px;
-  max-width: 50ch;
-}
 .kannada {
-  font-family: 'Noto Sans Kannada', 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: 'Noto Sans Kannada', var(--font-mono);
   font-size: 1.1rem;
   color: var(--muted);
   margin: -6px 0 18px;
@@ -565,7 +590,7 @@ body:not(.landing) .hero-photo .photo-caption {
   .proof-img { left: 50%; transform: translateX(-50%); }
 }
 .proof-stamp {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.74em;
   color: var(--muted);
   letter-spacing: 0.02em;
@@ -582,7 +607,7 @@ body:not(.landing) .hero-photo .photo-caption {
   position: relative;
 }
 .latest-label {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 1.18rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -625,7 +650,7 @@ body:not(.landing) .hero-photo .photo-caption {
   font-size: 0.97rem;
 }
 .latest-posts .post-date {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--accent);
   min-width: 96px;
@@ -679,7 +704,7 @@ body:not(.landing) .hero-photo .photo-caption {
   border-radius: 0 6px 6px 0;
 }
 .now-label {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -720,7 +745,7 @@ ol.papers li { counter-increment: paper; padding-left: 32px; position: relative;
 ol.papers li::before {
   content: counter(paper, decimal-leading-zero);
   position: absolute; left: 0; top: 16px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   color: var(--accent);
   font-size: 0.78rem;
   font-weight: 500;
@@ -743,7 +768,7 @@ ul.mottos li {
   padding: 10px 18px;
   border-left: 2px solid var(--rule);
   margin-bottom: 6px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-style: italic;
   color: var(--ink);
   font-size: 1.04rem;
@@ -771,9 +796,18 @@ ul.mottos li:hover { border-left-color: var(--accent); padding-left: 22px; }
   justify-content: space-between;
   gap: 24px;
 }
-.footer-col h2 { margin: 0 0 12px; border-bottom: none; padding-bottom: 0; }
+.footer-col h2 {
+  margin: 0 0 10px;
+  border-bottom: none;
+  padding-bottom: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--muted);
+}
 .footer-note {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--muted);
   margin: 0;
@@ -789,7 +823,7 @@ ul.links li:first-child::before { content: ""; }
 .brag-aside { display: block; margin-top: 4px; font-size: 0.86rem; color: var(--muted); }
 .roadmap-target {
   display: inline-block;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   color: var(--accent);
@@ -812,7 +846,7 @@ ul.links li:first-child::before { content: ""; }
   cursor: pointer;
   font: inherit;
   font-size: 0.82rem;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
   flex-shrink: 0;
   margin-top: 2px;
@@ -833,7 +867,7 @@ ul.links li:first-child::before { content: ""; }
   position: fixed;
   bottom: 14px;
   right: 16px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 700;
   color: var(--accent);
@@ -871,7 +905,7 @@ body:not(.landing) main > section:not(.hero) { animation: revealFade 0.45s ease-
   top: 50%;
   transform: translateY(-50%);
   z-index: 4;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--muted);
   display: none;
@@ -965,7 +999,7 @@ body:not(.landing) .toc { display: block; }
 .post-list h3 a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 .post-meta {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--muted);
   letter-spacing: 0.04em;
@@ -1012,7 +1046,7 @@ body:not(.landing) .toc { display: block; }
 /* ---- Tutorials ---- */
 .tutorial-list .tutorial-card { padding: 18px 0; }
 .t-level {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1024,7 +1058,7 @@ body:not(.landing) .toc { display: block; }
   display: inline-block;
   padding: 1px 8px;
   border-radius: 999px;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1045,7 +1079,7 @@ body:not(.landing) .toc { display: block; }
   border-radius: 6px;
   border: 1px solid var(--rule);
   color: var(--ink);
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   background: var(--card);
   text-decoration: none;
@@ -1070,7 +1104,7 @@ body:not(.landing) .toc { display: block; }
   overflow: hidden;
 }
 .reel-label {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-size: 0.86rem;
   color: var(--muted);
   letter-spacing: 0.04em;
@@ -1084,7 +1118,7 @@ body:not(.landing) .toc { display: block; }
   position: relative;
 }
 .reel-word {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--accent);
@@ -1133,7 +1167,7 @@ body:not(.landing) .toc { display: block; }
   color: var(--accent);
   display: flex; align-items: center; justify-content: center;
   font-size: 1.6rem;
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   position: relative;
   transition: transform .25s ease;
 }
@@ -1158,7 +1192,7 @@ body:not(.landing) .toc { display: block; }
   to   { transform: rotate(360deg); }
 }
 .flow-label {
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.92rem;
   margin: 6px 0 0;
@@ -1175,7 +1209,7 @@ body:not(.landing) .toc { display: block; }
   align-self: center;
   font-size: 1.4rem;
   color: var(--muted);
-  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-family: var(--font-mono);
 }
 @media (max-width: 600px) {
   .flow-diagram { flex-direction: column; gap: 8px; }
@@ -1193,7 +1227,6 @@ body:not(.landing) .toc { display: block; }
   .hero-photo .photo { width: 100px; height: 100px; }
   .hero-photo .photo-fallback { font-size: 2.2rem; }
   h1 { font-size: 1.85rem; }
-  .hero .lede { font-size: 1.15rem; }
   body { font-size: 16px; }
 }
 

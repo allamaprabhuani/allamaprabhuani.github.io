@@ -17,78 +17,66 @@
 <!-- Inline theme + background bootstrap (runs before CSS paint) -->
 <script>
 (function(){
-  var TZ_LAT = {
-    'Europe/London':51,'Europe/Dublin':53,'Europe/Paris':48,'Europe/Berlin':52,'Europe/Madrid':40,
-    'Europe/Rome':41,'Europe/Amsterdam':52,'Europe/Stockholm':59,'Europe/Helsinki':60,'Europe/Athens':37,
-    'Europe/Moscow':55,'Europe/Istanbul':41,'Asia/Kolkata':20,'Asia/Calcutta':22,'Asia/Karachi':24,
-    'Asia/Dubai':25,'Asia/Tehran':35,'Asia/Tokyo':35,'Asia/Seoul':37,'Asia/Shanghai':31,
-    'Asia/Hong_Kong':22,'Asia/Singapore':1,'Asia/Bangkok':13,'Asia/Jakarta':-6,
-    'Australia/Sydney':-33,'Australia/Melbourne':-37,'Australia/Perth':-31,'Pacific/Auckland':-36,
-    'America/New_York':40,'America/Toronto':43,'America/Chicago':41,'America/Denver':39,
-    'America/Los_Angeles':34,'America/Vancouver':49,'America/Mexico_City':19,'America/Sao_Paulo':-23,
-    'America/Buenos_Aires':-34,'Africa/Cairo':30,'Africa/Lagos':6,'Africa/Johannesburg':-26
+  // Single source of truth for cycling pools. site.js reads window.SITE_CONFIG.
+  // KEY_VERSION suffixes the localStorage indices so future array edits don't
+  // leave returning visitors stuck on stale slots — bump KEY_VERSION on change.
+  window.SITE_CONFIG = {
+    BGS:     ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'],
+    ACCENTS: ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel','slate','navy','graphite'],
+    CURSORS: ['circle','dot','crosshair','diamond'],
+    KEY_VERSION: 'v1'
   };
-  function isAfterSunset() {
-    try {
-      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      var lat = TZ_LAT[tz] != null ? TZ_LAT[tz] : 40;
-      var now = new Date();
-      var doy = Math.floor((now - new Date(now.getFullYear(),0,0))/86400000);
-      var dec = 23.45 * Math.sin(2*Math.PI*(284+doy)/365) * Math.PI/180;
-      var latR = lat * Math.PI/180;
-      var cosH = -Math.tan(latR) * Math.tan(dec);
-      var H = cosH > 1 ? 0 : cosH < -1 ? Math.PI : Math.acos(cosH);
-      var dayH = H * 24 / Math.PI;
-      var sunrise = 12 - dayH/2, sunset = 12 + dayH/2;
-      var hr = now.getHours() + now.getMinutes()/60;
-      return hr < sunrise || hr > sunset;
-    } catch(e) { return false; }
-  }
+  var C = window.SITE_CONFIG;
+
+  // Theme: localStorage override > simple local-time sunset (after 19:00 / before 7:00).
+  // Approximate to ±90 min of true sunset, but no permission prompt and no lookup.
   var theme;
   try { theme = localStorage.getItem('theme'); } catch(e) {}
   if (theme !== 'light' && theme !== 'dark') {
-    theme = isAfterSunset() ? 'dark' : 'light';
+    var h = new Date().getHours();
+    theme = (h < 7 || h >= 19) ? 'dark' : 'light';
   }
   document.documentElement.setAttribute('data-theme', theme);
 
-  // bg + accent: first visit is random, every refresh after that cycles to the next.
-  // ?bg=/?accent= URL params still pin a specific value.
-  var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
-  var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel','slate','navy','graphite'];
-  var CURSORS = ['circle','dot','crosshair','diamond'];
   function cycleNext(key, len) {
+    var fullKey = key + '-' + C.KEY_VERSION;
     var i;
-    try { i = parseInt(localStorage.getItem(key), 10); } catch(e) {}
+    try { i = parseInt(localStorage.getItem(fullKey), 10); } catch(e) {}
     if (isNaN(i) || i < 0 || i >= len) i = Math.floor(Math.random() * len);
     else i = (i + 1) % len;
-    try { localStorage.setItem(key, i); } catch(e) {}
+    try { localStorage.setItem(fullKey, i); } catch(e) {}
     return i;
   }
   var qs;
   try { qs = new URL(location.href).searchParams; } catch(e) { qs = null; }
-  var pinnedBg = qs && qs.get('bg');
-  var pinnedAccent = qs && qs.get('accent');
-  var pinnedCursor = qs && qs.get('cursor');
-  var bg     = (pinnedBg     && BGS.indexOf(pinnedBg)         !== -1) ? pinnedBg     : BGS[cycleNext('bg-i', BGS.length)];
-  var accent = (pinnedAccent && ACCENTS.indexOf(pinnedAccent) !== -1) ? pinnedAccent : ACCENTS[cycleNext('accent-i', ACCENTS.length)];
-  var cur    = (pinnedCursor && CURSORS.indexOf(pinnedCursor) !== -1) ? pinnedCursor : CURSORS[cycleNext('cursor-i', CURSORS.length)];
-  document.documentElement.setAttribute('data-bg', bg);
-  document.documentElement.setAttribute('data-accent', accent);
-  document.documentElement.setAttribute('data-cursor', cur);
+  function pickPool(name, qsKey) {
+    var pool = C[name];
+    var pinned = qs && qs.get(qsKey);
+    if (pinned && pool.indexOf(pinned) !== -1) return pinned;
+    return pool[cycleNext(qsKey + '-i', pool.length)];
+  }
+  document.documentElement.setAttribute('data-bg',     pickPool('BGS',     'bg'));
+  document.documentElement.setAttribute('data-accent', pickPool('ACCENTS', 'accent'));
+  document.documentElement.setAttribute('data-cursor', pickPool('CURSORS', 'cursor'));
 })();
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
+<!-- self-hosted fonts (Courier Prime + Noto Sans Kannada), no external CDN -->
+<link rel="preload" href="/assets/fonts/u-450q2lgwslOqpF_6gQ8kELawFpWs39pvk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/style.css">
 {% seo title=false %}
 {% feed_meta %}
 </head>
 <body{% if page.landing %} class="landing"{% endif %}>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="bg-layer" aria-hidden="true">
   <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
   <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
+</div>
+
+<!-- neural-net SVG lives in a <template>; site.js injects when data-bg="neural-net" -->
+<template id="neural-net-template">
   <svg class="neural-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
     <!-- intra-cluster edges (short curves) -->
     <g class="nn-edges" stroke="currentColor" stroke-width="0.7" fill="none" opacity="0.32">
@@ -145,7 +133,7 @@
       <circle r="3" opacity="0.8"><animateMotion dur="11s" begin="1s" repeatCount="indefinite"><mpath xlink:href="#br-ac2" href="#br-ac2"/></animateMotion></circle>
     </g>
   </svg>
-</div>
+</template>
 
 <nav class="topnav">
   <div class="nav-inner">
@@ -174,7 +162,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
   {{ content }}
 </main>
 
