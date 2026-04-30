@@ -200,26 +200,90 @@ html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
   50%      { opacity: 1;   r: 6; }
 }
 
-/* ---- Custom site cursor ---- */
+/* ---- Custom site cursor (4 variants, randomised per refresh) ---- */
 .site-cursor {
   position: fixed; top: 0; left: 0;
-  width: 18px; height: 18px;
-  border: 1.5px solid var(--accent);
-  border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: width .18s ease, height .18s ease, background-color .18s ease, opacity .2s ease;
   opacity: 0;
+  transition: width .18s ease, height .18s ease, background-color .18s ease,
+              border-color .18s ease, opacity .2s ease, transform .25s ease;
+  will-change: transform, left, top;
 }
-.site-cursor.active { opacity: 0.9; }
-.site-cursor.hover {
+.site-cursor.active { opacity: 0.92; }
+
+/* circle (default) */
+[data-cursor="circle"] .site-cursor {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+}
+[data-cursor="circle"] .site-cursor.hover {
   width: 32px; height: 32px;
   background: var(--accent-soft);
-  border-color: var(--accent);
+}
+
+/* dot */
+[data-cursor="dot"] .site-cursor {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 var(--accent-soft);
+}
+[data-cursor="dot"] .site-cursor.hover {
+  width: 6px; height: 6px;
+  box-shadow: 0 0 0 12px var(--accent-soft);
+}
+
+/* crosshair */
+[data-cursor="crosshair"] .site-cursor {
+  width: 20px; height: 20px;
+  background: transparent;
+  border: none;
+}
+[data-cursor="crosshair"] .site-cursor::before,
+[data-cursor="crosshair"] .site-cursor::after {
+  content: ""; position: absolute;
+  background: var(--accent);
+  top: 50%; left: 50%;
+}
+[data-cursor="crosshair"] .site-cursor::before {
+  width: 20px; height: 1.5px;
+  transform: translate(-50%, -50%);
+}
+[data-cursor="crosshair"] .site-cursor::after {
+  width: 1.5px; height: 20px;
+  transform: translate(-50%, -50%);
+}
+[data-cursor="crosshair"] .site-cursor.hover {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.4);
+}
+
+/* diamond */
+[data-cursor="diamond"] .site-cursor {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  border-radius: 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+[data-cursor="diamond"] .site-cursor.hover {
+  width: 22px; height: 22px;
+  background: var(--accent);
+}
+
+/* hide native cursor on fine-pointer devices when our custom cursor is active */
+@media (pointer: fine) {
+  body, a, button, input, label, textarea, select,
+  .photo, .upvote, .nav-btn, .btn-action {
+    cursor: none;
+  }
 }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
   .site-cursor { display: none !important; }
+  body, a, button, input, label, textarea, select,
+  .photo, .upvote, .nav-btn, .btn-action { cursor: auto; }
 }
 
 /* ---- Top navigation ---- */

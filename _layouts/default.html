@@ -61,6 +61,7 @@
   // ?bg=/?accent= URL params still pin a specific value.
   var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
   var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel'];
+  var CURSORS = ['circle','dot','crosshair','diamond'];
   function cycleNext(key, len) {
     var i;
     try { i = parseInt(localStorage.getItem(key), 10); } catch(e) {}
@@ -73,10 +74,13 @@
   try { qs = new URL(location.href).searchParams; } catch(e) { qs = null; }
   var pinnedBg = qs && qs.get('bg');
   var pinnedAccent = qs && qs.get('accent');
+  var pinnedCursor = qs && qs.get('cursor');
   var bg     = (pinnedBg     && BGS.indexOf(pinnedBg)         !== -1) ? pinnedBg     : BGS[cycleNext('bg-i', BGS.length)];
   var accent = (pinnedAccent && ACCENTS.indexOf(pinnedAccent) !== -1) ? pinnedAccent : ACCENTS[cycleNext('accent-i', ACCENTS.length)];
+  var cur    = (pinnedCursor && CURSORS.indexOf(pinnedCursor) !== -1) ? pinnedCursor : CURSORS[cycleNext('cursor-i', CURSORS.length)];
   document.documentElement.setAttribute('data-bg', bg);
   document.documentElement.setAttribute('data-accent', accent);
+  document.documentElement.setAttribute('data-cursor', cur);
 })();
 </script>
 
