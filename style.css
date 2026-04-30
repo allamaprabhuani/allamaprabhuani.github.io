@@ -5,7 +5,6 @@
   --muted: #6e6a62;
   --rule: #e6e1d6;
   --accent: #6b2c3a;
-  --card: #f3eee3;
   --shadow: 0 6px 22px rgba(28, 22, 14, 0.06);
 }
 html[data-theme="dark"] {
@@ -14,7 +13,6 @@ html[data-theme="dark"] {
   --muted: #8c867a;
   --rule: #2a2620;
   --accent: #b888bd;
-  --card: #1d1a14;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
 }
 
@@ -39,6 +37,10 @@ html {
   --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
   --bg-decor-1: color-mix(in srgb, var(--accent) 10%, transparent);
   --bg-decor-2: color-mix(in srgb, var(--accent) 6%, transparent);
+  --card: color-mix(in srgb, var(--accent) 8%, var(--bg));
+}
+html[data-theme="dark"] {
+  --card: color-mix(in srgb, var(--accent) 14%, var(--bg));
 }
 
 * { box-sizing: border-box; }
