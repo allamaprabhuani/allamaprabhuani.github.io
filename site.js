@@ -1,6 +1,6 @@
 (function(){
   var BGS = ['aurora','grid','contours','constellation','sunrise','linen','shooting-stars','neural-net'];
-  var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel'];
+  var ACCENTS = ['wine','burgundy-rose','magenta','eggplant','forest','olive','steel','slate','navy','graphite'];
 
   function reveal(){ document.body.classList.remove('landing'); }
 

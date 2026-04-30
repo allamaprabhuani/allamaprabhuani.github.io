@@ -31,6 +31,12 @@ html[data-accent="olive"]                           { --accent: #6b6f3a; }
 html[data-theme="dark"][data-accent="olive"]        { --accent: #c4c87a; }
 html[data-accent="steel"]                           { --accent: #3a5775; }
 html[data-theme="dark"][data-accent="steel"]        { --accent: #9bc0e0; }
+html[data-accent="slate"]                           { --accent: #4a5b73; }
+html[data-theme="dark"][data-accent="slate"]        { --accent: #a8b8cf; }
+html[data-accent="navy"]                            { --accent: #26426e; }
+html[data-theme="dark"][data-accent="navy"]         { --accent: #7a9cd4; }
+html[data-accent="graphite"]                        { --accent: #3a3a3a; }
+html[data-theme="dark"][data-accent="graphite"]     { --accent: #c4c4c0; }
 
 /* Derived tokens (computed from --accent so they stay in sync) */
 html {
