@@ -516,6 +516,13 @@ p { margin: 0 0 14px; }
 @media (max-width: 640px) {
   .proof-img { left: 50%; transform: translateX(-50%); }
 }
+.proof-stamp {
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 0.74em;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
 
 /* ---- Latest-from-blog (homepage, between intro and now-block) ---- */
 .latest-posts {

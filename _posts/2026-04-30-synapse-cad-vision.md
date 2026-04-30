@@ -89,4 +89,4 @@ parts — [get in touch](/#elsewhere).
 
 ---
 
-<p class="muted">Cross-posted on <a href="https://allamaprabhuani.github.io/synacad/">the SynaCAD site</a>.</p>
+<p class="muted">More about SynaCAD &rarr; <a href="https://allamaprabhuani.github.io/synacad/">the project site</a>.</p>
