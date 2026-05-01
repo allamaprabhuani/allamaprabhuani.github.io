@@ -850,15 +850,6 @@ ol.papers li .paper-meta {
   margin-top: 10px;
   min-height: 28px;
 }
-.dimensions-wrap { display: inline-flex; align-items: center; line-height: 1; }
-.dimensions-wrap .__dimensions_badge_embed__,
-.dimensions-wrap .__dimensions_Badge_Layout {
-  display: inline-block !important;
-  width: 32px !important;
-  height: 32px !important;
-}
-.dimensions-wrap img,
-.dimensions-wrap svg { width: 32px !important; height: 32px !important; }
 .roadmap-target {
   display: inline-block;
   font-family: var(--font-mono);
