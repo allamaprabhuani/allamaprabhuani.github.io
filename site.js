@@ -73,9 +73,16 @@
         var cur = document.documentElement.getAttribute('data-theme') || 'light';
         var next = cur === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
+        // iOS Safari: a position-fixed bg-layer prevents the rest of the page
+        // from repainting on a CSS-variable swap until the user scrolls.
+        // Setting colorScheme + nudging layout forces a synchronous repaint.
+        document.documentElement.style.colorScheme = next;
+        void document.body.offsetWidth;
         try { localStorage.setItem('theme', next); } catch(e) {}
       });
     }
+    // Mirror the bootstrap-set theme onto colorScheme on first paint.
+    document.documentElement.style.colorScheme = document.documentElement.getAttribute('data-theme') || 'light';
 
     /* ---- Shuffle: step bg + accent + cursor each click (matches refresh cycling) ---- */
     var shuffleBtn = document.getElementById('shuffle-bg');

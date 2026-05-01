@@ -6,6 +6,7 @@
 
 /* ---- Theme tokens ---- */
 :root {
+  color-scheme: light;
   --bg: #fbfaf7;
   --ink: #1a1a1c;
   --muted: #6e6a62;
@@ -14,6 +15,7 @@
   --shadow: 0 6px 22px rgba(28, 22, 14, 0.06);
 }
 html[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #14110d;
   --ink: #ece7dd;
   --muted: #8c867a;
