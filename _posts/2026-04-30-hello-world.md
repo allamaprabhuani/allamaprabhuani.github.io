@@ -15,7 +15,7 @@ half-finished thoughts I want to come back to.
 A few topics I expect to write about:
 
 - the actual benchmark methodology behind the 8× phase-field speedup
-- what worked and what didn't when wiring SynaCAD's solver layer to the LLM
+- what worked and what didn't when wiring [SynaCAD](https://allamaprabhuani.github.io/synacad/)'s solver layer to the LLM
 - short Bruhn / Niu / ESDU walk-throughs as I revisit them
 - occasional notes on Hindustani classical music, when a raga and a problem rhyme
 
