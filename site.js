@@ -129,9 +129,11 @@
         visitTally.style.opacity = '0';
       }
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
+      // NB: trailing slashes are required — counterapi v1 returns a 301 without
+      // CORS headers when the slash is missing, and the redirected request fails.
       var endpoint = bumped
-        ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits'
-        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up';
+        ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/'
+        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up/';
       fetch(endpoint)
         .then(function(r){ return r.json(); })
         .then(function(d){
@@ -177,7 +179,8 @@
       var voted = localStorage.getItem('voted-' + key) === '1';
       if (voted) btn.classList.add('voted');
 
-      fetch('https://api.counterapi.dev/v1/' + ns + '/' + key)
+      // Trailing slash matters — see visit-counter note above.
+      fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/')
         .then(function(r){ return r.json(); })
         .then(function(d){ if (d && typeof d.count === 'number') countEl.textContent = d.count; })
         .catch(function(){ countEl.textContent = '—'; });
@@ -190,7 +193,7 @@
         if (!isNaN(current)) countEl.textContent = current + 1;
         btn.classList.add('voted');
 
-        fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up')
+        fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up/')
           .then(function(r){ return r.json(); })
           .then(function(d){
             if (d && typeof d.count === 'number') {
@@ -207,6 +210,37 @@
             btn.disabled = false;
           });
       });
+    });
+
+    /* ---- Live citation counts from OpenAlex (CORS-friendly, no auth) ---- */
+    var CITE_CACHE_KEY = 'openalex-cites-v1';
+    var CITE_TTL_MS = 24 * 60 * 60 * 1000;  // 24 h
+    var citeCache = {};
+    try {
+      var rawCites = localStorage.getItem(CITE_CACHE_KEY);
+      if (rawCites) {
+        var parsed = JSON.parse(rawCites);
+        if (parsed && (Date.now() - parsed.t) < CITE_TTL_MS) citeCache = parsed.data || {};
+      }
+    } catch(e) {}
+    var citeNodes = document.querySelectorAll('.cite-count[data-openalex]');
+    citeNodes.forEach(function(el){
+      var id = el.getAttribute('data-openalex');
+      if (citeCache[id] != null) { el.textContent = citeCache[id]; return; }
+      // Polite-pool email per OpenAlex docs — adds you to the fast queue.
+      var url = 'https://api.openalex.org/works/' + id + '?select=cited_by_count&mailto=allamaprabhuani@gmail.com';
+      fetch(url)
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if (d && typeof d.cited_by_count === 'number') {
+            el.textContent = d.cited_by_count;
+            citeCache[id] = d.cited_by_count;
+            try { localStorage.setItem(CITE_CACHE_KEY, JSON.stringify({ t: Date.now(), data: citeCache })); } catch(e) {}
+          } else {
+            el.textContent = '—';
+          }
+        })
+        .catch(function(){ el.textContent = '—'; });
     });
 
     /* ---- Defer the heavy proof-img screenshot until first hover ---- */
