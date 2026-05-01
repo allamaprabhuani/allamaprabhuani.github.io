@@ -1,0 +1,63 @@
+---
+layout: default
+title: "404 — page not found"
+description: That page doesn't exist (or doesn't exist any more). Some links from the rest of the site to find your way back.
+permalink: /404.html
+sitemap: false
+---
+
+<section id="not-found" class="not-found">
+  <p class="status">404</p>
+  <h1>this page is somewhere else.</h1>
+  <p class="lede">Either it never existed, or it moved while you were looking. Both are equally likely on a one-person scrapbook.</p>
+
+  <div class="rescue">
+    <p class="rescue-label">try one of these instead &rarr;</p>
+    <ul class="rescue-list">
+      <li><a href="/">home</a> &middot; the front page, with everything I've shipped</li>
+      <li><a href="/#synacad">SynaCAD</a> &middot; the project I'm currently building</li>
+      <li><a href="/blog/">blog</a> &middot; everything I've written here</li>
+      <li><a href="/#papers">papers</a> &middot; the published list, with live citation counts</li>
+      <li><a href="https://allamaprabhuani.github.io/synacad/">SynaCAD project site</a> &middot; the manifesto and roadmap</li>
+      <li><a href="mailto:allamaprabhuani@gmail.com">email me</a> &middot; if you were looking for something specific that genuinely should exist</li>
+    </ul>
+  </div>
+
+  <p class="muted small">
+    If you arrived here from a link on another site, that link is stale &mdash; sorry.
+    The page may have been renamed when this scrapbook was rebuilt in 2026.
+  </p>
+</section>
+
+<style>
+.not-found { padding: 60px 0 40px; }
+.not-found .status {
+  font-family: var(--font-mono);
+  font-size: 5rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent) 75%, transparent);
+  margin: 0 0 8px;
+  letter-spacing: -0.04em;
+}
+.not-found h1 { font-size: 1.6rem; margin: 0 0 14px; letter-spacing: -0.01em; }
+.not-found .lede { color: var(--muted); margin: 0 0 32px; max-width: 520px; }
+.rescue { margin: 0 0 28px; }
+.rescue-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+.rescue-list { list-style: none; padding: 0; margin: 0; }
+.rescue-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+}
+.rescue-list li:last-child { border-bottom: none; }
+.rescue-list a { font-weight: 700; }
+.not-found .small { font-size: 0.85rem; max-width: 520px; }
+</style>
