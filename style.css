@@ -838,13 +838,27 @@ ul.links li:first-child::before { content: ""; }
 .cite-badge .cite-count { font-weight: 700; }
 .cite-badge .cite-src { opacity: 0.6; font-size: 0.72rem; }
 .cite-badge a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-.dimensions-wrap {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 4px;
-  transform: translateY(2px);
+/* Stack the paper citation, the editorial note, and the badge strip on
+   their own lines so the metadata never breaks the prose. */
+ol.papers li .paper-cite { display: block; }
+ol.papers li .paper-note { display: block; margin-top: 6px; }
+ol.papers li .paper-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  min-height: 28px;
 }
-.dimensions-wrap .__dimensions_badge_embed__ { display: inline-block; }
+.dimensions-wrap { display: inline-flex; align-items: center; line-height: 1; }
+.dimensions-wrap .__dimensions_badge_embed__,
+.dimensions-wrap .__dimensions_Badge_Layout {
+  display: inline-block !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+.dimensions-wrap img,
+.dimensions-wrap svg { width: 32px !important; height: 32px !important; }
 .roadmap-target {
   display: inline-block;
   font-family: var(--font-mono);
