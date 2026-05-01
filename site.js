@@ -136,11 +136,11 @@
         visitTally.style.opacity = '0';
       }
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
-      // NB: trailing slashes are required — counterapi v1 returns a 301 without
-      // CORS headers when the slash is missing, and the redirected request fails.
+      // counterapi v1 has opposite slash conventions: GET <key>/ needs the
+      // slash; GET <key>/up must NOT have one. Wrong form → 301 without CORS.
       var endpoint = bumped
         ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/'
-        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up/';
+        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up';
       fetch(endpoint)
         .then(function(r){ return r.json(); })
         .then(function(d){
@@ -200,7 +200,7 @@
         if (!isNaN(current)) countEl.textContent = current + 1;
         btn.classList.add('voted');
 
-        fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up/')
+        fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/up')
           .then(function(r){ return r.json(); })
           .then(function(d){
             if (d && typeof d.count === 'number') {
