@@ -25,10 +25,6 @@ html[data-theme="dark"] {
 }
 
 /* Accent palettes: light + dark per accent */
-html[data-accent="wine"]                            { --accent: #6b2c3a; }
-html[data-theme="dark"][data-accent="wine"]         { --accent: #b888bd; }
-html[data-accent="eggplant"]                        { --accent: #5a3a5e; }
-html[data-theme="dark"][data-accent="eggplant"]     { --accent: #c8a5cc; }
 html[data-accent="steel"]                           { --accent: #3a5775; }
 html[data-theme="dark"][data-accent="steel"]        { --accent: #9bc0e0; }
 html[data-accent="slate"]                           { --accent: #4a5b73; }
@@ -182,12 +178,6 @@ html[data-theme="dark"][data-bg="contours"] .bg-layer { opacity: 0.18; filter: i
 }
 
 /* linen: soft tactile noise */
-[data-bg="linen"] .bg-layer {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.5'/></svg>");
-  opacity: 0.22;
-}
-html[data-theme="dark"][data-bg="linen"] .bg-layer { opacity: 0.10; }
-
 @media (prefers-reduced-motion: reduce) {
   [data-bg="aurora"] .bg-layer::before,
   [data-bg="aurora"] .bg-layer::after,
