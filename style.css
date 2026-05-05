@@ -27,16 +27,8 @@ html[data-theme="dark"] {
 /* Accent palettes: light + dark per accent */
 html[data-accent="wine"]                            { --accent: #6b2c3a; }
 html[data-theme="dark"][data-accent="wine"]         { --accent: #b888bd; }
-html[data-accent="burgundy-rose"]                   { --accent: #6b2c3a; }
-html[data-theme="dark"][data-accent="burgundy-rose"]{ --accent: #d68aa0; }
-html[data-accent="magenta"]                         { --accent: #a8336b; }
-html[data-theme="dark"][data-accent="magenta"]      { --accent: #e09bb8; }
 html[data-accent="eggplant"]                        { --accent: #5a3a5e; }
 html[data-theme="dark"][data-accent="eggplant"]     { --accent: #c8a5cc; }
-html[data-accent="forest"]                          { --accent: #3d6e4f; }
-html[data-theme="dark"][data-accent="forest"]       { --accent: #94c4a3; }
-html[data-accent="olive"]                           { --accent: #6b6f3a; }
-html[data-theme="dark"][data-accent="olive"]        { --accent: #c4c87a; }
 html[data-accent="steel"]                           { --accent: #3a5775; }
 html[data-theme="dark"][data-accent="steel"]        { --accent: #9bc0e0; }
 html[data-accent="slate"]                           { --accent: #4a5b73; }
