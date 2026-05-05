@@ -263,43 +263,6 @@ html[data-theme="dark"][data-bg="contours"] .bg-layer { opacity: 0.18; filter: i
   box-shadow: 0 0 0 12px var(--accent-soft);
 }
 
-/* crosshair */
-[data-cursor="crosshair"] .site-cursor {
-  width: 20px; height: 20px;
-  background: transparent;
-  border: none;
-}
-[data-cursor="crosshair"] .site-cursor::before,
-[data-cursor="crosshair"] .site-cursor::after {
-  content: ""; position: absolute;
-  background: var(--accent);
-  top: 50%; left: 50%;
-}
-[data-cursor="crosshair"] .site-cursor::before {
-  width: 20px; height: 1.5px;
-  transform: translate(-50%, -50%);
-}
-[data-cursor="crosshair"] .site-cursor::after {
-  width: 1.5px; height: 20px;
-  transform: translate(-50%, -50%);
-}
-[data-cursor="crosshair"] .site-cursor.hover {
-  transform: translate(-50%, -50%) rotate(45deg) scale(1.4);
-}
-
-/* diamond */
-[data-cursor="diamond"] .site-cursor {
-  width: 14px; height: 14px;
-  border: 1.5px solid var(--accent);
-  background: transparent;
-  border-radius: 0;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-[data-cursor="diamond"] .site-cursor.hover {
-  width: 22px; height: 22px;
-  background: var(--accent);
-}
-
 /* hide native cursor on fine-pointer devices when our custom cursor is active */
 @media (pointer: fine) {
   body, a, button, input, label, textarea, select,
