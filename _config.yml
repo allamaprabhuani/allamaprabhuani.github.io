@@ -27,6 +27,18 @@ defaults:
   - scope: { path: "", type: "tutorials" }
     values:
       layout: tutorial
+  # Keep the GSC verification stub out of the sitemap (Google fetches it
+  # by exact path; indexing it adds noise).
+  - scope: { path: "google57dd859010581d7e.html" }
+    values:
+      sitemap: false
+  # /assets and /notebooks are listing pages with no real content.
+  - scope: { path: "assets" }
+    values:
+      sitemap: false
+  - scope: { path: "notebooks" }
+    values:
+      sitemap: false
 
 exclude:
   - README.md
