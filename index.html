@@ -1,7 +1,7 @@
 ---
 layout: default
 landing: true
-description: A scrapbook of work, half-finished ideas, and tools. PhD researcher at City, St George's. Currently building SynaCAD.
+description: A scrapbook of work, half-finished ideas, and tools. PhD researcher at City, St George's, University of London and the CEMS Lab at Queen Mary University of London. Currently building SynaCAD.
 ---
 
 <!-- JSON-LD Person schema -->
@@ -15,10 +15,19 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
   "image": "https://allamaprabhuani.github.io/assets/me.jpg",
   "email": "allamaprabhuani@gmail.com",
   "jobTitle": "Doctoral Researcher",
-  "affiliation": {
-    "@type": "CollegeOrUniversity",
-    "name": "City, St George's, University of London"
-  },
+  "affiliation": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "City, St George's, University of London",
+      "url": "https://www.city.ac.uk/"
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Queen Mary University of London",
+      "url": "https://www.qmul.ac.uk/sems/",
+      "department": "School of Engineering and Materials Science (CEMS Lab)"
+    }
+  ],
   "knowsAbout": ["Computational Mechanics", "Phase-Field Fracture", "Deep Learning", "PyTorch", "Bruhn structural analysis", "GD&T", "Composite materials", "Neural Operators", "Physics-Informed Neural Networks", "Fracture Mechanics"],
   "worksFor": {
     "@type": "CollegeOrUniversity",
@@ -112,7 +121,7 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
     <div class="hero-text">
       <h1>Allamaprabhu Ani</h1>
       <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
-      <p class="tag">PhD researcher in computational mechanics &amp; deep learning at <a href="https://www.city.ac.uk/">City, St George's</a>, with <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> of the <a href="https://github.com/CEMS-Lab">CEMS Lab</a> (Queen Mary). Co-author of <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">a recent review of ML for fracture mechanics</a> (<i>EFM</i>, Dec 2025) &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in <i>EFM</i><img class="proof-img" data-src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</p>
+      <p class="tag">PhD researcher in computational mechanics &amp; deep learning, registered at <a href="https://www.city.ac.uk/">City, St George's, University of London</a> and embedded in the <a href="https://github.com/CEMS-Lab">CEMS Lab</a> at <a href="https://www.qmul.ac.uk/sems/">Queen Mary University of London</a>, supervised by <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a>. Co-author of <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">a recent review of ML for fracture mechanics</a> (<i>EFM</i>, Dec 2025) &mdash; <span class="proof-hover" tabindex="0">currently the most-downloaded article in <i>EFM</i><img class="proof-img" data-src="/assets/efm-most-downloaded.png" alt="Screenshot of Engineering Fracture Mechanics Most Downloaded list with this paper at #1, captured 2026-04-30" loading="lazy"></span> <span class="proof-stamp">(verified 2026-04-30)</span>.</p>
     </div>
     <!-- Replace assets/me.jpg with a 400x400 face crop. -->
     <div class="hero-photo">
@@ -255,12 +264,12 @@ description: A scrapbook of work, half-finished ideas, and tools. PhD researcher
   <h2>roadmap</h2>
   <p class="muted">A public to-do list. Upvote the things you want me to ship next, the count is real and lives forever (one vote per browser; honor system).</p>
   <ul class="stack bucket-list">
-    <li><span class="bucket-text"><span class="roadmap-target">2026</span><a href="https://allamaprabhuani.github.io/synacad/">SynaCAD</a> v1.0, open-source, that any engineering student in the world can run locally to design and certify a real part.</span> <button class="upvote" data-key="synacad-v1" aria-label="Upvote: SynaCAD v1.0"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text"><span class="roadmap-target">2027+</span>A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span> <button class="upvote" data-key="fracture-foundation" aria-label="Upvote: Fracture foundation model"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span> <button class="upvote" data-key="bruhn-niu-esdu-videos" aria-label="Upvote: Bruhn / Niu / ESDU video series"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span> <button class="upvote" data-key="gdt-mistakes-dataset" aria-label="Upvote: GD&T mistakes dataset"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</span> <button class="upvote" data-key="solved-bruhn-library" aria-label="Upvote: Solved Bruhn library"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
-    <li><span class="bucket-text"><span class="roadmap-target">one day</span>A raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span> <button class="upvote" data-key="raga-concert" aria-label="Upvote: Raga concert"><span class="up-arrow">▲</span> <span class="up-count">·</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">2026</span><a href="https://allamaprabhuani.github.io/synacad/">SynaCAD</a> v1.0, open-source, that any engineering student in the world can run locally to design and certify a real part.</span> <button class="upvote" data-key="synacad-v1" aria-label="Upvote: SynaCAD v1.0"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">2027+</span>A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span> <button class="upvote" data-key="fracture-foundation" aria-label="Upvote: Fracture foundation model"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span> <button class="upvote" data-key="bruhn-niu-esdu-videos" aria-label="Upvote: Bruhn / Niu / ESDU video series"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span> <button class="upvote" data-key="gdt-mistakes-dataset" aria-label="Upvote: GD&T mistakes dataset"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A small library of solved Bruhn problems with code, for every junior stress engineer Googling at 2am.</span> <button class="upvote" data-key="solved-bruhn-library" aria-label="Upvote: Solved Bruhn library"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
+    <li><span class="bucket-text"><span class="roadmap-target">one day</span>A raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span> <button class="upvote" data-key="raga-concert" aria-label="Upvote: Raga concert"><span class="up-arrow">▲</span> <span class="up-count">0</span></button></li>
   </ul>
 </section>
 

@@ -187,10 +187,14 @@
       if (voted) btn.classList.add('voted');
 
       // Trailing slash matters — see visit-counter note above.
+      // counterapi returns 400 "record not found" until the key is first
+      // incremented, so treat any non-numeric response as 0 (not "—" or "·").
       fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ if (d && typeof d.count === 'number') countEl.textContent = d.count; })
-        .catch(function(){ countEl.textContent = '—'; });
+        .then(function(r){ return r.json().catch(function(){ return null; }); })
+        .then(function(d){
+          countEl.textContent = (d && typeof d.count === 'number') ? d.count : 0;
+        })
+        .catch(function(){ countEl.textContent = 0; });
 
       btn.addEventListener('click', function(){
         if (btn.classList.contains('voted') || btn.disabled) return;
