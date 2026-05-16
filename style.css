@@ -1049,6 +1049,94 @@ body:not(.landing) .toc { display: block; }
   border-bottom-color: var(--accent);
 }
 
+/* ---- Tutorial figure / interactive embed ---- */
+.tutorial-fig {
+  margin: 22px 0;
+}
+.tutorial-fig img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.tutorial-fig figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 8px;
+  text-align: center;
+}
+.tutorial-interactive {
+  margin: 22px 0;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.tutorial-interactive iframe {
+  width: 100%;
+  height: 520px;
+  border: 0;
+  display: block;
+}
+
+/* ---- Embedded nbconvert (template: basic) cells ---- */
+.post-body .cell { margin: 14px 0; }
+.post-body .cell .prompt {
+  display: none; /* hide In [n]: / Out[n]: prompts */
+}
+.post-body .cell .input_area,
+.post-body .cell .output_text {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+.post-body .cell .output_text { background: transparent; }
+.post-body .cell .output_png,
+.post-body .cell .output_subarea img {
+  max-width: 100%;
+  height: auto;
+  margin: 8px auto;
+  display: block;
+}
+.post-body .cell .text_cell_render {
+  padding: 4px 0;
+}
+.post-body .cell .text_cell_render p,
+.post-body .cell .text_cell_render li { line-height: 1.65; }
+.post-body .cell .text_cell_render table {
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+.post-body .cell .text_cell_render th,
+.post-body .cell .text_cell_render td {
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  font-size: 0.88rem;
+}
+/* pygments mapping (minimal) */
+.post-body .highlight .k,
+.post-body .highlight .kn,
+.post-body .highlight .kc { color: #a626a4; font-weight: 600; }
+.post-body .highlight .s,
+.post-body .highlight .s1,
+.post-body .highlight .s2 { color: #50a14f; }
+.post-body .highlight .c,
+.post-body .highlight .c1,
+.post-body .highlight .cm { color: var(--muted); font-style: italic; }
+.post-body .highlight .nb { color: #c18401; }
+.post-body .highlight .mi,
+.post-body .highlight .mf { color: #986801; }
+.post-body .highlight .nf,
+.post-body .highlight .nc { color: #4078f2; }
+.post-body .highlight .o,
+.post-body .highlight .ow { color: #383a42; }
+
 /* ---- Word reel (vertical scrolling cycle) ---- */
 .word-reel {
   display: flex;

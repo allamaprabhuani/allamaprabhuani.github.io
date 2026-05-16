@@ -8,7 +8,12 @@ Source `.ipynb` files for the tutorials at https://allamaprabhuani.github.io/tut
 2. Render it to standalone HTML so the static site can embed it:
 
    ```bash
-   jupyter nbconvert --to html --template lab \
+   # Execute first so cell outputs are present, then render with the
+   # `basic` template (lab/classic produce full HTML docs that don't
+   # include cleanly into a Jekyll page).
+   jupyter nbconvert --to notebook --execute --inplace \
+     notebooks/01-ml-training.ipynb
+   jupyter nbconvert --to html --template basic \
      --output-dir notebooks \
      notebooks/01-ml-training.ipynb
    ```
