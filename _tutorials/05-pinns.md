@@ -82,15 +82,26 @@ than either, across the whole window.
 
 ## Why this matters for my own research
 
-Once your forward solver is end-to-end differentiable, the PDE coefficients
-become *trainable parameters*. The same autograd machinery that solves a
-toy oscillator is what
-[`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
-uses to recover material toughness $G_c$ from a handful of displacement
-observations of a real cracked specimen — differentiable phase-field
-fracture, adjoint + autograd + checkpoint. The math gets harder
-(non-convex energy, irreversibility, operator-split stability) but the
-autograd pattern is identical to what's in this notebook.
+There is a clean inversion of the workflow you just did. We **gave** the
+network the equation and asked it to find the function. You can also
+**give** it the function (some experimental measurements) and ask it to
+find the equation — specifically, the *coefficients* of the equation.
+
+Treat $\omega_0$ and $\zeta$ as `torch.nn.Parameter`s and put them into
+the optimiser alongside the network weights. PyTorch's autograd will
+backpropagate the data-loss gradient all the way through the physics
+residual to those two parameters. This is called an **inverse problem**,
+and it's the engineering version of the "discover the laws of physics
+from data" pitch.
+
+This is the bridge between toy PINNs like this one and my own research
+on [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
+— a PyTorch fracture-mechanics solver where the unknown isn't $\omega_0$
+but the material toughness $G_c$, recovered from a handful of
+displacement observations of a real cracked specimen. The maths is
+genuinely harder (the energy is non-convex, damage cannot heal, the
+time-stepping is conditionally stable) but the autograd pattern is
+literally what you wrote above.
 
 ## Where to go after PINNs
 

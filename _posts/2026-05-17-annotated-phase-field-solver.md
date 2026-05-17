@@ -240,13 +240,19 @@ state-of-the-art for stable implicit fixed-point regimes).
 
 ## 6. What differentiability buys you
 
-If the solver is **end-to-end differentiable** — including through the
-load loop, the alternating min, and the irreversibility projection —
-then the PDE coefficients become **trainable parameters of the
-simulation**. Given any experimental observation (a load-displacement
-curve, a digital-image-correlation displacement field, a crack
-trajectory from a high-speed camera), you can recover the material
-parameters that *would have produced* that observation:
+The PyTorch sketch in §4 has a property the legacy solvers don't:
+**every output is a differentiable function of every input.** That
+includes the irreversibility projection, the load loop, and the
+alternating min — autograd will carry the gradient back through all of
+it, as long as you avoid the four pitfalls in §5.
+
+That single property is the door. Once it's open, the material
+parameters in the equation (`G_c`, `E`, ℓ) stop being constants and
+become *trainable*. Pick any experimental measurement of a real
+cracking specimen — a load-displacement curve from an Instron, a
+digital-image-correlation displacement field, a crack trajectory from a
+high-speed camera — and you can recover the material parameters that
+*would have produced* that measurement:
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/blog/annotated-phase-field/fig5-gc-recovery.png' | relative_url }}"
@@ -254,10 +260,13 @@ parameters that *would have produced* that observation:
   <figcaption>Outer-loop convergence of <code>G_c</code> recovered by backpropagating a load-curve mismatch through a phase-field simulation. The forward simulation is differentiable; the gradient comes back through every alternating-min iteration and tells the outer optimiser which direction to nudge <code>G_c</code>.</figcaption>
 </figure>
 
-This is the connection between the *forward solver* a fracture
-mechanician would build and the *inverse problem* an applied-ML
-researcher would frame. Same code, two read directions. Once the
-solver is differentiable you also get:
+The same simulation read two ways: a fracture mechanician calls it a
+*forward solver* (geometry + material → load curve); an applied-ML
+researcher calls it an *inverse problem* (load curve → material).
+Differentiability is what lets one piece of code be both.
+
+The same property unlocks three other things people are actually
+shipping today:
 
 - **Gradient-based topology optimisation** of toughened structures —
   design a part to maximise fracture resistance, not just stiffness.
