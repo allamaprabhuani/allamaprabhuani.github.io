@@ -189,12 +189,17 @@
       // Trailing slash matters — see visit-counter note above.
       // counterapi returns 400 "record not found" until the key is first
       // incremented, so treat any non-numeric response as 0 (not "—" or "·").
+      // Show the count only when we have a positive number from the API.
+      // 0 / failure / "record not found" → leave the count slot empty.
+      countEl.textContent = '';
       fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/')
         .then(function(r){ return r.json().catch(function(){ return null; }); })
         .then(function(d){
-          countEl.textContent = (d && typeof d.count === 'number') ? d.count : 0;
+          if (d && typeof d.count === 'number' && d.count > 0) {
+            countEl.textContent = d.count;
+          }
         })
-        .catch(function(){ countEl.textContent = 0; });
+        .catch(function(){});
 
       btn.addEventListener('click', function(){
         if (btn.classList.contains('voted') || btn.disabled) return;
@@ -235,23 +240,34 @@
       }
     } catch(e) {}
     var citeNodes = document.querySelectorAll('.cite-count[data-openalex]');
+    function applyCite(el, count){
+      // Hide the whole "cited X · OpenAlex" badge if count is 0 or unknown —
+      // a "cited 0" badge advertises a weak paper, an empty placeholder
+      // ("·") just looks broken. Better to render nothing.
+      var badge = el.closest('.cite-badge');
+      if (typeof count === 'number' && count > 0) {
+        el.textContent = count;
+        if (badge) badge.hidden = false;
+      } else {
+        if (badge) badge.hidden = true;
+      }
+    }
     citeNodes.forEach(function(el){
       var id = el.getAttribute('data-openalex');
-      if (citeCache[id] != null) { el.textContent = citeCache[id]; return; }
+      if (citeCache[id] != null) { applyCite(el, citeCache[id]); return; }
       // Polite-pool email per OpenAlex docs — adds you to the fast queue.
       var url = 'https://api.openalex.org/works/' + id + '?select=cited_by_count&mailto=allamaprabhuani@gmail.com';
       fetch(url)
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
-          if (d && typeof d.cited_by_count === 'number') {
-            el.textContent = d.cited_by_count;
-            citeCache[id] = d.cited_by_count;
+          var n = d && typeof d.cited_by_count === 'number' ? d.cited_by_count : null;
+          applyCite(el, n);
+          if (n != null) {
+            citeCache[id] = n;
             try { localStorage.setItem(CITE_CACHE_KEY, JSON.stringify({ t: Date.now(), data: citeCache })); } catch(e) {}
-          } else {
-            el.textContent = '—';
           }
         })
-        .catch(function(){ el.textContent = '—'; });
+        .catch(function(){ applyCite(el, null); });
     });
 
     /* ---- Defer the heavy proof-img screenshot until first hover ---- */

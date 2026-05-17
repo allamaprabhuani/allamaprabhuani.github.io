@@ -1070,10 +1070,22 @@ body:not(.landing) .toc { display: block; }
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--accent);
   margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
 }
+.t-level-intro        { color: #2f8755; }   /* green   */
+.t-level-intermediate { color: #b57614; }   /* amber   */
+.t-level-advanced     { color: #b03a30; }   /* red     */
+html[data-theme="dark"] .t-level-intro        { color: #6fc28f; }
+html[data-theme="dark"] .t-level-intermediate { color: #e3b96e; }
+html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 .t-pending { color: var(--muted); }
+
+/* Cite badges ship with the `hidden` attribute set; site.js un-hides
+   them when OpenAlex returns a positive count. The native `hidden`
+   handles the display:none. */
 .status {
   display: inline-block;
   padding: 1px 8px;
