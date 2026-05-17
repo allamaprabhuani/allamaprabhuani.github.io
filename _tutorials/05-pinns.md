@@ -1,6 +1,6 @@
 ---
 title: "Physics-Informed Neural Networks (PINNs)"
-subtitle: "Data, physics, or both? The Moseley-style framing on a damped oscillator, then the bridge to inverse problems and neural operators."
+subtitle: "Data, physics, or both? A damped oscillator that compares all three on the same architecture, then the bridge to inverse problems and neural operators."
 level: advanced
 status: published
 order: 5
@@ -13,11 +13,12 @@ whole idea. The rest is engineering: what to put in the loss, how to weight
 it, and why your first PINN will train to a flat function unless you do a
 few specific things.
 
-This tutorial follows the framing made famous by [Ben Moseley's PINN blog
-post](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/):
-pick a problem with a known exact solution, give yourself a small window of
-noisy data, and watch three models behave very differently when you ask
-them to predict the future.
+The setup: pick a problem with a known exact solution, give yourself a
+small window of noisy data, then watch three models behave very
+differently when you ask them to predict the future. The damped-oscillator
+worked example below is directly inspired by Ben Moseley's
+[introductory PINN tutorial](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/);
+the structure and core demo are his — go read the original.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/05/hero-three-models.png' | relative_url }}"
@@ -123,11 +124,15 @@ model handles a whole family of inputs in milliseconds:
 - Some familiarity with ODEs / PDEs — knowing what a damped oscillator
   describes is enough; PDE experience is a bonus, not required
 
-## Source
+## References
 
-Original tutorial. Framing inspired by [Ben
-Moseley](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/);
-"what comes next" pointers from Mishra's CIRM operator-learning lectures.
+1. Raissi, M., Perdikaris, P., &amp; Karniadakis, G. E. (2019). **Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.** *Journal of Computational Physics*, 378, 686–707. [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)
+2. Moseley, B. (2021). **So, what is a physics-informed neural network?** Personal blog. [benmoseley.blog](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/) — the introductory tutorial whose damped-oscillator demo this notebook is built around.
+3. Wang, S., Yu, X., &amp; Perdikaris, P. (2022). **When and why PINNs fail to train: A neural tangent kernel perspective.** *Journal of Computational Physics*, 449, 110768. [doi:10.1016/j.jcp.2021.110768](https://doi.org/10.1016/j.jcp.2021.110768)
+4. Krishnapriyan, A., Gholami, A., Zhe, S., Kirby, R., &amp; Mahoney, M. (2021). **Characterizing possible failure modes in physics-informed neural networks.** [arXiv:2109.01050](https://arxiv.org/abs/2109.01050)
+5. Lu, L., Jin, P., Pang, G., Zhang, Z., &amp; Karniadakis, G. E. (2021). **Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators.** *Nature Machine Intelligence*, 3, 218–229. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
+6. Li, Z., Kovachki, N., Azizzadenesheli, K., Liu, B., Bhattacharya, K., Stuart, A., &amp; Anandkumar, A. (2021). **Fourier neural operator for parametric partial differential equations.** *ICLR 2021*. [arXiv:2010.08895](https://arxiv.org/abs/2010.08895)
+7. Mishra, S. (2024). **Learning operators — Lecture 1, CIRM Marseille.** [YouTube](https://www.youtube.com/watch?v=5CnctvgyssU). A full theoretical derivation of neural operators from scratch; the recommended next watch after this tutorial.
 
 ## End of series
 

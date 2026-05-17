@@ -13,12 +13,15 @@ function of every input. Each of those framings is on its own a small
 PhD's worth of material.
 
 This post is the version of the explainer I wish I had three years ago.
-The narrative arc is Sasha Rush's *Annotated Transformer* applied to a
-solver: each piece of math gets one figure, one code block, and one
-paragraph of why-it-is-the-way-it-is. By the end you should understand
-why a phase-field solver looks the way it does, what's hard about
-turning one into a PyTorch module, and why differentiability changes
-what you can do with one.
+Each piece of math gets one figure, one code block, and one paragraph of
+why-it-is-the-way-it-is. By the end you should understand why a phase-
+field solver looks the way it does, what's hard about turning one into a
+PyTorch module, and why differentiability changes what you can do with
+one.
+
+The annotated walk-through format is borrowed from Sasha Rush's
+[*Annotated Transformer*](https://nlp.seas.harvard.edu/2018/04/03/attention.html);
+if you've never read it, go read it first — it's the template.
 
 ## 1. The thing we are modelling
 
@@ -64,7 +67,7 @@ Three blocks worth chewing on:
 
 - **`g(d) ψ(ε)`** is the elastic strain energy, degraded where there is
   damage. `ψ` is the usual quadratic strain energy density from linear
-  elasticity. `g(d) = (1 - d)²` is the workhorse choice; it has the
+  elasticity. `g(d) = (1 - d)²` is the standard choice; it has the
   right `g(0) = 1`, `g(1) = 0`, and `g'(1) = 0` to avoid stress
   concentration at fully-damaged points.
 
@@ -343,6 +346,23 @@ If you read this far and have feedback or want to discuss differentiable
 solvers more generally, my email is in the
 [site footer](/#elsewhere). I am especially interested in hearing about
 benchmark cases that should exist but don't.
+
+---
+
+## References
+
+1. Griffith, A. A. (1921). **The phenomena of rupture and flow in solids.** *Philosophical Transactions of the Royal Society A* 221(582–593), 163–198. [doi:10.1098/rsta.1921.0006](https://doi.org/10.1098/rsta.1921.0006)
+2. Francfort, G. A., &amp; Marigo, J.-J. (1998). **Revisiting brittle fracture as an energy minimization problem.** *Journal of the Mechanics and Physics of Solids* 46(8), 1319–1342. [doi:10.1016/S0022-5096(98)00034-9](https://doi.org/10.1016/S0022-5096\(98\)00034-9)
+3. Bourdin, B., Francfort, G. A., &amp; Marigo, J.-J. (2000). **Numerical experiments in revisited brittle fracture.** *Journal of the Mechanics and Physics of Solids* 48(4), 797–826. [doi:10.1016/S0022-5096(99)00028-9](https://doi.org/10.1016/S0022-5096\(99\)00028-9) — the original phase-field-for-fracture paper.
+4. Ambrosio, L., &amp; Tortorelli, V. M. (1990). **Approximation of functionals depending on jumps by elliptic functionals via Γ-convergence.** *Communications on Pure and Applied Mathematics* 43(8), 999–1036. [doi:10.1002/cpa.3160430805](https://doi.org/10.1002/cpa.3160430805) — the Γ-convergence guarantee that makes the whole field rigorous.
+5. Miehe, C., Welschinger, F., &amp; Hofacker, M. (2010). **Thermodynamically consistent phase-field models of fracture: Variational principles and multi-field FE implementations.** *International Journal for Numerical Methods in Engineering* 83(10), 1273–1311. [doi:10.1002/nme.2861](https://doi.org/10.1002/nme.2861) — the staggered scheme + history-variable formulation cited in §5.
+6. Borden, M. J., Verhoosel, C. V., Scott, M. A., Hughes, T. J. R., &amp; Landis, C. M. (2012). **A phase-field description of dynamic brittle fracture.** *Computer Methods in Applied Mechanics and Engineering* 217–220, 77–95. [doi:10.1016/j.cma.2012.01.008](https://doi.org/10.1016/j.cma.2012.01.008) — the dynamic-branching benchmark cases.
+7. Pham, K., Amor, H., Marigo, J.-J., &amp; Maurini, C. (2011). **Gradient damage models and their use to approximate brittle fracture.** *International Journal of Damage Mechanics* 20(4), 618–652. [doi:10.1177/1056789510386852](https://doi.org/10.1177/1056789510386852) — the AT1 vs AT2 distinction.
+8. Akhare, D., Luo, T., &amp; Wang, J.-X. (2025). **Im-PiNDiff: Implicit physics-informed neural differentiable solver for stiff temporal systems.** [arXiv:2504.02260](https://arxiv.org/abs/2504.02260) — the implicit-step differentiability state-of-the-art cited in §7.
+9. Lu, L., Jin, P., Pang, G., Zhang, Z., &amp; Karniadakis, G. E. (2021). **Learning nonlinear operators via DeepONet.** *Nature Machine Intelligence* 3, 218–229. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
+10. Li, Z., Kovachki, N., Azizzadenesheli, K., et al. (2021). **Fourier neural operator for parametric partial differential equations.** *ICLR 2021*. [arXiv:2010.08895](https://arxiv.org/abs/2010.08895)
+11. Mishra, S. (2024). **Learning operators — Lecture 1, CIRM Marseille.** [YouTube](https://www.youtube.com/watch?v=5CnctvgyssU)
+12. Rush, A. M. (2018). **The Annotated Transformer.** Harvard NLP. [nlp.seas.harvard.edu](https://nlp.seas.harvard.edu/2018/04/03/attention.html) — the explainer format borrowed for this post.
 
 ---
 

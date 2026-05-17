@@ -88,3 +88,11 @@ as the centrepiece.
 - [`05 — Physics-Informed Neural Networks`](/tutorials/05-pinns/) — what
   changes when the loss function knows physics, and how that opens up
   inverse problems and differentiable simulation.
+
+## References
+
+1. Hubel, D. H., &amp; Wiesel, T. N. (1962). **Receptive fields, binocular interaction and functional architecture in the cat's visual cortex.** *Journal of Physiology* 160(1), 106–154. [doi:10.1113/jphysiol.1962.sp006837](https://doi.org/10.1113/jphysiol.1962.sp006837) — the biological motivation for oriented edge detectors.
+2. LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998). **Gradient-based learning applied to document recognition.** *Proceedings of the IEEE* 86(11), 2278–2324. [doi:10.1109/5.726791](https://doi.org/10.1109/5.726791) — the LeNet paper, the original conv-then-pool-then-FC template.
+3. Krizhevsky, A., Sutskever, I., &amp; Hinton, G. E. (2012). **ImageNet classification with deep convolutional neural networks.** *NeurIPS 2012*. [paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) — the AlexNet result that started the modern CNN era.
+4. He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). **Deep residual learning for image recognition.** *CVPR 2016*. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385) — ResNet; the architecture template used by most production CNNs in 2026.
+5. Zeiler, M. D., &amp; Fergus, R. (2014). **Visualizing and understanding convolutional networks.** *ECCV 2014*. [arXiv:1311.2901](https://arxiv.org/abs/1311.2901) — the original paper on filter and feature-map visualisation.
