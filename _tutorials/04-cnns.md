@@ -1,87 +1,211 @@
 ---
 title: "Convolutional Neural Networks"
-subtitle: "Convolutions, pooling, receptive fields. Build a CNN that classifies images, then read what it actually learned."
+subtitle: "Why MLPs fail on images, what a convolution actually does, and how to read what a trained CNN has learned."
 level: intermediate
 status: published
 order: 4
-tags: [cnn, vision, pytorch]
+tags: [cnn, vision, pytorch, interpretability]
 notebook: notebooks/04-cnns.ipynb
 ---
 
 A CNN is an MLP that **shares weights spatially**. Instead of one weight
-per input pixel, you have a 3×3 filter that slides across the image. That
-single change buys you translation invariance, parameter efficiency, and
-a useful inductive bias for any signal where neighbouring values are
+per input pixel, you have a 3 × 3 filter that slides across the image.
+That single change buys you translation invariance, parameter efficiency,
+and a useful inductive bias for any signal where neighbouring values are
 correlated — images, audio, time series, physical simulation fields.
 
-We build a 2-conv-block CNN on sklearn's 8×8 digit dataset (1 797 images,
-no download), train it in 60 s on CPU, then crack it open and look at
-what each filter actually learned.
+This tutorial does CNNs in three movements:
+
+1. **Why we need CNNs at all** — what breaks when you flatten a colour
+   image into a 3 072-element vector and hand it to an MLP.
+2. **The convolution operation** — kernels, strides, padding, pooling.
+   The math is small; the inductive bias is enormous.
+3. **A trained CNN, opened up** — visualising the learned filters and
+   the feature maps they produce. CNNs are easier to interpret than
+   modern ML literature suggests.
+
+The runnable notebook uses sklearn's `load_digits` (1 797 hand-written
+8 × 8 grayscale digits) so it finishes in under a minute on CPU. This
+page accompanies it with **CIFAR-10 figures** that were pre-rendered
+locally — colour images make the lessons land harder.
+
+## CIFAR-10 — the dataset every CNN tutorial uses
 
 <figure class="tutorial-fig">
-  <img src="{{ '/assets/tutorials/04/architecture.png' | relative_url }}"
-       alt="Block diagram of SmallCNN: Conv-Pool-Conv-Pool-FC-FC">
-  <figcaption>SmallCNN: two convolution-and-pool blocks followed by a fully-connected head. Same architecture template as the original LeNet, just scaled to 8×8 input.</figcaption>
+  <img src="{{ '/assets/tutorials/04/cifar-classes.png' | relative_url }}"
+       alt="Grid of 10 CIFAR-10 example images, one per class">
+  <figcaption>CIFAR-10 — 10 classes × 6 000 training images, 32 × 32 colour. The standard "harder than MNIST" benchmark for small vision models.</figcaption>
 </figure>
 
-## The model converges fast
+## A CNN sees three stacked grayscales, not a colour image
+
+Channels are how a CNN handles colour: the input tensor has shape
+`[batch, channels, height, width]` and for an RGB image, **channels = 3**.
+The model never reasons about "redness"; it processes three independent
+grayscale arrays and learns to combine them.
 
 <figure class="tutorial-fig">
-  <img src="{{ '/assets/tutorials/04/training-curve.png' | relative_url }}"
-       alt="Training loss falling and validation accuracy climbing toward 1.0 over 60 epochs">
-  <figcaption>Loss falls smoothly; test accuracy climbs to &gt; 98 % in under a minute on CPU.</figcaption>
+  <img src="{{ '/assets/tutorials/04/rgb-channels.png' | relative_url }}"
+       alt="A CIFAR cat image broken into its R, G, and B channels visualised as separate grayscale maps">
+  <figcaption>The same image, split into its three colour channels. The cat's eyes are bright in R, the green grass is bright in G, the sky-tinted shadows in B.</figcaption>
 </figure>
 
-## Open it up — the learned filters
+## The killer flaw of MLPs on images — flattening
 
-CNNs are interpretable when they're small. Each 3×3 filter in `conv1`
-ends up as an **edge detector** at some orientation, plus a couple of
-blob detectors. This is exactly the cat-visual-cortex finding that
-motivated CNNs in the first place (Hubel &amp; Wiesel, 1962).
+An MLP needs a 1-D input. So before you can feed an image to one, you
+**flatten** it from `[C, H, W]` into a single long vector. That destroys
+the very thing that makes an image an image.
 
 <figure class="tutorial-fig">
-  <img src="{{ '/assets/tutorials/04/learned-filters.png' | relative_url }}"
-       alt="Eight 3x3 learned convolutional filters visualised as red-blue images">
-  <figcaption>The 8 learned filters in <code>conv1</code>. Red = positive weight, blue = negative. Most are oriented edge detectors.</figcaption>
+  <img src="{{ '/assets/tutorials/04/flatten-loses-spatial.png' | relative_url }}"
+       alt="Side-by-side: a 2D cat image and its 3072-element flattened version as a long thin strip">
+  <figcaption>Left — pixels know their neighbours. Right — the same pixels in arbitrary order. The MLP has to learn 2-D spatial structure from scratch, every single time, for every translation of every object.</figcaption>
 </figure>
 
-## What the filters fire on
+## The other MLP problem — parameter explosion
+
+For a fully-connected first hidden layer with 512 neurons:
+
+| input image | input features | parameters in 1st hidden layer |
+|---|---|---|
+| 8 × 8 digits (this notebook) | 64 | 33 280 |
+| 32 × 32 RGB (CIFAR) | 3 072 | **1 573 376** |
+| 224 × 224 RGB (ImageNet) | 150 528 | **77 070 848** |
+
+A CNN's first conv layer with 32 filters of 3 × 3 × 3 has **896
+parameters** *regardless of image size*. Same weights are reused
+everywhere.
 
 <figure class="tutorial-fig">
-  <img src="{{ '/assets/tutorials/04/feature-maps.png' | relative_url }}"
-       alt="Input digit on the left, eight feature maps showing where each filter activated">
-  <figcaption>Apply the same 8 filters to one input digit. Each filter highlights a different stroke — diagonal, vertical, the centre, the gap.</figcaption>
+  <img src="{{ '/assets/tutorials/04/parameter-scaling.png' | relative_url }}"
+       alt="Log-scale plot of parameter count vs image side length; MLP grows quadratically, CNN stays flat">
+  <figcaption>Parameter count in the first layer as the image grows. MLP scales O(n²); CNN stays flat. This is why no production vision model is an MLP.</figcaption>
 </figure>
 
-## Sample predictions
+## Empirical verdict: same data, two architectures
+
+We trained both a 3-layer MLP and a 2-conv-block CNN on CIFAR-10 for a
+few epochs each. The MLP gets ~52 % test accuracy with **1.7 M
+parameters**; the CNN gets ~70 % with **300 k parameters** — six times
+smaller and significantly better.
 
 <figure class="tutorial-fig">
-  <img src="{{ '/assets/tutorials/04/sample-predictions.png' | relative_url }}"
-       alt="Grid of 16 digit images with predicted and true labels">
-  <figcaption>16 random held-out digits with predictions. Green = correct, red = wrong. The mistakes are usually ambiguous digits even a human would hesitate on.</figcaption>
+  <img src="{{ '/assets/tutorials/04/mlp-vs-cnn-cifar.png' | relative_url }}"
+       alt="Two-panel figure: training loss curves for MLP vs CNN on CIFAR; bar chart of test accuracy">
+  <figcaption>MLP (red) vs CNN (green) on CIFAR-10. The CNN's loss falls faster <em>and</em> it generalises better, with a fraction of the parameters.</figcaption>
+</figure>
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/probe-logits.png' | relative_url }}"
+       alt="A probe cat image with bar plots of MLP and CNN logits over 10 classes">
+  <figcaption>Both models classifying a single held-out cat image. The MLP spreads its confidence — it doesn't really know. The CNN votes hard for the correct class.</figcaption>
+</figure>
+
+## What a convolution actually does
+
+A 2-D convolution is a local weighted sum:
+
+$$\quad \text{output}(i, j) = \sum_m \sum_n \text{input}(i + m, j + n) \cdot \text{kernel}(m, n)$$
+
+In words: place a small **kernel** of learnable weights on a patch of
+the input, multiply element-wise, sum, write the scalar into the
+output. Slide the kernel one step, repeat.
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/conv-mechanics.png' | relative_url }}"
+       alt="Three panels showing a 5x5 input, a 3x3 vertical-edge kernel, and the resulting 3x3 output">
+  <figcaption>One step of a 3 × 3 convolution on a 5 × 5 input. Output size = ⌊(5 − 3) / 1⌋ + 1 = 3. The kernel here is a vertical-edge detector; the output's columns reflect column differences in the input.</figcaption>
+</figure>
+
+### Padding and stride
+
+- **Padding**: add zero-pixels around the input border so the output
+  stays the same size as the input ("same" convolution). Without it,
+  every conv shrinks the spatial dims by `kernel_size - 1`.
+- **Stride**: how far the kernel jumps each step. Stride 2 halves the
+  output dimensions — a cheap form of downsampling.
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/padding-stride.png' | relative_url }}"
+       alt="Three side-by-side configurations of padding and stride showing input and output grid sizes">
+  <figcaption>Three common combinations. The general output-size formula is <code>n_out = ⌊(n + 2·pad − k) / s⌋ + 1</code> — memorise this; you'll use it every time you sketch an architecture.</figcaption>
+</figure>
+
+## Pooling — controlled downsampling
+
+After each convolution, we typically halve the spatial dimensions with
+a **pooling** layer. Max pooling keeps the strongest activation in each
+window and discards the rest; average pooling smooths.
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/pooling-types.png' | relative_url }}"
+       alt="A 4x4 input grid reduced by max-pool 2x2 to a 2x2 grid alongside average-pool result">
+  <figcaption>2 × 2 pooling with stride 2 halves each spatial dimension. Max-pool keeps the highest activation; avg-pool smooths.</figcaption>
+</figure>
+
+## The trained CNN, opened up
+
+CNNs are interpretable when they're small. **Each 3 × 3 filter in
+`conv1` ends up as an edge detector at some orientation**, plus a few
+blob/colour detectors. This is the same finding from the cat visual
+cortex experiments that originally motivated CNNs.
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/cnn-filters-cifar.png' | relative_url }}"
+       alt="Grid of 32 learned 3x3 RGB filters from the first conv layer of the CIFAR-trained CNN">
+  <figcaption>All 32 learned <code>conv1</code> filters from the CIFAR-trained CNN. Each tile is a 3 × 3 × 3 RGB pattern. You can spot colour-blob detectors (uniform tiles), edge detectors (split tiles), and a few opponent-colour detectors.</figcaption>
+</figure>
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/cnn-featuremaps-cifar.png' | relative_url }}"
+       alt="Grid of 32 feature maps from the first conv layer applied to a CIFAR cat image">
+  <figcaption>The same 32 filters applied to a single cat image. Each panel is one filter's response across the whole input — they highlight different strokes, edges, and colour regions. The spatial layout is preserved, which is why these are <em>localizable</em>.</figcaption>
+</figure>
+
+The notebook's 8 × 8 digit version of the same interpretation:
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/digits-filters.png' | relative_url }}"
+       alt="Eight 3x3 grayscale conv1 filters from the digit-trained CNN">
+  <figcaption>The eight filters from the runnable notebook (trained on 8 × 8 digits in 60 s). Coarser than the CIFAR version but the same story.</figcaption>
+</figure>
+
+<figure class="tutorial-fig">
+  <img src="{{ '/assets/tutorials/04/digits-featuremaps.png' | relative_url }}"
+       alt="Eight feature maps + the input digit they came from">
+  <figcaption>Their feature maps on one held-out digit.</figcaption>
 </figure>
 
 ## What's in here
 
-- What a 2D convolution does to an image, with pictures
-- Pooling: max vs average, when each one is the right call
-- A 2-conv-block CNN in PyTorch, trained in 60 s
-- **Visualising learned filters and feature maps** — interpretability for free
-- What changes when you move from 8×8 to 224×224 ImageNet
-- The case for fine-tuning a pretrained backbone instead of training from scratch
+- Why MLPs flatten the spatial structure of images and pay for it twice
+  (information loss + parameter explosion)
+- The convolution operation with the output-size formula
+- Padding, stride, and pooling — the three knobs every CNN turns
+- A 2-conv-block CNN built in ~30 lines of PyTorch
+- The interpretability story — learned filters as edge / colour
+  detectors, feature maps as their responses
+- Side-by-side MLP-vs-CNN training on CIFAR-10 with concrete parameter
+  and accuracy numbers
+- What changes for real-world datasets (batch norm, augmentation,
+  pretrained backbones)
 
 ## Prerequisites
 
-- [Tutorial 03](/tutorials/03-neural-networks-intro/) — the MLP training loop
-- A bit of comfort with image tensors (shape `[N, C, H, W]`)
+- [Tutorial 03](/tutorials/03-neural-networks-intro/) — the PyTorch
+  training loop
+- Comfort with image tensor shapes `[N, C, H, W]`
 
 ## Source
 
 Pedagogy adapted from the `CNN_final` teaching notebook I built while
-assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in his
-Machine Learning short course at Queen Mary University of London (2025);
-rebuilt here as a focused PyTorch tutorial with interpretability visuals
-as the centrepiece.
+assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in
+his Machine Learning short course at Queen Mary University of London
+(2025). The original is much longer (86 cells); this version preserves
+the pedagogical progression — MLP-on-images failure → convolution
+mechanics → trained-CNN interpretation — and adds the CIFAR-vs-digits
+hybrid demo for a 60-second runnable notebook with full CIFAR colour
+figures for the harder lessons.
 
 ## Next
 
@@ -93,6 +217,8 @@ as the centrepiece.
 
 1. Hubel, D. H., &amp; Wiesel, T. N. (1962). **Receptive fields, binocular interaction and functional architecture in the cat's visual cortex.** *Journal of Physiology* 160(1), 106–154. [doi:10.1113/jphysiol.1962.sp006837](https://doi.org/10.1113/jphysiol.1962.sp006837) — the biological motivation for oriented edge detectors.
 2. LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998). **Gradient-based learning applied to document recognition.** *Proceedings of the IEEE* 86(11), 2278–2324. [doi:10.1109/5.726791](https://doi.org/10.1109/5.726791) — the LeNet paper, the original conv-then-pool-then-FC template.
-3. Krizhevsky, A., Sutskever, I., &amp; Hinton, G. E. (2012). **ImageNet classification with deep convolutional neural networks.** *NeurIPS 2012*. [paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) — the AlexNet result that started the modern CNN era.
-4. He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). **Deep residual learning for image recognition.** *CVPR 2016*. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385) — ResNet; the architecture template used by most production CNNs in 2026.
-5. Zeiler, M. D., &amp; Fergus, R. (2014). **Visualizing and understanding convolutional networks.** *ECCV 2014*. [arXiv:1311.2901](https://arxiv.org/abs/1311.2901) — the original paper on filter and feature-map visualisation.
+3. Krizhevsky, A. (2009). **Learning multiple layers of features from tiny images.** Technical report — the CIFAR-10 / CIFAR-100 datasets. [pdf](https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf)
+4. Krizhevsky, A., Sutskever, I., &amp; Hinton, G. E. (2012). **ImageNet classification with deep convolutional neural networks.** *NeurIPS 2012*. [paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) — the AlexNet result that started the modern CNN era.
+5. He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). **Deep residual learning for image recognition.** *CVPR 2016*. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385) — ResNet; the architecture template used by most production CNNs in 2026.
+6. Zeiler, M. D., &amp; Fergus, R. (2014). **Visualizing and understanding convolutional networks.** *ECCV 2014*. [arXiv:1311.2901](https://arxiv.org/abs/1311.2901) — the original paper on filter and feature-map visualisation.
+7. Lin, M., Chen, Q., &amp; Yan, S. (2014). **Network in network.** *ICLR 2014*. [arXiv:1312.4400](https://arxiv.org/abs/1312.4400) — origin of global average pooling.
