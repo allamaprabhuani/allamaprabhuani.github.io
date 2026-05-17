@@ -5,6 +5,21 @@ author:
   name: Allamaprabhu S Ani
   email: allamaprabhuani@gmail.com
 
+# Fallback image when a page has no `image` in its frontmatter
+# (jekyll-seo-tag uses this for og:image / twitter:image).
+image: /assets/me.jpg
+logo: /favicon.png
+social:
+  name: Allamaprabhu S Ani
+  links:
+    - https://github.com/allamaprabhuani
+    - https://scholar.google.com/citations?user=dX3xKGsAAAAJ
+    - https://orcid.org/0000-0003-1039-7622
+    - https://www.linkedin.com/in/allamaprabhu-ani
+    - https://www.saponnusami.com/
+twitter:
+  card: summary_large_image
+
 markdown: kramdown
 highlighter: rouge
 permalink: /blog/:year/:month/:day/:title/

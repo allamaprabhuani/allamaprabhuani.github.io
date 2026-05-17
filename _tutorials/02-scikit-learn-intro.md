@@ -1,6 +1,11 @@
 ---
 title: "scikit-learn, the parts you'll actually use"
 subtitle: "A complete tabular-ML workflow on the UCI auto-MPG dataset: load → explore → split → fit → evaluate → diagnose. Single-feature first, then multi-feature."
+description: "A complete tabular-ML workflow on UCI auto-MPG: load, explore, split, fit, evaluate, diagnose. Single-feature first, then multi-feature with bias-variance demo."
+image:
+  path: /assets/tutorials/02/correlation-heatmap.png
+  width: 923
+  height: 633
 level: intro
 status: published
 order: 2

@@ -1,6 +1,11 @@
 ---
 title: "Introduction to Neural Networks"
 subtitle: "One neuron → matrix layer → manual gradient descent → PyTorch abstraction → MLP that fits a sine → real binary classifier on Wisconsin breast cancer data."
+description: "From a single neuron to a multi-layer perceptron in PyTorch, then a working binary classifier on Wisconsin breast cancer data with confusion matrix and ROC."
+image:
+  path: /assets/tutorials/03/sine-progression.png
+  width: 1672
+  height: 436
 level: intro
 status: published
 order: 3

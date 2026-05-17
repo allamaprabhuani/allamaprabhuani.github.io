@@ -1,6 +1,11 @@
 ---
 title: "Convolutional Neural Networks"
 subtitle: "Why MLPs fail on images, what a convolution actually does, and how to read what a trained CNN has learned."
+description: "Why MLPs fail on images, what a convolution actually does, and how to read what a trained CNN has learned. Filter and feature-map visualisations on CIFAR-10."
+image:
+  path: /assets/tutorials/04/mlp-vs-cnn-cifar.png
+  width: 1412
+  height: 424
 level: intermediate
 status: published
 order: 4

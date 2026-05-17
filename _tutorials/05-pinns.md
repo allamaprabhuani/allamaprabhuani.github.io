@@ -1,6 +1,11 @@
 ---
 title: "Physics-Informed Neural Networks (PINNs)"
 subtitle: "Data, physics, or both? A damped oscillator that compares all three on the same architecture, then the bridge to inverse problems and neural operators."
+description: "Data, physics, or both? A damped oscillator comparing three approaches on the same architecture, then the bridge to inverse problems and neural operators."
+image:
+  path: /assets/tutorials/05/hero-three-models.png
+  width: 1737
+  height: 513
 level: advanced
 status: published
 order: 5

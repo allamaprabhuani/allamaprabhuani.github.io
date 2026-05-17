@@ -2,6 +2,7 @@
 layout: post
 title: "SynaCAD: the synapse, and what it's for"
 subtitle: "Why I'm building an AI design partner that's bound by validated solvers, not by what an LLM thinks sounds plausible."
+description: "Why I'm building SynaCAD — an AI design partner for mechanical engineering, grounded in validated solvers (Bruhn, Niu, ESDU) rather than LLM plausibility."
 date: 2026-04-30
 tags: [synacad, vision, mechanics, ai]
 ---

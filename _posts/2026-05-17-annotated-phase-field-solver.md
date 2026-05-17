@@ -2,8 +2,16 @@
 layout: post
 title: "The Annotated Phase-Field Solver"
 subtitle: "An explainer for the differentiable, autograd-friendly phase-field fracture solvers that have quietly become a category, written for someone who knows PyTorch but has never solved a PDE before."
+description: "A from-scratch explainer of differentiable phase-field fracture solvers in PyTorch — variational form, alternating min, the four pitfalls, inverse problems."
+image:
+  path: /assets/blog/annotated-phase-field/fig5-gc-recovery.png
+  width: 1132
+  height: 398
 date: 2026-05-17
 tags: [phase-field, fracture, scientific-ml, autograd, pytorch]
+# Hidden until thesis + papers are public. Re-publish: flip to true.
+# Tracked in lifeops issue. Target re-publish: August 2026.
+published: false
 ---
 
 A phase-field fracture solver is a strange object. It is a finite-element

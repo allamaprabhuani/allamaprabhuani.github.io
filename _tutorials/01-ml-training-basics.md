@@ -1,6 +1,11 @@
 ---
 title: "Machine Learning Training, from scratch"
 subtitle: "Hand-derive the gradient, write the training loop in NumPy, then again in PyTorch with autograd. Then watch a deliberately over-large model overfit, and fix it three different ways."
+description: "Hand-derive the gradient, write the training loop in NumPy, then PyTorch with autograd. Watch a deliberately over-large model overfit, fix it three ways."
+image:
+  path: /assets/tutorials/01/hero-fit.png
+  width: 892
+  height: 476
 level: intro
 status: published
 order: 1
