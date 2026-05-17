@@ -1,0 +1,860 @@
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=7dbdaf18"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="scikit-learn-%E2%80%94-the-parts-you'll-actually-use">scikit-learn — the parts you'll actually use<a class="anchor-link" href="#scikit-learn-%E2%80%94-the-parts-you'll-actually-use">¶</a></h1><blockquote>
+<p>Pipelines, cross-validation, and the five models that solve 80 % of
+tabular problems.</p>
+</blockquote>
+<p>scikit-learn is enormous. Working ML code uses roughly 10 % of it. This is
+that 10 %, demonstrated on California housing — a real, messy, mid-sized
+dataset where every preprocessing decision visibly moves the score.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=707acc7a"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-The-dataset">1. The dataset<a class="anchor-link" href="#1.-The-dataset">¶</a></h2><p>8 numeric features (median income, house age, average rooms, population,
+latitude, longitude…), one continuous target (median house value), 20 640
+rows. Standard sklearn import, no extra download.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=06c1f176">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">(</span><span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">target</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">'→'</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(20640, 8) → (20640,)
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt output_prompt">Out[1]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>MedInc</th>
+<th>HouseAge</th>
+<th>AveRooms</th>
+<th>AveBedrms</th>
+<th>Population</th>
+<th>AveOccup</th>
+<th>Latitude</th>
+<th>Longitude</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>8.3252</td>
+<td>41.0</td>
+<td>6.984127</td>
+<td>1.023810</td>
+<td>322.0</td>
+<td>2.555556</td>
+<td>37.88</td>
+<td>-122.23</td>
+</tr>
+<tr>
+<th>1</th>
+<td>8.3014</td>
+<td>21.0</td>
+<td>6.238137</td>
+<td>0.971880</td>
+<td>2401.0</td>
+<td>2.109842</td>
+<td>37.86</td>
+<td>-122.22</td>
+</tr>
+<tr>
+<th>2</th>
+<td>7.2574</td>
+<td>52.0</td>
+<td>8.288136</td>
+<td>1.073446</td>
+<td>496.0</td>
+<td>2.802260</td>
+<td>37.85</td>
+<td>-122.24</td>
+</tr>
+<tr>
+<th>3</th>
+<td>5.6431</td>
+<td>52.0</td>
+<td>5.817352</td>
+<td>1.073059</td>
+<td>558.0</td>
+<td>2.547945</td>
+<td>37.85</td>
+<td>-122.25</td>
+</tr>
+<tr>
+<th>4</th>
+<td>3.8462</td>
+<td>52.0</td>
+<td>6.281853</td>
+<td>1.081081</td>
+<td>565.0</td>
+<td>2.181467</td>
+<td>37.85</td>
+<td>-122.25</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=649b875b">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">Xtr</span><span class="p">,</span> <span class="n">Xte</span><span class="p">,</span> <span class="n">ytr</span><span class="p">,</span> <span class="n">yte</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'train: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xtr</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;5</span><span class="si">}</span><span class="s1">   test: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Xte</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;5</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>train: 16512   test:  4128
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=35213181"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Pipeline-%E2%80%94-the-single-object-that-holds-preprocessing-+-model">2. Pipeline — the single object that holds preprocessing + model<a class="anchor-link" href="#2.-Pipeline-%E2%80%94-the-single-object-that-holds-preprocessing-+-model">¶</a></h2><p>The Pipeline is the single most underused class in sklearn. It bundles
+preprocessing and the model into one estimator, which means:</p>
+<ul>
+<li>one <code>.fit()</code> call, one <code>.predict()</code> call</li>
+<li>cross-validation sees the preprocessing too (no leakage)</li>
+<li>model persistence saves the full pipeline (no "I forgot to scale" bugs)</li>
+<li>swapping models is one line</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=c035cd60">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">'scale'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s1">'model'</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">()),</span>
+<span class="p">])</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'train R²  </span><span class="si">{</span><span class="n">pipe</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xtr</span><span class="p">,</span><span class="w"> </span><span class="n">ytr</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'test R²   </span><span class="si">{</span><span class="n">pipe</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xte</span><span class="p">,</span><span class="w"> </span><span class="n">yte</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>train R²  0.609
+test R²   0.594
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=26fd6e31"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Five-models-that-solve-most-tabular-problems">3. Five models that solve most tabular problems<a class="anchor-link" href="#3.-Five-models-that-solve-most-tabular-problems">¶</a></h2><p>You will reach for one of these in 90 % of tabular ML work. Keep them in
+your head; reach for fancier models only when these plateau.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=e900465e">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ridge</span><span class="p">,</span> <span class="n">Lasso</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'linear'</span><span class="p">:</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'sc'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">'m'</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">())]),</span>
+    <span class="s1">'ridge'</span><span class="p">:</span>  <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'sc'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">'m'</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))]),</span>
+    <span class="s1">'lasso'</span><span class="p">:</span>  <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'sc'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">'m'</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">))]),</span>
+    <span class="s1">'tree'</span><span class="p">:</span>   <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="s1">'rf'</span><span class="p">:</span>     <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="s1">'gb'</span><span class="p">:</span>     <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=adbd38ba"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-cross_val_score-%E2%80%94-why-a-single-split-lies">4. <code>cross_val_score</code> — why a single split lies<a class="anchor-link" href="#4.-cross_val_score-%E2%80%94-why-a-single-split-lies">¶</a></h2><p>A single train/test split gives you one number. That number could be lucky
+or unlucky. <strong>k-fold cross-validation</strong> rotates the test fold across the
+data and gives you a <em>distribution</em> of scores — that's the honest signal.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=6613ae16">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">'r2'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+          <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s1">&gt;7s</span><span class="si">}</span><span class="s1">  R² = </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">  ± </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre> linear  R² = 0.605  ± 0.006
+  ridge  R² = 0.605  ± 0.006
+  lasso  R² = 0.603  ± 0.006
+   tree  R² = 0.678  ± 0.007
+     rf  R² = 0.797  ± 0.005
+     gb  R² = 0.821  ± 0.005
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=ad0d8f86"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-GridSearchCV-vs-RandomizedSearchCV">5. <code>GridSearchCV</code> vs <code>RandomizedSearchCV</code><a class="anchor-link" href="#5.-GridSearchCV-vs-RandomizedSearchCV">¶</a></h2><p><code>GridSearchCV</code> tries every combination — exhaustive, expensive.
+<code>RandomizedSearchCV</code> samples random combinations — much faster, almost as
+good for &gt;3 hyperparameters. <strong>Default to Randomized.</strong></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=c5e526ac">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'m__alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'sc'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span> <span class="p">(</span><span class="s1">'m'</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">())]),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">'r2'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'best alpha: </span><span class="si">{</span><span class="n">gs</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s2">"m__alpha"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'best CV R²: </span><span class="si">{</span><span class="n">gs</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'test R²:    </span><span class="si">{</span><span class="n">gs</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xte</span><span class="p">,</span><span class="w"> </span><span class="n">yte</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>best alpha: 10.0
+best CV R²: 0.605
+test R²:    0.594
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: divide by zero encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/utils/extmath.py:203: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: divide by zero encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: overflow encountered in matmul
+  return X @ coef_ + self.intercept_
+/Users/allamaprabhuani/miniconda3/lib/python3.10/site-packages/sklearn/linear_model/_base.py:280: RuntimeWarning: invalid value encountered in matmul
+  return X @ coef_ + self.intercept_
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=81cd405b"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6.-Saving-and-loading-without-breaking-versioning">6. Saving and loading without breaking versioning<a class="anchor-link" href="#6.-Saving-and-loading-without-breaking-versioning">¶</a></h2><p><code>joblib.dump()</code> serialises the whole pipeline. Always pin your
+scikit-learn version — pickle files break across major versions.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=5245c050">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span><span class="o">,</span><span class="w"> </span><span class="nn">sklearn</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">'gb'</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span><span class="p">)</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">'pipe'</span><span class="p">:</span> <span class="n">gb</span><span class="p">,</span> <span class="s1">'sklearn_version'</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">__version__</span><span class="p">},</span> <span class="s1">'/tmp/gb_model.joblib'</span><span class="p">)</span>
+
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'/tmp/gb_model.joblib'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'saved with sklearn </span><span class="si">{</span><span class="n">loaded</span><span class="p">[</span><span class="s2">"sklearn_version"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'loaded test R²: </span><span class="si">{</span><span class="n">loaded</span><span class="p">[</span><span class="s2">"pipe"</span><span class="p">]</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xte</span><span class="p">,</span><span class="w"> </span><span class="n">yte</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>saved with sklearn 1.7.2
+loaded test R²: 0.826
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=e575fac3"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-you've-built">What you've built<a class="anchor-link" href="#What-you've-built">¶</a></h2><ul>
+<li>A Pipeline that holds preprocessing + model as one object.</li>
+<li>A 5-model bake-off with honest cross-validated scores.</li>
+<li>A <code>GridSearchCV</code> over a real hyperparameter.</li>
+<li>A persisted model that survives Python sessions.</li>
+</ul>
+<p><strong>Next:</strong> <a href="/tutorials/03-neural-networks-intro/"><code>03 — Introduction to Neural Networks</code></a>
+covers what's different when the model is a network and the framework is
+PyTorch.</p>
+<p>For the rest of the series, see <a href="/tutorials/">tutorials</a>.</p>
+</div>
+</div>
+</div>

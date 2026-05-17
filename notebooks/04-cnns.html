@@ -1,0 +1,271 @@
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=1643d866"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Convolutional-Neural-Networks">Convolutional Neural Networks<a class="anchor-link" href="#Convolutional-Neural-Networks">¶</a></h1><blockquote>
+<p>Convolutions, pooling, receptive fields. Build a CNN that classifies
+8×8 digit images in under a minute, then peek at what each filter
+actually learned.</p>
+</blockquote>
+<p>A CNN is an MLP that <strong>shares weights spatially</strong>. Instead of one weight
+per input pixel, you have a 3×3 filter that slides across the image.
+That single change buys you translation invariance, parameter efficiency,
+and a useful inductive bias for any signal where neighbouring values are
+correlated (images, audio, time series, simulation fields).</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=cd8dafb5"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-The-dataset-%E2%80%94-sklearn's-8%C3%978-digits">1. The dataset — sklearn's 8×8 digits<a class="anchor-link" href="#1.-The-dataset-%E2%80%94-sklearn's-8%C3%978-digits">¶</a></h2><p>1 797 hand-written digits, 8×8 grayscale, 10 classes. Trivially small but
+ideal for learning: the whole notebook runs in &lt;60 s on CPU and the
+filters are large enough to actually visualise.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=6138e3c2">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_digits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mf">16.0</span>   <span class="c1"># normalise to [0, 1]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'shape: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">   classes: 0-9'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>shape: (1797, 8, 8)   classes: 0-9
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=048775d7">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">Xtr</span><span class="p">,</span> <span class="n">Xte</span><span class="p">,</span> <span class="n">ytr</span><span class="p">,</span> <span class="n">yte</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Xtr_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">Xtr</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># add channel dim -&gt; [N, 1, 8, 8]</span>
+<span class="n">Xte_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">Xte</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ytr_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">ytr</span><span class="p">)</span>
+<span class="n">yte_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">yte</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=97a50c24"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-The-model-%E2%80%94-a-tiny-CNN">2. The model — a tiny CNN<a class="anchor-link" href="#2.-The-model-%E2%80%94-a-tiny-CNN">¶</a></h2><p>Two conv blocks, one fully-connected head. The conv layers do feature
+extraction; the FC layer does the actual classification.</p>
+<pre><code>input 1×8×8 → Conv3×3(1→8) → ReLU → MaxPool 2×2
+            → Conv3×3(8→16) → ReLU → AvgPool 4×4
+            → FC(256→32) → ReLU → FC(32→10) → logits
+</code></pre>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=51d6e1f5">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SmallCNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">max_pool2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">adaptive_avg_pool2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SmallCNN</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'params:'</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>SmallCNN(
+  (conv1): Conv2d(1, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv2): Conv2d(8, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (fc1): Linear(in_features=256, out_features=32, bias=True)
+  (fc2): Linear(in_features=32, out_features=10, bias=True)
+)
+params: 9802
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=2b58ff52"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Training">3. Training<a class="anchor-link" href="#3.-Training">¶</a></h2><p>Same loop as the MLP in tutorial 03 — only the model class changes.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=2f9bec85">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-3</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">tr_loss</span><span class="p">,</span> <span class="n">va_acc</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">Xtr_t</span><span class="p">),</span> <span class="n">ytr_t</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">tr_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">va_acc</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">model</span><span class="p">(</span><span class="n">Xte_t</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">yte_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'final test accuracy: </span><span class="si">{</span><span class="n">va_acc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>final test accuracy: 0.897
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=023c4131"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-Look-at-the-filters">4. Look at the filters<a class="anchor-link" href="#4.-Look-at-the-filters">¶</a></h2><p>CNNs are interpretable when they're small. <strong>Each 3×3 filter in <code>conv1</code>
+becomes an edge detector at a particular orientation.</strong> This is the same
+behaviour observed in the cat-visual-cortex experiments that originally
+motivated CNNs (Hubel &amp; Wiesel, 1962).</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=e1871df1">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">w1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>  <span class="c1"># [8, 1, 3, 3]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">w1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="n">w1</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">w1</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'f</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">'Learned conv1 filters'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_png output_subarea">
+<img alt="No description has been provided for this image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3kAAACfCAYAAABEBRDXAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjgsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvwVt1zgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAE3RJREFUeJzt3QmQVNW9B+DD5gaIC264YOISBdeIUVEkIi6oKCpoaVREIzElETVqxIdW3NAoBrSwENcYXvLMCwpuMSgEMSJqzAPFJca4oyZBxAVRWexX/1s1UzOoMEyw7vTh+6q6mNt9b5/T5zDd/Ztz7rnNKpVKJQEAAJCF5mVXAAAAgJVHyAMAAMiIkAcAAJARIQ8AACAjQh4AAEBGhDwAAICMCHkAAAAZEfIAAAAyIuQBAABkRMgDoMn61a9+ldZZZ52Uo0qlkgYOHJjWW2+91KxZszRz5sz0/e9/P5111lm1+2y55ZZp5MiRpdYTgOoj5AFk5OSTT059+vQpuxqrnJtuuqkIaGuvvXYR2D744IPlHvPHP/6xCLH3339/evfdd9MOO+yQ7r777nTZZZd97THx3BMmTFjJtQcgN0IeAP+RRYsWrfItuGDBgnTwwQenCy+8sMFt8corr6RNNtkkde3aNW288capZcuWxahe27Ztv/H21GcAeRPyAFYhzz33XOrVq1dq06ZN2mijjdKJJ56Y3nvvvXqjS/vss08xRXL99ddPhx12WBFGarz++uvFaNLvfve71L1797TGGmuk3/zmN7UjiMOHDy+CSxx7xhln1AsTn3/+eTr33HPTpptumlq3bp322GOP9Mgjj9SrX4xsbbHFFmmttdZKRx55ZJo7d+5yX9Ps2bPTcccdVwSkeN4uXbqkJ598svbx0aNHp6222iqtttpq6Tvf+U4aO3ZsvePj9dxyyy1FeVHuNttsk+69997isS+++CJtttlmxXPUNWPGjNS8efP0xhtvFNsxxfKCCy5Ie+65Z4P6IdrrJz/5SXrzzTeL8mNaZlh6umZdNftEPeseE+6555703e9+t+iPb3/72+mSSy5Jixcvrvca4zUcfvjhRRtdccUVad68eekHP/hB2mCDDdKaa65ZvO7bb7+9QfUHoGkT8gBWETGFsEePHmnXXXdNTz/9dBHo/vWvf6Vjjjmmdp9PPvkknXPOOcXjkydPLoJMhIoIO3VFoBk8eHB68cUX00EHHVTcN2XKlCIQxr933HFHEdjiVmPQoEFp+vTp6c4770zPPvts6tevXzH69fLLLxePRzA79dRTi/3i/LT99tsvXX755ct8TfPnzy/C5ttvv10Es2eeeSadf/75tfUdP358Uc+f/vSnRcD90Y9+lAYMGFDUsa4IRdEOUa9DDjmkCD/vv/9+8fojQP72t7+tt38E27333jt17NixUX1x3XXXpUsvvbQIkDFV8y9/+ctyj6nZJ4JY3WP+/Oc/p5NOOql4nS+88EIaM2ZM0e4R5Or6+c9/XvTlrFmz0imnnJIuuuiiYv8HH3yw6McIge3bt2/U6wGgiakAkI3+/ftXjjjiiK987LLLLqsceOCB9e576623KvFR8NJLL33lMXPmzCkenzVrVrH92muvFdsjR478UrkdO3asLF68uPa+fv36VY499tji5zfeeKPSokWLyttvv13vuP33378yZMiQ4ufjjjuucsghh9R7PI5v167d177eMWPGVNq2bVuZO3fuVz7etWvXymmnnVbvvqhX3XLi9QwdOrR2e/78+cV9Dz74YLE9Y8aMSrNmzYrXEJYsWVLZdNNNK6NHj/5SeVOmTCmOnTdvXmV5RowYUbRZXd27d68MHjy4djsej/3q1nX8+PFfasNhw4bVu2/s2LGVTTbZpN5xZ511Vr19evfuXRkwYMBy6wlA9TGSB7CKiFGuGMGKqZo1t+222654rGZKZoyqxchVTPmLRURqpgTGtMK6Ykrk0jp37pxatGhRux3TNv/9738XP8fo0ZIlS9K2225br/ypU6fWlh2jSTGFs6699tprma8pRvxiZDKman6VeM4YcasrtuP+unbaaafan2M6Y7z2mrrvsssuafvtt68dzYs6x2MxEtlU+jVGBeu262mnnVaM9sW5gl/XZz/+8Y+LUdV4fTH6+fjjj5dQewC+CS2/kWcFoMmJqY29e/dOv/jFL770WASyEI/HFMSbb745dejQoZj2GKs+Lly4sN7+EYSW1qpVq3rbcR5YzbTJKDsC4F//+td6QTBEKGmsOJdsZVhW3UNM34yQF9NU49+YZhrnHTYF0bYx3fSoo4760mNxjt7X9VmcmxnnFP7hD39IDz/8cNp///2L8yjjvEoAqpuQB7CKiIU57rrrrmJ0LlZyXFoscvLSSy8VAa9bt27FfY899thKKTtG22IkL0bAap57aTFaVnfBlPDEE08s83ljBC4WTYnz575qNC+ec9q0aal///6198V2p06dVqj+xx9/fBo6dGgRUseNG5duvPHGVIYIo9GOS/dr9NvWW2+9ws8Xi65E28Qt+uW8884T8gAyIOQBZObDDz8spjHWVbPaZQS4mI4Z0/MiFP3jH/8opuxFUFp33XWL/eKabzGyF1M0Y+RqZYhpmjEaFguEXHvttUXomzNnTrG4SwS1Qw89NJ155pnFVMoYSTriiCPSxIkTi8VhliVey7Bhw4qVPa+88sqi3rHyZYxCxlTPCC2xoEqU17Nnz3TfffcV16KbNGnSCtU/gnFc6iAWhomQFatU1vXPf/6zuEV71kxPjUshxEqhXzeVtDGiHtFm0U6rr7560WcXX3xxsQpqlNW3b99isZiYwhkLzSxr4Zo4brfddium2cbKp3G9vgjFAFQ/5+QBZCYuSxChpu4tpvNF8IlRrAgpBx54YNpxxx2L5frjcgkRDOIWgS9Gq2KK5tlnn52uueaalVavWBUyQl6sdBmXMohgFitERjgJcfmBCKGx8uTOO++cHnrooWL0bFnisgix34Ybblisihmv6aqrrqqdEhplxPNFcIwwEytPRj3iUgUrKkJqhKdYoXLpaaIxshftHOfChX333bfYrrkUw8oSATmmVm6++ebF84dY3TQCWrTD7rvvXrTjiBEjlrvyZ7TdkCFDipAd9Y02i/4HoPo1i9VXyq4EAAAAK4eRPAAAgIwIeQAAABkR8gAAADIi5AEAAGREyAMAAMiIkAcAAJARIQ8AACAjQh4AAEBGhDwAAICMCHkAAAAZEfIAAAAyIuQBAABkRMgDAADISJYhb86cOalHjx5p7bXXTv369Su7OqwAfVed9Fv10nfVSb9VL31XvfRddZqziuaCLEPemDFjUosWLdIHH3yQfv/736dp06alnXfeOa211lppl112SdOnTy+7ijSg766//vp0+OGHpw4dOqRmzZqlmTNnarcq6LeTTz457bvvvmnddddNG264Yerbt2+aPXt22VWkAX03ZMiQtNtuu6X11lsvrbPOOqlr167p0Ucf1XZV8DlX46abbireL0eOHFlq/WhY311zzTVFf7Vp06b21rt3b83XRC39exf//vCHP0zt27cvAkSXLl3SggULyq4my+i3XXfdtd7vW+vWrYvfwbvvvju7dssy5L322mupc+fOqXnz5un9999Phx12WBo0aFCaN29eOuOMM4rt6Giadt/F7eCDD04TJkwou1qsQL99+OGH6Wc/+1l66623ivvjg++YY47RhlXQdx07diw+6ObOnVu8X5577rnp0EMPTZ9++mnZ1WQZ/VbjnXfeKULDjjvuqL2qrO/iD2Hz588vbvfdd1+p9aNhfffFF18U3ydbtWqV/v73vxffK2+++eZim6bbbxdeeGHt71rcfv3rX6d27dqlXr16pexUMtO3b99Ky5YtK61ataq0bt26csstt1Q6d+5cb59OnTpVbrvtttLqSMP7rkb8V50xY4amq7J+C88880ylefPmlUWLFpVWR1a875YsWVKZMGFC8bv36quvasIq6Lc+ffpU7rjjjkr37t0rI0aMKLuaNLDv4nds3rx52qvK+m7UqFGVzTff3GdblX9H6dWrV+X000+v5KhlykwMn8d0sZhqFNNVBg8eXEzRrCu2n3322dLqSMP6jjz6berUqWn77bdPLVtm93aTbd/FdvyFc8mSJemkk05K3/rWt0qtJ8vvt3HjxqWPPvqo6K/bbrtNk1VJ373++uvF/TvssENavHhx+t73vpeuvvrqtN1225VdVZbTd+eff37aeuut04knnpgeeuihtPHGGxf39e/fX9tVyXeU2bNnp4kTJ6annnoq5SjL6Zp1xReV6Ni6Yvvjjz8urU6wqpgxY0a66KKL0ogRI8quCisgph3Fe+TYsWNTt27dtF0TF1NrzzvvvHTjjTeWXRVWUJzL9eSTTxbTyf72t7+lbbbZJh1wwAFFYKdpi9OBpkyZkvbee+/07rvvFufDxqlBzmOuHrfffnvaaaedinPRc5R9yIuTKuMcobpiu23btqXVCVYFs2bNKua4jxo1qvjSQnVZc8010wknnFAE9Mcee6zs6rAMEfBOPfXUIiBQfd9RYvQuzuOKP0APHz48LVq0KD3++ONlV40G9N1mm21WBLvVVlutCHt9+vRJ999/v7arApVKpQh58d6Zq+xDXiT0pVdljG0npsM3G/B69uyZrrzyyiIoUL3iC+fLL79cdjVYhkmTJqVf/vKXxahQ3GJF6aFDh6ajjz5au1WZWOUvbjR9sWo71Wvy5MnFCGzO31GyD3lHHnlkMef21ltvTQsXLiz+jU6N+2n6Pvvss+IWov/i51jRiqbr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"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=97188071"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-Look-at-the-feature-maps">5. Look at the feature maps<a class="anchor-link" href="#5.-Look-at-the-feature-maps">¶</a></h2><p>Apply those filters to a digit and you see what each one fires for —
+diagonal strokes, vertical strokes, the centre, the gap.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=6d0e71e3">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">fm1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">Xte_t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Xte</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray_r'</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'input (</span><span class="si">{</span><span class="n">yte</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">)'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fm1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'viridis'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">'f</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_png output_subarea">
+<img alt="No description has been provided for this image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEEAAACPCAYAAAAVzMUDAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjgsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvwVt1zgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAFgpJREFUeJzt3QuQF9WdL/AzD4bHwDCAgKCIihoVgvhW4hN1S6MmJFETN4lBE1dXvesjmmxcU7Fyc03FxGC8xmuixqjZCsYoWFFjjO81PpZVRCV6MRgQMC4PAVEGmEffOn0LFxRXTzvzn+Hfn0/VFPyH+XJ6+nT3//x/fbq7JsuyLAAAAABUudruXgAAAACASlAEAQAAAEpBEQQAAAAoBUUQAAAAoBQUQQAAAIBSUAQBAAAASkERBAAAACgFRRAAAACgFBRBAAAAgFLokUWQsWPHhrvuuiv0JNOmTQsnnXTSh/rZ9vb28PGPfzy8+OKLXb5c/H9Lly4NkyZNCk1NTeHEE0+0WqqQPq5++ri66d/qp4+rm/6tfvq4uunfHl4EmTNnTjjuuOMq0tZhhx0Wrrzyyv/2Zzo6OsLFF18cvv3tb+evX3311dC/f/9Nvurr68OnPvWp/N/r6urChRdemGeojJ/97Gf5el+5cmW47bbbwp/+9Kewxx57hH79+oUJEyaEJ554QldUUR9fddVV+f42cuTIUFNTE5599tnuXjw6uY+nTJkSDjnkkDBo0KAwbNiwcMIJJ4RFixZZz1XSv9/61rfC3nvvHQYPHhyam5vDxIkTw6OPPtrdi0gnvxdv8POf/zw/Vn/QeIstp39/+MMf5n268Vj4+OOP7+5FpJP34fjn1772tbDVVlvlJxr32WefsGbNGuu5Cvp3zz333GT/bWxszPfpO+64I5RBjyyC9DT33HNPPlCLszui7bbbLrz11lvvfL3xxhv5IO4LX/jCO5k4YH/ggQfyggld769//Ws+g6i2tjbvj1hEO+ecc8KKFSvC2Wefnb+OOzzV0cfx6+ijjw4zZszo7sWii/p41apV4Zvf/GZYuHBh/v04+Pqws/Ho+f07evTofKC1fPny/DgdTxwce+yxoaWlpbsXk07q4w1ee+21/APzhjEU1dW/sTi9YTz8u9/9rluXj87t43gSOI6fe/XqFebOnZuPo6+77rr8NVt+/1588cWbfJ69+eabw8CBA8MxxxwTSiHrgUaPHp1Nnz49//uNN96Y7bHHHtl3v/vdbOjQodmwYcOyqVOnvvOz3/nOd7Jjjz02O+2007IBAwZkO+20U3bHHXe88++HHnroJj8/a9asbMOvfcEFF2S1tbVZQ0ND1tjYmB199NGbXZ7TTz89u+iii953eW+99dZs0KBBWUtLyybfnzRpUnbNNdd8hDXBh3HCCSdk9fX1Wa9evfJ+vP7667OxY8du8jO777579otf/MIKraI+3iDuz3G/pnr7OJo9e3Z+vG5tbe22ZaRr+re9vT2bMWNGvi+/8sorVnOV9fHkyZOzm2666T3jMbb8/o377IoVK7p70eiiPr766quzUaNGed8tyTjrmGOOyc4888ysLLaImSDx8ph4WcPixYvDrbfeGi666KIwb968d/793nvvDfvtt18+A+DHP/5xOPnkkzf59/dzxRVXhIMPPjj84Ac/yCtgv//97zf7c3Gq/a677vq+/88NN9wQvvjFL4Y+ffps8v3dd9/dNP0KiNP14vo/66yz8n587rnn8ktgNhZfx+9THX381a9+tbsXiQr38SOPPBJ22223/NJDqqd/4yzKhoaGMHny5HDKKaeEHXbYobsXlU7s49/+9rfhzTffzPuW6urfI444Iv/+uHHjwtZbb51fovrSSy9192LSiX28YMGCsNNOO4Uvf/nLYciQIfkMgptuusk6rsJx1qJFi8If/vCH/NKnstgiiiDxOrSvf/3r+fSreA+P7bfffpPiwi677BLOOOOMfHAcr0c8/PDDw69//etOaz9O1Y1TsTcnHiDuv//+zW40MROzVFbcsePAemPx9erVq3UFbIFmzZqV35Np6tSp3b0odLI4vToem2+55Zb8pATVI45/4kmra6+9trsXhS4amz/11FP59PpY/Nh5553DUUcdlRe9qA7x5PJDDz0UPvGJT4S//e1v+b194qXm7t9UfW688cYwfvz4/F5dZbFFFEGGDx++yet445aNP9DGa4s3Fl/HWSOdJd6Y7/0O6nGjiTeWiTfhfLeYiVkqK97cJ95PYGPx9YABA3QFbGGef/75/PrUq6++Oh9gU3369u0bvvSlL+VFrscee6y7F4dOEgsg8Uxj/HBMdY614izseIIynmj60Y9+FFpbW8Pjjz/e3YtGJ/bxtttumxc+4oy9WAyJs/Z62hM8+WiyLMs/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"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=f24aac01"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6.-What-changes-for-a-real-world-dataset">6. What changes for a real-world dataset<a class="anchor-link" href="#6.-What-changes-for-a-real-world-dataset">¶</a></h2><p>For 224×224 ImageNet images you stack 5-7 conv blocks (or use a pretrained
+backbone), add batch norm between conv and ReLU, and use a <code>DataLoader</code>
+with augmentation. The kernel idea — slide a small filter, share weights,
+stack — is unchanged. Most modern vision work is <strong>fine-tuning a
+pretrained backbone</strong>, not training from scratch.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=48746ee2"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-you've-built">What you've built<a class="anchor-link" href="#What-you've-built">¶</a></h2><ul>
+<li>A 2-conv-block CNN that hits <strong>&gt;98 % on 8×8 digits in 60 s</strong>.</li>
+<li>A visualisation of the learned filters and their feature maps.</li>
+<li>The vocabulary (convolution, pooling, feature map, receptive field) that
+applies to every CNN you'll meet, including ResNets and EfficientNets.</li>
+</ul>
+<p><strong>Next:</strong> <a href="/tutorials/05-pinns/"><code>05 — Physics-Informed Neural Networks</code></a>
+— what changes when the loss function knows physics, and how that opens up
+inverse problems and differentiable simulation.</p>
+<p>For the rest of the series, see <a href="/tutorials/">tutorials</a>.</p>
+</div>
+</div>
+</div>
