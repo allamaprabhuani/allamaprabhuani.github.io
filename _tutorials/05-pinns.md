@@ -40,9 +40,10 @@ right is extrapolation.
 
 ## The setup
 
-Light underdamped oscillator, $\omega_0 = 4\pi$, $\zeta = 0.05$. 12 noisy
-observations in $t \in [0, 0.4]$. The exact solution is a decaying cosine —
-which lets us measure error directly across the full window $t \in [0, 1]$.
+Light underdamped oscillator, $\omega_0 = 2\pi$ (period 1, one full cycle
+in the window) and $\zeta = 0.05$. 12 noisy observations in
+$t \in [0, 0.4]$. The exact solution is a decaying cosine — which lets us
+measure error directly across the full window $t \in [0, 1]$.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/05/setup.png' | relative_url }}"
