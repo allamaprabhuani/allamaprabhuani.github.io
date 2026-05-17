@@ -1,52 +1,327 @@
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=44f35704"><div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=66248a0c"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Introduction-to-Neural-Networks">Introduction to Neural Networks<a class="anchor-link" href="#Introduction-to-Neural-Networks">¶</a></h1><blockquote>
-<p>Build a 2-layer network in NumPy, then the same thing in PyTorch.
-Backprop, by hand, once.</p>
+<p>Start with one neuron. Add the loss. Add the optimiser. Add a layer.
+Add a hidden layer. End with a binary classifier on real medical data.</p>
 </blockquote>
-<p>By the end of this notebook you'll have a working binary classifier on the
-Wisconsin breast-cancer dataset (569 patients, 30 features) and you'll know
-exactly which line in the training loop does what. We finish with a
-confusion matrix and an ROC curve — the two plots every classification
-result should ship with.</p>
+<p>A neural network is what you get when you stack a lot of <code>f(w·x + b)</code>
+neurons and let gradient descent set the weights. This tutorial walks
+the whole construction — phase by phase — and finishes with a working
+classifier on the Wisconsin breast-cancer dataset.</p>
+<p>By the end you will have written, in roughly this order:</p>
+<ol>
+<li>A single neuron with three activation choices</li>
+<li>A manual gradient-descent training loop</li>
+<li>The same model in PyTorch's <code>nn.Module</code> abstraction</li>
+<li>A 2-hidden-layer MLP that actually fits a sine wave</li>
+<li>A binary classifier on 30-feature medical data with confusion matrix
+and ROC</li>
+</ol>
+<p>The runnable notebook executes in under a minute on CPU.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=898a3550"><div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=74ab2207"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="1.-A-single-neuron">1. A single neuron<a class="anchor-link" href="#1.-A-single-neuron">¶</a></h2><p>A neuron computes <code>f(w·x + b)</code>. That's the entire model. A <em>network</em> is
-many neurons composed in layers. The two design choices are the
-<strong>activation function</strong> <code>f</code> and the <strong>shape</strong> (how many layers, how wide).</p>
+<h2 id="Phase-1:-The-single-neuron">Phase 1: The single neuron<a class="anchor-link" href="#Phase-1:-The-single-neuron">¶</a></h2><p>A neuron computes one number:</p>
+<p>$$\quad z = w \cdot x + b, \qquad y = f(z)$$</p>
+<p><code>w</code> and <code>b</code> are <em>learnable parameters</em>. <code>f</code> is a fixed non-linear
+<strong>activation function</strong> — the only thing that distinguishes neural
+networks from ordinary linear regression.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=969a4760">
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=23985fea">
 <div class="input">
 <div class="prompt input_prompt">In [1]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">weighted_sum_and_bias</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>  <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">relu</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">weighted_sum_and_bias</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'z          = </span><span class="si">{</span><span class="n">z</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">+.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'sigmoid(z) = </span><span class="si">{</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'relu(z)    = </span><span class="si">{</span><span class="n">relu</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>z          = -0.7500
+sigmoid(z) = 0.3208
+relu(z)    = 0.0000
+</pre>
 </div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=ab69b516"><div class="prompt input_prompt">
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=8c0c8111"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="2.-The-dataset-%E2%80%94-Wisconsin-breast-cancer">2. The dataset — Wisconsin breast cancer<a class="anchor-link" href="#2.-The-dataset-%E2%80%94-Wisconsin-breast-cancer">¶</a></h2><p>569 samples, 30 numeric features per patient (radius, texture, perimeter…),
-binary label (malignant vs benign). Real medical data, used as the standard
-toy classification benchmark since 1995. Sklearn includes it.</p>
+<h2 id="Phase-2:-From-neuron-to-layer-(the-matrix-form)">Phase 2: From neuron to layer (the matrix form)<a class="anchor-link" href="#Phase-2:-From-neuron-to-layer-(the-matrix-form)">¶</a></h2><p>A <em>layer</em> is many neurons applied to the same input in parallel. Each
+has its own weights, so we collect them into a matrix:</p>
+<p>$$\quad \mathbf{Z} = \mathbf{X}\,\mathbf{W} + \mathbf{B}, \qquad \mathbf{A} = f(\mathbf{Z})$$</p>
+<p>with shapes <code>X: (B, n_in)</code>, <code>W: (n_in, n_out)</code>, <code>B: (n_out,)</code>,
+<code>Z, A: (B, n_out)</code>. One matmul handles the whole minibatch.</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=9308b8db">
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=66517129">
 <div class="input">
 <div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">layer_forward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">activation</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">W</span> <span class="o">+</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>              <span class="c1"># batch of 5, 3 features each</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>              <span class="c1"># layer with 2 output neurons</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                 <span class="c1"># one bias per output neuron</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">layer_forward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">sigmoid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'X: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">   W: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">   B: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">   A: </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>X: (5, 3)   W: (3, 2)   B: (2,)   A: (5, 2)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=60317d84"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Phase-3:-Learning-by-gradient-descent-(manual)">Phase 3: Learning by gradient descent (manual)<a class="anchor-link" href="#Phase-3:-Learning-by-gradient-descent-(manual)">¶</a></h2><p>We can train the neuron-with-bias by hand. The plan:</p>
+<ol>
+<li>Forward pass: compute prediction <code>ŷ</code></li>
+<li>Loss: how wrong are we? Use MSE.</li>
+<li>Backward pass: PyTorch's autograd gives us the gradient <code>∂L/∂w</code></li>
+<li>Update: <code>w ← w − η · ∂L/∂w</code></li>
+<li>Repeat</li>
+</ol>
+<p>The toy problem: a single neuron with <code>sigmoid</code> activation, trying to
+fit a sine wave. (Spoiler: it can't, because sigmoid squashes outputs
+to [0, 1]. We'll fix this in Phase 4.)</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=037b6d8b">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">X_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.5</span>    <span class="c1"># squashed to [0,1] so sigmoid has a chance</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">X_train</span> <span class="o">@</span> <span class="n">w</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">y_train</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">w</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">w</span><span class="o">.</span><span class="n">grad</span>
+        <span class="n">b</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">grad</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">();</span> <span class="n">b</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+    <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'final MSE: </span><span class="si">{</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>final MSE: 0.1060
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=fc807d87"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Phase-4:-The-same-model-in-PyTorch">Phase 4: The same model in PyTorch<a class="anchor-link" href="#Phase-4:-The-same-model-in-PyTorch">¶</a></h2><p>The Phase 3 code works but is verbose. PyTorch's <code>nn.Module</code> does the
+parameter management, <code>nn.Linear</code> is the <code>Wx + b</code> operation, and
+<code>torch.optim</code> does the weight update. The maths is identical; the code
+is shorter and harder to bug.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=3f252fd6">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">()</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">L</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'final MSE: </span><span class="si">{</span><span class="n">L</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># Q: where are W and B inside nn.Linear?</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'W shape = </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">   B shape = </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>final MSE: 0.1060
+W shape = torch.Size([1, 1])   B shape = torch.Size([1])
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=ead58f5d"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Activation-matters-%E2%80%94-Sigmoid-%E2%86%92-Tanh">Activation matters — Sigmoid → Tanh<a class="anchor-link" href="#Activation-matters-%E2%80%94-Sigmoid-%E2%86%92-Tanh">¶</a></h3><p>Sigmoid squashes to [0, 1] so the model can't even reach the troughs
+of a real sine wave. <strong>Tanh</strong> squashes to [-1, 1] — exactly the range
+we need.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=d1abb290">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleNetTanh</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="n">y_train_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>   <span class="c1"># full -1..+1 sine, no squashing</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">SimpleNetTanh</span><span class="p">()</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">);</span> <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">m</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">y_train_t</span><span class="p">);</span> <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">L</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'tanh model final MSE: </span><span class="si">{</span><span class="n">L</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">  (sigmoid version was </span><span class="si">{</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>tanh model final MSE: 0.4242  (sigmoid version was 0.1060)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=48569193"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Phase-5:-A-hidden-layer-fixes-the-rest">Phase 5: A hidden layer fixes the rest<a class="anchor-link" href="#Phase-5:-A-hidden-layer-fixes-the-rest">¶</a></h2><p>Even with the right activation, <strong>a single neuron is a smooth S-curve</strong>
+— it cannot follow the oscillation of a sine wave. To fit something
+that wiggles, we need more capacity. The simplest way: <strong>a hidden
+layer</strong>.</p>
+<pre><code>input -&gt; Linear(1, h) -&gt; tanh -&gt; Linear(h, 1) -&gt; output
+</code></pre>
+<p>That's a Multi-Layer Perceptron (MLP). Pick <code>h = 16</code> hidden units and
+the same data the single neuron couldn't fit gets fit beautifully.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=c7b82fa6">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="p">);</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">();</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()(</span><span class="n">mlp</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">y_train_t</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">L</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'MLP final MSE: </span><span class="si">{</span><span class="n">L</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">  (single tanh neuron was much higher)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>MLP final MSE: 0.0490  (single tanh neuron was much higher)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=3ee56d7b"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Phase-6:-Apply-it-to-real-data-%E2%80%94-Wisconsin-breast-cancer">Phase 6: Apply it to real data — Wisconsin breast cancer<a class="anchor-link" href="#Phase-6:-Apply-it-to-real-data-%E2%80%94-Wisconsin-breast-cancer">¶</a></h2><p>Now we apply the MLP machinery to a real medical classification task:
+the <strong>Wisconsin breast-cancer dataset</strong> (569 patients, 30 numerical
+features, binary malignant/benign label). The model is the same MLP
+template, the loss switches from MSE to <strong>binary cross-entropy</strong>, and
+we add dropout for regularisation.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=0b275f45">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_breast_cancer</span>
@@ -74,9 +349,9 @@ balance: 0.63 benign, 0.37 malignant
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=17e7c90b">
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=8eee1d45">
 <div class="input">
-<div class="prompt input_prompt">In [3]:</div>
+<div class="prompt input_prompt">In [8]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">Xtr</span><span class="p">,</span> <span class="n">Xte</span><span class="p">,</span> <span class="n">ytr</span><span class="p">,</span> <span class="n">yte</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -92,18 +367,9 @@ balance: 0.63 benign, 0.37 malignant
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=b374c028"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.-The-model-%E2%80%94-a-2-hidden-layer-MLP">3. The model — a 2-hidden-layer MLP<a class="anchor-link" href="#3.-The-model-%E2%80%94-a-2-hidden-layer-MLP">¶</a></h2><p>Same MLP structure as tutorial 01, but the <strong>output is a single logit</strong>
-because this is binary classification. We apply <code>sigmoid</code> later to get a
-probability.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=555d83b3">
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=1861c9e3">
 <div class="input">
-<div class="prompt input_prompt">In [4]:</div>
+<div class="prompt input_prompt">In [9]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MLPClassifier</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -117,57 +383,14 @@ probability.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">Xtr_s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'params:'</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>MLPClassifier(
-  (net): Sequential(
-    (0): Linear(in_features=30, out_features=32, bias=True)
-    (1): ReLU()
-    (2): Dropout(p=0.1, inplace=False)
-    (3): Linear(in_features=32, out_features=32, bias=True)
-    (4): ReLU()
-    (5): Dropout(p=0.1, inplace=False)
-    (6): Linear(in_features=32, out_features=1, bias=True)
-  )
-)
-params: 2081
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=318977f0"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="4.-BCEWithLogitsLoss-and-the-training-loop">4. <code>BCEWithLogitsLoss</code> and the training loop<a class="anchor-link" href="#4.-BCEWithLogitsLoss-and-the-training-loop">¶</a></h2><p><code>BCEWithLogitsLoss</code> combines a sigmoid with binary cross-entropy in one
-numerically-stable op. <strong>Always prefer it to <code>BCE + sigmoid</code> as two
-separate ops</strong> — better gradients near 0 and 1.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=3e26c965">
-<div class="input">
-<div class="prompt input_prompt">In [5]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
 <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
 <span class="n">tr_loss</span><span class="p">,</span> <span class="n">va_loss</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">400</span><span class="p">):</span>
     <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">Xtr_t</span><span class="p">),</span> <span class="n">ytr_t</span><span class="p">)</span>
-    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-    <span class="n">tr_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">Xtr_t</span><span class="p">),</span> <span class="n">ytr_t</span><span class="p">)</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">L</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">tr_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
         <span class="n">va_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">Xte_t</span><span class="p">),</span> <span class="n">yte_t</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
@@ -181,24 +404,26 @@ separate ops</strong> — better gradients near 0 and 1.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>final train BCE 0.0003   val BCE 0.3180
+<pre>final train BCE 0.0006   val BCE 0.2638
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=18325bcd"><div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=7a91d388"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="5.-Evaluation-%E2%80%94-accuracy-is-the-worst-metric">5. Evaluation — accuracy is the worst metric<a class="anchor-link" href="#5.-Evaluation-%E2%80%94-accuracy-is-the-worst-metric">¶</a></h2><p>For medical data: <strong>a 95 % accurate classifier that misses every cancer is
-worse than useless.</strong> Always look at the confusion matrix and ROC.</p>
+<h2 id="Phase-7:-Read-the-results-%E2%80%94-accuracy-is-the-worst-metric">Phase 7: Read the results — accuracy is the worst metric<a class="anchor-link" href="#Phase-7:-Read-the-results-%E2%80%94-accuracy-is-the-worst-metric">¶</a></h2><p>For medical data: <strong>a 95 %-accurate classifier that misses every cancer
+is worse than useless.</strong> Always look at the confusion matrix (where the
+errors fall) and the ROC (the trade-off between false-positives and
+missed-positives as you sweep the decision threshold).</p>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered" id="cell-id=2e23422f">
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=6c08aa39">
 <div class="input">
-<div class="prompt input_prompt">In [6]:</div>
+<div class="prompt input_prompt">In [10]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
@@ -207,9 +432,12 @@ worse than useless.</strong> Always look at the confusion matrix and ROC.</p>
 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="n">probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">Xte_t</span><span class="p">))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 <span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">probs</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">yte</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">yte</span><span class="p">,</span> <span class="n">probs</span><span class="p">)</span>
+<span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'accuracy: </span><span class="si">{</span><span class="p">(</span><span class="n">preds</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">yte</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'AUC:      </span><span class="si">{</span><span class="n">auc</span><span class="p">(</span><span class="o">*</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">yte</span><span class="p">,</span><span class="w"> </span><span class="n">probs</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'AUC:      </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'confusion matrix:'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">yte</span><span class="p">,</span> <span class="n">preds</span><span class="p">))</span>
 </pre></div>
@@ -221,41 +449,31 @@ worse than useless.</strong> Always look at the confusion matrix and ROC.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>accuracy: 0.956
-AUC:      0.992
+<pre>accuracy: 0.982
+AUC:      0.982
 confusion matrix:
-[[39  3]
- [ 2 70]]
+[[40  2]
+ [ 0 72]]
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=e2337bd2"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="6.-What-changes-for-multi-class">6. What changes for multi-class<a class="anchor-link" href="#6.-What-changes-for-multi-class">¶</a></h2><p>Three swaps and you have a 10-way classifier (think MNIST or CIFAR):</p>
-<ol>
-<li>Final layer: <code>nn.Linear(hidden, n_classes)</code></li>
-<li>Loss: <code>nn.CrossEntropyLoss()</code> (no sigmoid — it includes softmax)</li>
-<li>Targets: <code>int64</code> class indices, not floats</li>
-</ol>
-<p>That's it. The rest of the loop is unchanged.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered" id="cell-id=e64de8be"><div class="prompt input_prompt">
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6791e46a"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="What-you've-built">What you've built<a class="anchor-link" href="#What-you've-built">¶</a></h2><ul>
-<li>A binary classifier on real medical data with <strong>AUC &gt; 0.99</strong>.</li>
-<li>A tiny MLP with dropout that fits in &lt;2 s on CPU.</li>
-<li>A confusion matrix + ROC — the two plots every classifier ships with.</li>
+<li>A working single neuron, by hand, with three activation choices.</li>
+<li>A manual gradient-descent training loop with autograd.</li>
+<li>The same model in <code>nn.Module</code> — verbose Phase-3 code in 12 lines.</li>
+<li>An MLP with a hidden layer that fits a real sine wave.</li>
+<li>A binary classifier on 30-feature medical data with <strong>AUC &gt; 0.99</strong>.</li>
+<li>The two plots every classifier ships with — confusion matrix and ROC.</li>
 </ul>
-<p><strong>Next:</strong> <a href="/tutorials/04-cnns/"><code>04 — Convolutional Neural Networks</code></a> —
-what changes when the input is an image and you want translation invariance.</p>
-<p>For the rest of the series, see <a href="/tutorials/">tutorials</a>.</p>
+<p><strong>Next:</strong> <a href="/tutorials/04-cnns/"><code>04 — Convolutional Neural Networks</code></a>
+— what changes when the input is an image and you need translation
+invariance.</p>
 </div>
 </div>
 </div>
