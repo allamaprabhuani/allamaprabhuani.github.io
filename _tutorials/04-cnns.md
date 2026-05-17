@@ -198,14 +198,7 @@ The notebook's 8 × 8 digit version of the same interpretation:
 
 ## Source
 
-Pedagogy adapted from the `CNN_final` teaching notebook I built while
-assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in
-his Machine Learning short course at Queen Mary University of London
-(2025). The original is much longer (86 cells); this version preserves
-the pedagogical progression — MLP-on-images failure → convolution
-mechanics → trained-CNN interpretation — and adds the CIFAR-vs-digits
-hybrid demo for a 60-second runnable notebook with full CIFAR colour
-figures for the harder lessons.
+Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.saponnusami.com/) (2025).
 
 ## Next
 
@@ -215,10 +208,7 @@ figures for the harder lessons.
 
 ## References
 
-1. Hubel, D. H., &amp; Wiesel, T. N. (1962). **Receptive fields, binocular interaction and functional architecture in the cat's visual cortex.** *Journal of Physiology* 160(1), 106–154. [doi:10.1113/jphysiol.1962.sp006837](https://doi.org/10.1113/jphysiol.1962.sp006837) — the biological motivation for oriented edge detectors.
-2. LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998). **Gradient-based learning applied to document recognition.** *Proceedings of the IEEE* 86(11), 2278–2324. [doi:10.1109/5.726791](https://doi.org/10.1109/5.726791) — the LeNet paper, the original conv-then-pool-then-FC template.
-3. Krizhevsky, A. (2009). **Learning multiple layers of features from tiny images.** Technical report — the CIFAR-10 / CIFAR-100 datasets. [pdf](https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf)
-4. Krizhevsky, A., Sutskever, I., &amp; Hinton, G. E. (2012). **ImageNet classification with deep convolutional neural networks.** *NeurIPS 2012*. [paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html) — the AlexNet result that started the modern CNN era.
-5. He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). **Deep residual learning for image recognition.** *CVPR 2016*. [arXiv:1512.03385](https://arxiv.org/abs/1512.03385) — ResNet; the architecture template used by most production CNNs in 2026.
-6. Zeiler, M. D., &amp; Fergus, R. (2014). **Visualizing and understanding convolutional networks.** *ECCV 2014*. [arXiv:1311.2901](https://arxiv.org/abs/1311.2901) — the original paper on filter and feature-map visualisation.
-7. Lin, M., Chen, Q., &amp; Yan, S. (2014). **Network in network.** *ICLR 2014*. [arXiv:1312.4400](https://arxiv.org/abs/1312.4400) — origin of global average pooling.
+1. Hubel &amp; Wiesel (1962). **Receptive fields in the cat's visual cortex.** [doi:10.1113/jphysiol.1962.sp006837](https://doi.org/10.1113/jphysiol.1962.sp006837)
+2. LeCun et al. (1998). **Gradient-based learning applied to document recognition** (LeNet). [doi:10.1109/5.726791](https://doi.org/10.1109/5.726791)
+3. Krizhevsky, Sutskever &amp; Hinton (2012). **ImageNet classification with deep CNNs** (AlexNet). [paper](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html)
+4. Zeiler &amp; Fergus (2014). **Visualizing and understanding convolutional networks.** [arXiv:1311.2901](https://arxiv.org/abs/1311.2901)

@@ -127,13 +127,11 @@ model handles a whole family of inputs in milliseconds:
 
 ## References
 
-1. Raissi, M., Perdikaris, P., &amp; Karniadakis, G. E. (2019). **Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.** *Journal of Computational Physics*, 378, 686–707. [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)
-2. Moseley, B. (2021). **So, what is a physics-informed neural network?** Personal blog. [benmoseley.blog](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/) — the introductory tutorial whose damped-oscillator demo this notebook is built around.
-3. Wang, S., Yu, X., &amp; Perdikaris, P. (2022). **When and why PINNs fail to train: A neural tangent kernel perspective.** *Journal of Computational Physics*, 449, 110768. [doi:10.1016/j.jcp.2021.110768](https://doi.org/10.1016/j.jcp.2021.110768)
-4. Krishnapriyan, A., Gholami, A., Zhe, S., Kirby, R., &amp; Mahoney, M. (2021). **Characterizing possible failure modes in physics-informed neural networks.** [arXiv:2109.01050](https://arxiv.org/abs/2109.01050)
-5. Lu, L., Jin, P., Pang, G., Zhang, Z., &amp; Karniadakis, G. E. (2021). **Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators.** *Nature Machine Intelligence*, 3, 218–229. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
-6. Li, Z., Kovachki, N., Azizzadenesheli, K., Liu, B., Bhattacharya, K., Stuart, A., &amp; Anandkumar, A. (2021). **Fourier neural operator for parametric partial differential equations.** *ICLR 2021*. [arXiv:2010.08895](https://arxiv.org/abs/2010.08895)
-7. Mishra, S. (2024). **Learning operators — Lecture 1, CIRM Marseille.** [YouTube](https://www.youtube.com/watch?v=5CnctvgyssU). A full theoretical derivation of neural operators from scratch; the recommended next watch after this tutorial.
+1. Raissi, Perdikaris &amp; Karniadakis (2019). **Physics-informed neural networks.** *J. Comp. Physics* 378. [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)
+2. Moseley (2021). **So, what is a physics-informed neural network?** [benmoseley.blog](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/) — the tutorial this notebook's demo is built around.
+3. Krishnapriyan et al. (2021). **Characterizing possible failure modes in PINNs.** [arXiv:2109.01050](https://arxiv.org/abs/2109.01050)
+4. Lu, Jin et al. (2021). **DeepONet.** *Nat Machine Intelligence* 3. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
+5. Mishra (2024). **Learning operators — CIRM lecture series.** [YouTube](https://www.youtube.com/watch?v=5CnctvgyssU) — recommended next watch.
 
 ## End of series
 

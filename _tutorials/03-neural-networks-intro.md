@@ -73,10 +73,7 @@ tutorial is for the model and metrics, not clinical deployment.
 
 ## Source
 
-Pedagogy adapted from the `BiomedicalClassification` teaching notebook I
-built while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/)
-in his Machine Learning short course at Queen Mary University of London
-(2025); rebuilt here as a focused PyTorch tutorial.
+Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.saponnusami.com/) (2025).
 
 ## Next
 
@@ -85,8 +82,6 @@ in his Machine Learning short course at Queen Mary University of London
 
 ## References
 
-1. Wolberg, W. H., &amp; Mangasarian, O. L. (1990). **Multisurface method of pattern separation for medical diagnosis applied to breast cytology.** *PNAS* 87(23), 9193–9196. [doi:10.1073/pnas.87.23.9193](https://doi.org/10.1073/pnas.87.23.9193) — the Wisconsin breast-cancer dataset's origin paper.
-2. Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1986). **Learning representations by back-propagating errors.** *Nature* 323, 533–536. [doi:10.1038/323533a0](https://doi.org/10.1038/323533a0)
-3. Glorot, X., &amp; Bengio, Y. (2010). **Understanding the difficulty of training deep feedforward neural networks.** *AISTATS 2010* — weight initialisation rule used here. [PMLR](https://proceedings.mlr.press/v9/glorot10a.html)
-4. Fawcett, T. (2006). **An introduction to ROC analysis.** *Pattern Recognition Letters* 27(8), 861–874. [doi:10.1016/j.patrec.2005.10.010](https://doi.org/10.1016/j.patrec.2005.10.010)
-5. Saito, T., &amp; Rehmsmeier, M. (2015). **The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets.** *PLoS ONE* 10(3), e0118432. [doi:10.1371/journal.pone.0118432](https://doi.org/10.1371/journal.pone.0118432) — companion reading for the "accuracy is the worst metric" framing.
+1. Wolberg &amp; Mangasarian (1990). **Multisurface method of pattern separation for medical diagnosis applied to breast cytology** — the Wisconsin breast-cancer dataset. [doi:10.1073/pnas.87.23.9193](https://doi.org/10.1073/pnas.87.23.9193)
+2. Rumelhart, Hinton &amp; Williams (1986). **Learning representations by back-propagating errors.** *Nature* 323. [doi:10.1038/323533a0](https://doi.org/10.1038/323533a0)
+3. Fawcett (2006). **An introduction to ROC analysis.** [doi:10.1016/j.patrec.2005.10.010](https://doi.org/10.1016/j.patrec.2005.10.010)

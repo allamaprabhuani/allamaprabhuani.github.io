@@ -66,9 +66,7 @@ contains everything**.
 
 ## Source
 
-The notebook is original — California housing instead of the QMUL synthetic
-sets — because the QMUL teaching notebooks for this lesson are single-cell
-scripts, and the Pipeline lesson genuinely needs the multi-cell tour.
+Original notebook on California housing.
 
 ## Next
 
@@ -76,8 +74,6 @@ scripts, and the Pipeline lesson genuinely needs the multi-cell tour.
 
 ## References
 
-1. Pedregosa, F., Varoquaux, G., Gramfort, A., et al. (2011). **Scikit-learn: Machine learning in Python.** *JMLR* 12, 2825–2830. [JMLR](https://jmlr.org/papers/v12/pedregosa11a.html)
-2. Pace, R. K., &amp; Barry, R. (1997). **Sparse spatial autoregressions.** *Statistics &amp; Probability Letters* 33(3), 291–297 — the California housing dataset used here. [doi:10.1016/S0167-7152(96)00140-X](https://doi.org/10.1016/S0167-7152\(96\)00140-X)
-3. Friedman, J. H. (2001). **Greedy function approximation: A gradient boosting machine.** *Annals of Statistics* 29(5), 1189–1232. [doi:10.1214/aos/1013203451](https://doi.org/10.1214/aos/1013203451)
-4. Breiman, L. (2001). **Random forests.** *Machine Learning* 45(1), 5–32. [doi:10.1023/A:1010933404324](https://doi.org/10.1023/A:1010933404324)
-5. Bergstra, J., &amp; Bengio, Y. (2012). **Random search for hyper-parameter optimization.** *JMLR* 13, 281–305. [JMLR](https://jmlr.org/papers/v13/bergstra12a.html) — why `RandomizedSearchCV` usually beats `GridSearchCV`.
+1. Pedregosa et al. (2011). **Scikit-learn.** *JMLR* 12. [JMLR](https://jmlr.org/papers/v12/pedregosa11a.html)
+2. Friedman (2001). **Greedy function approximation: A gradient boosting machine.** [doi:10.1214/aos/1013203451](https://doi.org/10.1214/aos/1013203451)
+3. Bergstra &amp; Bengio (2012). **Random search for hyper-parameter optimization.** [JMLR](https://jmlr.org/papers/v13/bergstra12a.html)

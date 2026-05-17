@@ -78,13 +78,9 @@ fix is one of three knobs, compared head-to-head below.
 - Comfortable with NumPy arrays
 - High-school calculus (we use one chain rule)
 
-## Source material
+## Source
 
-This tutorial extends a teaching notebook I built while assisting
-[Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in his Machine
-Learning short course at Queen Mary University of London (2025). The
-original single-cell version is in the [GitHub repository](https://github.com/allamaprabhuani/allamaprabhuani.github.io/blob/main/notebooks/01-ml-training.ipynb)
-under `notebooks/`.
+Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.saponnusami.com/) (2025).
 
 ## Next
 
@@ -95,8 +91,6 @@ under `notebooks/`.
 
 ## References
 
-1. Paszke, A., Gross, S., Massa, F., et al. (2019). **PyTorch: An imperative style, high-performance deep learning library.** *NeurIPS 2019*. [arXiv:1912.01703](https://arxiv.org/abs/1912.01703)
-2. Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., &amp; Salakhutdinov, R. (2014). **Dropout: A simple way to prevent neural networks from overfitting.** *JMLR* 15(56), 1929–1958. [JMLR](https://jmlr.org/papers/v15/srivastava14a.html)
-3. Kingma, D. P., &amp; Ba, J. (2015). **Adam: A method for stochastic optimization.** *ICLR 2015*. [arXiv:1412.6980](https://arxiv.org/abs/1412.6980)
-4. Prechelt, L. (1998). **Early stopping — but when?** in *Neural Networks: Tricks of the Trade*, Springer. [doi:10.1007/3-540-49430-8\_3](https://doi.org/10.1007/3-540-49430-8_3)
-5. Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). **Deep Learning.** MIT Press. Chapters 7 (regularization) and 8 (optimization). [deeplearningbook.org](https://www.deeplearningbook.org/)
+1. Srivastava, N., Hinton, G., et al. (2014). **Dropout.** *JMLR* 15(56). [JMLR](https://jmlr.org/papers/v15/srivastava14a.html)
+2. Kingma &amp; Ba (2015). **Adam: A method for stochastic optimization.** [arXiv:1412.6980](https://arxiv.org/abs/1412.6980)
+3. Goodfellow, Bengio &amp; Courville (2016). **Deep Learning** (MIT Press), chs 7–8. [deeplearningbook.org](https://www.deeplearningbook.org/)
