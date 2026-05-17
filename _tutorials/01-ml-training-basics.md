@@ -6,7 +6,6 @@ status: published
 order: 1
 tags: [ml, training, fundamentals]
 notebook: notebooks/01-ml-training.ipynb
-rendered: ../notebooks/01-ml-training.html
 ---
 
 A from-scratch tour of how a model actually learns. We start from one feature

@@ -24,10 +24,19 @@ Source `.ipynb` files for the tutorials at https://allamaprabhuani.github.io/tut
    ```yaml
    status: published
    notebook: notebooks/01-ml-training.ipynb
-   rendered: ../notebooks/01-ml-training.html
    ```
 
-4. Commit `.ipynb`, `.html`, and the updated `_tutorials/*.md`. Push.
+   (Do **not** set `rendered:` with a `../` path — Jekyll's `include_relative`
+   blocks parent-directory paths for security and the build will fail. The
+   `rendered:` field in the layout is reserved for future use when the
+   notebook lives in the same directory as the tutorial markdown.)
+
+4. The tutorial markdown is the curated long-form: write framing prose,
+   embed key PNG/GIF figures from `assets/tutorials/NN/`, and if there is
+   an interactive HTML demo, embed it via the `tutorial-interactive`
+   iframe pattern (see `_tutorials/01-ml-training-basics.md`).
+
+5. Commit `.ipynb`, `.html`, and the updated `_tutorials/*.md`. Push.
 
 ## Why both `.ipynb` and `.html`?
 
