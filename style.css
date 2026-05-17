@@ -1,26 +1,34 @@
-/* ---- Type stack tokens ---- */
+/* ---- Type stack tokens ----
+ * Body / headings: warm transitional serif (Iowan Old Style on macOS,
+ * Georgia everywhere else). UI chrome stays in our monospace.
+ * Inspired by thinkingmachines.ai (Iowan Old Style + Gruvbox-leaning palette).
+ */
 :root {
   --font-mono: 'Courier Prime', 'Courier New', Courier, monospace;
+  --font-serif: 'Iowan Old Style BT', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-serif);
   --font-kannada: 'Noto Sans Kannada', var(--font-mono);
 }
 
 /* ---- Theme tokens ---- */
 :root {
   color-scheme: light;
-  --bg: #fbfaf7;
-  --ink: #1a1a1c;
-  --muted: #6e6a62;
-  --rule: #e6e1d6;
+  --bg: #ffffff;
+  --ink: #282828;
+  --muted: #6b6866;
+  --rule: #e8e4dc;
   --accent: #6b2c3a;
+  --bg-code: #f3f3f2;
   --shadow: 0 6px 22px rgba(28, 22, 14, 0.06);
 }
 html[data-theme="dark"] {
   color-scheme: dark;
   --bg: #14110d;
-  --ink: #ece7dd;
-  --muted: #8c867a;
+  --ink: #f0ece2;
+  --muted: #b8b2a4;
   --rule: #2a2620;
   --accent: #b888bd;
+  --bg-code: #1a1815;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
 }
 
@@ -78,8 +86,7 @@ html, body { margin: 0; padding: 0; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-feature-settings: "ss01", "cv11";
+  font-family: var(--font-body);
   line-height: 1.65;
   font-size: 17px;
   -webkit-font-smoothing: antialiased;
@@ -371,7 +378,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 }
 
 main {
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 56px 24px 96px;
   position: relative;
@@ -389,23 +396,23 @@ a {
 a:hover { border-bottom-color: var(--accent); }
 
 h1, h2, h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-serif);
   font-weight: 600;
-  letter-spacing: -0.012em;
-  line-height: 1.2;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
 }
-h1 { font-size: 2.4rem; margin: 4px 0 14px; }
+h1 { font-size: 2.0rem; margin: 4px 0 14px; }
 h2 {
-  font-family: var(--font-mono);
-  font-size: 1.05rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.005em;
   color: var(--ink);
-  margin: 64px 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--accent);
-  line-height: 1.1;
+  margin: 56px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.3;
 }
 main > section > h2,
 .blog-header h1,
@@ -984,19 +991,21 @@ body:not(.landing) .toc { display: block; }
   color: var(--muted); font-style: italic;
 }
 .post-body code {
-  background: var(--card);
+  background: var(--bg-code);
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 0.92em;
+  font-family: var(--font-mono);
 }
 .post-body pre {
-  background: var(--card);
+  background: var(--bg-code);
   padding: 14px 16px;
   border-radius: 6px;
   border: 1px solid var(--rule);
   overflow-x: auto;
   font-size: 0.88rem;
   line-height: 1.5;
+  font-family: var(--font-mono);
 }
 .post-body pre code { background: none; padding: 0; border-radius: 0; }
 .post-foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
