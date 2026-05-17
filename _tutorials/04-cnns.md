@@ -77,8 +77,11 @@ motivated CNNs in the first place (Hubel &amp; Wiesel, 1962).
 
 ## Source
 
-Pedagogy adapted from the QMUL `CNN_final` teaching notebook; rebuilt as a
-focused PyTorch tutorial with interpretability visuals as the centrepiece.
+Pedagogy adapted from the `CNN_final` teaching notebook I built while
+assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in his
+Machine Learning short course at Queen Mary University of London (2025);
+rebuilt here as a focused PyTorch tutorial with interpretability visuals
+as the centrepiece.
 
 ## Next
 

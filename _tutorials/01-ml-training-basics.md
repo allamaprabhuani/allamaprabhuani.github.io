@@ -80,10 +80,10 @@ fix is one of three knobs, compared head-to-head below.
 
 ## Source material
 
-This tutorial extends a teaching notebook I built while assisting Dr Sathiskumar
-Selvarasu in his Machine Learning short course at Queen Mary University of
-London (2025). The original single-cell version is in the [GitHub
-repository](https://github.com/allamaprabhuani/allamaprabhuani.github.io/blob/main/notebooks/01-ml-training.ipynb)
+This tutorial extends a teaching notebook I built while assisting
+[Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) in his Machine
+Learning short course at Queen Mary University of London (2025). The
+original single-cell version is in the [GitHub repository](https://github.com/allamaprabhuani/allamaprabhuani.github.io/blob/main/notebooks/01-ml-training.ipynb)
 under `notebooks/`.
 
 ## Next

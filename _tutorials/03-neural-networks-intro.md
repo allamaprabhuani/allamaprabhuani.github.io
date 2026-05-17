@@ -73,8 +73,10 @@ tutorial is for the model and metrics, not clinical deployment.
 
 ## Source
 
-Pedagogy adapted from the QMUL `BiomedicalClassification` teaching notebook;
-rebuilt as a focused PyTorch tutorial.
+Pedagogy adapted from the `BiomedicalClassification` teaching notebook I
+built while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/)
+in his Machine Learning short course at Queen Mary University of London
+(2025); rebuilt here as a focused PyTorch tutorial.
 
 ## Next
 
