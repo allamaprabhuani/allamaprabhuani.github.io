@@ -52,7 +52,7 @@ Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page,
 - [ ] **Tutorials section** — five placeholders, no real notebooks. Either ship one real notebook or hide the section until you do.
 - [ ] **Blog post count** — only two posts. The "latest from the blog" block looks thin. Either drop the limit to "show latest 1" until there are 5+ posts, or commit to a monthly cadence.
 - [ ] **`recommend` section** has 5 sites — three of them (Beltoforion, Jay Alammar, DrSimulate) are ML/sim community staples. Adding 2-3 fracture-specific sites would differentiate it from a generic "links page".
-- [ ] **OpenGraph image** — set a custom `og:image` to your headshot or a SynaCAD render so social shares look intentional.
+- [ ] **OpenGraph image** — set a custom `og:image` to your headshot or a research render so social shares look intentional.
 
 ## P3 — Deferred / open questions
 

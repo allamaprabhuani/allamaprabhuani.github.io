@@ -2,7 +2,7 @@
 layout: post
 title: "SynaCAD: the synapse, and what it's for"
 subtitle: "Why I'm building an AI design partner that's bound by validated solvers, not by what an LLM thinks sounds plausible."
-description: "Why I'm building SynaCAD — an AI design partner for mechanical engineering, grounded in validated solvers (Bruhn, Niu, ESDU) rather than LLM plausibility."
+description: "The archived OSV 2026 concept behind SynaCAD: an AI design partner for mechanical engineering, grounded in validated solvers rather than LLM plausibility."
 date: 2026-04-30
 tags: [synacad, vision, mechanics, ai]
 ---
@@ -80,14 +80,15 @@ This is the line between "interesting demo" and "thing you can put your name on 
 5. **No mystery in the loop.** A junior engineer should be able to read SynaCAD's report and learn
    *why* the part is sized the way it is, not just trust the answer.
 
-## Where we're at
+## Where it landed
 
-In active development. The 2026 fellowship pitch is complete, and the project is now being shaped into a public,
-locally runnable tool. Public alpha planned for 2026.
+This was the OSV Fellowship 2026 concept pitch. The application was declined on 2026-05-19, so the standalone
+SynaCAD project is archived. The useful parts now fold back into the main research track: differentiable phase-field
+solvers, open engineering tools, and thesis/paper artefacts.
 
 If this resonates — collaborators, manufacturers, advisors, students who want to test it on their own
 parts — [get in touch](/#elsewhere).
 
 ---
 
-<p class="muted">More about SynaCAD &rarr; <a href="https://allamaprabhuani.github.io/synacad/">the project site</a>.</p>
+<p class="muted">Archived OSV 2026 concept note. The standalone pitch site is no longer an active project surface.</p>
