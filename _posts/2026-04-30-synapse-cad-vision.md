@@ -82,8 +82,8 @@ This is the line between "interesting demo" and "thing you can put your name on 
 
 ## Where we're at
 
-In active development. Currently pitching for the
-[O'Shaughnessy Fellowship 2026](https://allamaprabhuani.github.io/synacad/). Public alpha planned for 2026.
+In active development. The 2026 fellowship pitch is complete, and the project is now being shaped into a public,
+locally runnable tool. Public alpha planned for 2026.
 
 If this resonates — collaborators, manufacturers, advisors, students who want to test it on their own
 parts — [get in touch](/#elsewhere).
