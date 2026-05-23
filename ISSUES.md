@@ -8,8 +8,8 @@ Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page,
 
 - [x] **Protective Coatings paper authorship was misrepresented.** Site listed `A. S. Ani, C. V. Srinivasa.`; the real author order on IOP is `C V Srinivasa, Allamaprabhu S Ani, B M Jyothi Prasad`. Now corrected to put Srinivasa first, you second, Jyothi Prasad third, with a "second author" disclosure note. **Confirm whether you want this paper kept at all** — if "the paper that doesn't actually belong to me" was this one (because you weren't the first author / weren't the principal contributor), say so and I'll remove it entirely.
 - [x] **IEEE neural-operator paper REMOVED.** User confirmed 2026-05-01 that "Application of Neural Operators to the Phase Field Modeling of Brittle Fractures" (IEEE doc 10770952) is not his paper. Removed from `index.html` papers list. Memory updated so it never gets re-added.
-- [ ] **EFM publication date inconsistency.** JSON-LD says `2026-02-07`, the prose says `Dec 2025`, the master profile says `5 Dec 2025`. Pick one and use it everywhere (Scholar shows 2025).
-- [ ] **EFM "verified" stamp is stale.** Currently `(verified 2026-04-30)`. Bump it whenever you re-check the Most-Downloaded list, or remove the stamp and let the live citation badge carry the proof.
+- [x] **EFM publication date inconsistency.** Site now uses the ScienceDirect issue date everywhere: `2026-02-07` in JSON-LD and `Vol 332, Art 111778, 2026` in prose.
+- [x] **EFM "verified" stamp was stale.** Changed the wording to `(screenshot captured 2026-04-30)` so the page no longer implies a fresh live re-check.
 
 ## P0 — Bugs
 
@@ -26,7 +26,7 @@ Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page,
 
 ## P1 — JSON-LD (currently inconsistent with prose)
 
-- [ ] `ScholarlyArticle.datePublished` = `2026-02-07` but prose says Dec 2025. Update to `2025-12-05` to match the journal's actual publication date.
+- [x] `ScholarlyArticle.datePublished` is `2026-02-07`, matching the ScienceDirect issue date for EFM Vol 332.
 - [ ] `ScholarlyArticle.author` order — fine for the EFM paper. But Schema.org `author` array order should reflect the byline, so confirm: `Ani, Nakka, Subhash, Molinari, Ponnusami` is correct (it matches the EFM PDF cover).
 - [ ] Add a second `ScholarlyArticle` block for the Protective Coatings paper if you keep it, with the **correct** author order (Srinivasa first). Otherwise remove the link.
 
