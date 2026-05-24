@@ -1,23 +1,47 @@
 ---
-title: "Introduction to Neural Networks"
-subtitle: "One neuron → matrix layer → manual gradient descent → PyTorch abstraction → MLP that fits a sine → real binary classifier on Wisconsin breast cancer data."
-description: "From a single neuron to a multi-layer perceptron in PyTorch, then a working binary classifier on Wisconsin breast cancer data with confusion matrix and ROC."
+title: "Neural Networks from One Neuron to a PyTorch MLP Classifier"
+subtitle: "One neuron to matrix layer to PyTorch abstraction to an MLP that fits a sine wave, then a real binary classifier on Wisconsin breast cancer data."
+description: "Learn neural networks from one neuron to a PyTorch MLP: activations, layers, training loops, sine fitting, binary classification, confusion matrix, and ROC."
 image:
   path: /assets/tutorials/03/sine-progression.png
   width: 1672
   height: 436
+image_alt: One-neuron and MLP models fitting a sine wave in PyTorch
 level: intro
 status: published
 order: 3
 tags: [neural-networks, pytorch, classification, fundamentals]
 notebook: notebooks/03-neural-networks.ipynb
+runtime: "55 min"
+duration: "PT55M"
+hook: "See exactly when one neuron fails, why a hidden layer works, and how the same pattern becomes a classifier."
+related:
+  - title: "PyTorch training loop"
+    url: /tutorials/01-ml-training-basics/
+    note: "The forward, loss, backward, step pattern this page reuses."
+  - title: "CNN feature maps"
+    url: /tutorials/04-cnns/
+    note: "What changes when layers preserve image structure."
 ---
 
+The confusing part of neural networks is not the word "neural"; it is
+the jump from one weighted sum to a system that can learn curved
+decision boundaries. This tutorial keeps that jump small.
+
 A neural network is what you get when you stack a lot of $f(w \cdot x + b)$
-neurons and let gradient descent set the weights. This tutorial walks
-the whole construction — phase by phase — and finishes with a working
-classifier on the Wisconsin breast-cancer dataset (569 patients,
-30 features).
+neurons and let gradient descent set the weights. We build that stack
+one layer at a time, then use the same pattern for a classifier on the
+Wisconsin breast-cancer dataset (569 patients, 30 features).
+
+```python
+model = nn.Sequential(
+    nn.Linear(30, 32),
+    nn.ReLU(),
+    nn.Dropout(0.2),
+    nn.Linear(32, 1)
+)
+loss = nn.BCEWithLogitsLoss()(model(x), y)
+```
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/03/neuron-schematic.png' | relative_url }}"
@@ -122,7 +146,8 @@ Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.sapo
 ## Next
 
 - [`04 — Convolutional Neural Networks`](/tutorials/04-cnns/) — what
-  changes when the input is an image and you need translation invariance.
+  changes when the input is an image and you need to preserve spatial
+  structure.
 
 ## References
 

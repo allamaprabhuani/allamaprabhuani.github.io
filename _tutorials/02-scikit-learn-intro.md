@@ -1,22 +1,46 @@
 ---
-title: "scikit-learn, the parts you'll actually use"
-subtitle: "A complete tabular-ML workflow on the UCI auto-MPG dataset: load → explore → split → fit → evaluate → diagnose. Single-feature first, then multi-feature."
-description: "A complete tabular-ML workflow on UCI auto-MPG: load, explore, split, fit, evaluate, diagnose. Single-feature first, then multi-feature with bias-variance demo."
+title: "scikit-learn Regression Tutorial: Explore, Fit, Evaluate, Diagnose"
+subtitle: "A complete tabular-ML workflow on the UCI auto-MPG dataset: load, explore, split, fit, evaluate, diagnose. Single-feature first, then multi-feature."
+description: "A scikit-learn regression tutorial using UCI auto-MPG: explore tabular data, split train/test, fit linear models, evaluate R2/RMSE, and diagnose bias-variance."
 image:
   path: /assets/tutorials/02/correlation-heatmap.png
   width: 923
   height: 633
+image_alt: Pearson correlation heatmap for the UCI auto-MPG regression dataset
 level: intro
 status: published
 order: 2
 tags: [scikit-learn, regression, tabular]
 notebook: notebooks/02-scikit-learn.ipynb
+runtime: "40 min"
+duration: "PT40M"
+hook: "Build the full tabular ML loop and see why a pretty regression line is not enough."
+related:
+  - title: "Training loops from scratch"
+    url: /tutorials/01-ml-training-basics/
+    note: "The gradient-descent version of the same fit/evaluate discipline."
+  - title: "Neural-network classification metrics"
+    url: /tutorials/03-neural-networks-intro/
+    note: "Confusion matrices, ROC, and threshold-aware evaluation."
 ---
 
-scikit-learn is enormous, but the day-to-day API is tiny: instantiate
-a model, call `.fit`, call `.predict`. Everything else is choosing
-*which* model, *which* features, and *which* numbers to trust when
-evaluating it.
+The mistake in beginner scikit-learn is not usually the `.fit()` call.
+It is trusting the first number that looks good. A model can draw a nice
+line and still fail systematically on the held-out data.
+
+The day-to-day API is tiny: instantiate a model, call `.fit`, call
+`.predict`. Everything else is choosing *which* model, *which* features,
+and *which* numbers to trust when evaluating it.
+
+```python
+from sklearn.metrics import root_mean_squared_error, r2_score
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+rmse = root_mean_squared_error(y_test, pred)
+r2 = r2_score(y_test, pred)
+```
 
 This tutorial walks the entire workflow on the **UCI auto-MPG dataset**
 — 392 cars from the 1970s and 80s — and ends with the diagnostics that

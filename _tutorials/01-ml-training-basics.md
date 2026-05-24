@@ -1,24 +1,47 @@
 ---
-title: "Machine Learning Training, from scratch"
-subtitle: "Hand-derive the gradient, write the training loop in NumPy, then again in PyTorch with autograd. Then watch a deliberately over-large model overfit, and fix it three different ways."
-description: "Hand-derive the gradient, write the training loop in NumPy, then PyTorch with autograd. Watch a deliberately over-large model overfit, fix it three ways."
+title: "Machine Learning Training from Scratch: Loss, Gradients, and Overfitting"
+subtitle: "Hand-derive the gradient, write the training loop in NumPy, then again in PyTorch. Watch a deliberately oversized model overfit, then fix it three ways."
+description: "Learn machine learning training from scratch: derive MSE gradients, write NumPy and PyTorch training loops, read loss curves, and fix overfitting."
 image:
   path: /assets/tutorials/01/hero-fit.png
   width: 892
   height: 476
+image_alt: Noisy sine data with train and validation split and a trained MLP fit
 level: intro
 status: published
 order: 1
 tags: [ml, training, fundamentals, pytorch]
 notebook: notebooks/01-ml-training.ipynb
+runtime: "45 min"
+duration: "PT45M"
+hook: "Reproduce the classic train-loss-down, validation-loss-up overfitting curve and learn what fixes it."
+related:
+  - title: "Bias-variance in scikit-learn"
+    url: /tutorials/02-scikit-learn-intro/
+    note: "The same overfitting story in a tabular regression workflow."
+  - title: "Autograd inside PINNs"
+    url: /tutorials/05-pinns/
+    note: "The same backward pass, now used to differentiate physics residuals."
 ---
 
-This tutorial is about *what `loss.backward()` actually does*. We start
-by hand-deriving the gradient for a one-parameter regression, watch
-gradient descent walk down the loss curve in NumPy, then rewrite the
-same thing in PyTorch using autograd. After that we get clinical: a
-train / val split, a model deliberately too big, three regularisation
-knobs compared head-to-head.
+Most beginner ML code hides the only thing you really need to understand:
+why the weights move. `loss.backward()` looks like a magic spell until
+you have derived one gradient by hand and watched it update a parameter.
+
+This tutorial makes that update visible. We start with one-parameter
+regression, write the training loop in NumPy, then let PyTorch autograd
+do the same job. The second half is the failure mode every useful model
+eventually hits: training loss keeps falling while validation loss turns
+around and climbs.
+
+```python
+for xb, yb in train_loader:
+    pred = model(xb)
+    loss = loss_fn(pred, yb)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/01/hero-fit.png' | relative_url }}"

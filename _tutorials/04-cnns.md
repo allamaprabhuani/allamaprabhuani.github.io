@@ -1,23 +1,46 @@
 ---
-title: "Convolutional Neural Networks"
+title: "Convolutional Neural Networks from Pixels to Feature Maps"
 subtitle: "Why MLPs fail on images, what a convolution actually does, and how to read what a trained CNN has learned."
-description: "Why MLPs fail on images, what a convolution actually does, and how to read what a trained CNN has learned. Filter and feature-map visualisations on CIFAR-10."
+description: "A CNN tutorial from pixels to feature maps: why MLPs fail on images, how convolutions, padding, stride, and pooling work, with CIFAR-10 visualizations."
 image:
   path: /assets/tutorials/04/mlp-vs-cnn-cifar.png
   width: 1412
   height: 424
+image_alt: MLP versus CNN training loss and test accuracy on CIFAR-10
 level: intermediate
 status: published
 order: 4
 tags: [cnn, vision, pytorch, interpretability]
 notebook: notebooks/04-cnns.ipynb
+runtime: "60 min"
+duration: "PT60M"
+hook: "Train a small CNN, compare it with an MLP, then open the model and inspect the filters."
+related:
+  - title: "Neural-network capacity"
+    url: /tutorials/03-neural-networks-intro/
+    note: "Why hidden units matter before images enter the story."
+  - title: "Training and regularisation"
+    url: /tutorials/01-ml-training-basics/
+    note: "The same validation-loss checks still decide whether the CNN is learning."
 ---
+
+Flattening an image turns a neighbourhood into a long list. That is the
+first reason MLPs struggle with vision: the model has to relearn locality
+from scratch for every object, position, and scale.
 
 A CNN is an MLP that **shares weights spatially**. Instead of one weight
 per input pixel, you have a 3 × 3 filter that slides across the image.
-That single change buys you translation invariance, parameter efficiency,
+That single change buys translation equivariance, parameter efficiency,
 and a useful inductive bias for any signal where neighbouring values are
-correlated — images, audio, time series, physical simulation fields.
+correlated: images, audio, time series, physical simulation fields.
+Pooling and the later architecture can then trade some of that
+equivariance for practical translation invariance.
+
+```python
+conv = nn.Conv2d(in_channels=3, out_channels=32,
+                 kernel_size=3, padding=1)
+y = conv(x)  # [batch, 3, height, width] -> [batch, 32, height, width]
+```
 
 This tutorial does CNNs in three movements:
 
@@ -42,17 +65,19 @@ locally — colour images make the lessons land harder.
   <figcaption>CIFAR-10 — 10 classes × 6 000 training images, 32 × 32 colour. The standard "harder than MNIST" benchmark for small vision models.</figcaption>
 </figure>
 
-## A CNN sees three stacked grayscales, not a colour image
+## A CNN sees channels, then learns how to mix them
 
 Channels are how a CNN handles colour: the input tensor has shape
 `[batch, channels, height, width]` and for an RGB image, **channels = 3**.
-The model never reasons about "redness"; it processes three independent
-grayscale arrays and learns to combine them.
+The first convolutional layer receives three aligned channel maps and
+each learned filter spans all three channels. So the model starts with
+RGB as separate input channels, but it immediately learns cross-channel
+combinations such as colour edges and opponent-colour blobs.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/04/rgb-channels.png' | relative_url }}"
        alt="A CIFAR cat image broken into its R, G, and B channels visualised as separate grayscale maps">
-  <figcaption>The same image, split into its three colour channels. The cat's eyes are bright in R, the green grass is bright in G, the sky-tinted shadows in B.</figcaption>
+  <figcaption>The same image, split into its three colour channels. The cat's eyes are bright in R, the green grass is bright in G, the sky-tinted shadows in B. A learned RGB filter can combine all three at once.</figcaption>
 </figure>
 
 ## The killer flaw of MLPs on images — flattening
@@ -78,13 +103,13 @@ For a fully-connected first hidden layer with 512 neurons:
 | 224 × 224 RGB (ImageNet) | 150 528 | **77 070 848** |
 
 A CNN's first conv layer with 32 filters of 3 × 3 × 3 has **896
-parameters** *regardless of image size*. Same weights are reused
-everywhere.
+parameters** regardless of image size for that layer. Same weights are
+reused everywhere.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/04/parameter-scaling.png' | relative_url }}"
        alt="Log-scale plot of parameter count vs image side length; MLP grows quadratically, CNN stays flat">
-  <figcaption>Parameter count in the first layer as the image grows. MLP scales O(n²); CNN stays flat. This is why no production vision model is an MLP.</figcaption>
+  <figcaption>Parameter count in the first layer as the image grows. A dense MLP scales with pixel count; this convolutional layer stays flat. Production vision models avoid fully connected pixels by adding structure: convolutions, patches, attention, or related tricks.</figcaption>
 </figure>
 
 ## Empirical verdict: same data, two architectures
@@ -184,7 +209,7 @@ The notebook's 8 × 8 digit version of the same interpretation:
 ## What's in here
 
 - Why MLPs flatten the spatial structure of images and pay for it twice
-  (information loss + parameter explosion)
+  (lost locality + parameter explosion)
 - The convolution operation with the output-size formula
 - Padding, stride, and pooling — the three knobs every CNN turns
 - A 2-conv-block CNN built in ~30 lines of PyTorch

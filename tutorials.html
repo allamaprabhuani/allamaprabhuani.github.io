@@ -1,22 +1,34 @@
 ---
 layout: default
-title: Machine Learning and PINN Tutorials
-description: Hands-on Jupyter tutorials from Allamaprabhu S Ani on machine learning, neural networks, CNNs, and physics-informed learning.
+title: Free PyTorch and Machine Learning Tutorials with Jupyter Notebooks
+description: Free runnable PyTorch, scikit-learn, CNN, and PINN tutorials from Allamaprabhu S Ani, with Jupyter notebooks, Colab, Binder, visual explanations, and from-scratch code.
 permalink: /tutorials/
 ---
 <header class="blog-header">
-  <h1>tutorials</h1>
-  <p class="muted">Notebooks + explainers, the way I wish they had been explained to me. Each tutorial has a runnable Colab/Binder link so you can try it without installing anything.</p>
+  <h1>machine learning tutorials</h1>
+  <p class="muted">A five-part path from the training loop to physics-informed neural networks. Each tutorial is a runnable notebook plus a visual explainer: the goal is not just to run code, but to understand what the model is doing.</p>
 </header>
 
-<ul class="post-list tutorial-list">
 {% assign sorted = site.tutorials | sort: "order" %}
+<nav class="series-map" aria-label="Tutorial series map">
+  <p class="series-label">series map</p>
+  <ol>
+  {% for t in sorted %}
+    <li>
+      <span class="series-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+      <a href="{{ t.url }}">{{ t.title }}</a>
+    </li>
+  {% endfor %}
+  </ol>
+</nav>
+
+<ul class="post-list tutorial-list">
 {% for t in sorted %}
 <li class="tutorial-card tutorial-card-{{ t.status | default: 'draft' }}">
   {% if t.image %}
   <a class="tutorial-thumb" href="{{ t.url }}" aria-hidden="true" tabindex="-1">
     <img src="{{ t.image.path | relative_url }}"
-         alt=""
+         alt="{{ t.image_alt | default: t.title }}"
          loading="lazy"
          {% if t.image.width %}width="{{ t.image.width }}" height="{{ t.image.height }}"{% endif %}>
   </a>
@@ -25,7 +37,7 @@ permalink: /tutorials/
     <p class="post-meta">
       <span class="t-level t-level-{{ t.level | default: 'intro' }}">{{ t.level | default: "intro" }}</span>
       {% if t.status != 'published' %}<span class="status status-{{ t.status | default: 'draft' }}">{{ t.status | default: "draft" }}</span>{% endif %}
-      {% if t.tags %} · {{ t.tags | join: " · " }}{% endif %}
+      {% if t.tags %} · {% for tag in t.tags %}<a href="/tutorials/#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}
     </p>
     <h3>
       {% if t.status == 'coming-soon' %}
@@ -35,6 +47,11 @@ permalink: /tutorials/
       {% endif %}
     </h3>
     {% if t.subtitle %}<p class="muted">{{ t.subtitle }}</p>{% endif %}
+    {% if t.hook %}<p class="tutorial-hook">{{ t.hook }}</p>{% endif %}
+    <p class="tutorial-card-meta">
+      {% if t.runtime %}<span>{{ t.runtime }}</span>{% endif %}
+      {% if t.notebook %}<span>Colab + Binder</span>{% endif %}
+    </p>
   </div>
 </li>
 {% endfor %}

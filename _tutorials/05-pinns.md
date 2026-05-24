@@ -1,22 +1,48 @@
 ---
-title: "Physics-Informed Neural Networks (PINNs)"
-subtitle: "Data, physics, or both? A damped oscillator that compares all three on the same architecture, then the bridge to inverse problems and neural operators."
-description: "Data, physics, or both? A damped oscillator comparing three approaches on the same architecture, then the bridge to inverse problems and neural operators."
+title: "PINN Tutorial in PyTorch: Damped Oscillator, Autograd, and Inverse Problems"
+subtitle: "Data, physics, or both? A damped oscillator compares all three on the same architecture, then bridges to inverse problems and neural operators."
+description: "A PyTorch PINN tutorial using a damped oscillator: compare data-only, physics-only, and hybrid models; use autograd for derivatives; connect to inverse problems."
 image:
   path: /assets/tutorials/05/hero-three-models.png
   width: 1737
   height: 513
+image_alt: Data-only neural network, physics-only PINN, and hybrid PINN on a damped oscillator
 level: advanced
 status: published
 order: 5
 tags: [pinn, physics, pytorch, autograd, scientific-ml]
 notebook: notebooks/05-pinns.ipynb
+runtime: "70 min"
+duration: "PT70M"
+hook: "Use torch.autograd.grad to make a neural network obey an ODE, then turn the same idea into an inverse problem."
+related:
+  - title: "PyTorch autograd basics"
+    url: /tutorials/01-ml-training-basics/
+    note: "Start here if torch.autograd.grad feels like a black box."
+  - title: "Neural networks as function approximators"
+    url: /tutorials/03-neural-networks-intro/
+    note: "The same MLP architecture before physics enters the loss."
 ---
+
+The failure mode that makes PINNs interesting is extrapolation. A plain
+neural network can fit the data you showed it and still become useless
+the moment you ask what happens next.
 
 A PINN is a neural network with a **physics term in the loss**. That's the
 whole idea. The rest is engineering: what to put in the loss, how to weight
 it, and why your first PINN will train to a flat function unless you do a
 few specific things.
+
+```python
+t = t.requires_grad_(True)
+u = model(t)
+du_dt = torch.autograd.grad(u, t, torch.ones_like(u),
+                            create_graph=True)[0]
+d2u_dt2 = torch.autograd.grad(du_dt, t, torch.ones_like(du_dt),
+                              create_graph=True)[0]
+residual = d2u_dt2 + 2 * zeta * omega0 * du_dt + omega0**2 * u
+physics_loss = (residual ** 2).mean()
+```
 
 The setup: pick a problem with a known exact solution, give yourself a
 small window of noisy data, then watch three models behave very

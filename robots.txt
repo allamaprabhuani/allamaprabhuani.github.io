@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /notebooks/*.html
 
 Sitemap: https://allamaprabhuani.github.io/sitemap.xml

@@ -1,6 +1,38 @@
 ---
 layout: default
 ---
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: page.subtitle | jsonify }},
+  "url": {{ page.url | absolute_url | jsonify }},
+  "author": {
+    "@type": "Person",
+    "name": {{ site.author.name | default: site.title | jsonify }},
+    "url": {{ site.url | jsonify }}
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": {{ site.author.name | default: site.title | jsonify }}
+  },
+  {% if page.image.path %}
+  "image": {{ page.image.path | absolute_url | jsonify }},
+  {% endif %}
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ page.url | absolute_url | jsonify }}
+  },
+  "about": {{ page.tags | default: empty_array | jsonify }},
+  "proficiencyLevel": {{ page.level | default: "beginner" | jsonify }},
+  {% if page.duration %}
+  "timeRequired": {{ page.duration | jsonify }},
+  {% endif %}
+  "learningResourceType": "tutorial",
+  "isAccessibleForFree": true
+}
+</script>
 {% assign sorted = site.tutorials | sort: "order" %}
 {% assign prev = nil %}
 {% assign next = nil %}
@@ -34,6 +66,16 @@ layout: default
     {% include_relative {{ page.rendered }} %}
     {% endif %}
   </div>
+  {% if page.related %}
+  <aside class="related-concepts" aria-label="Related tutorial concepts">
+    <h2>Related concepts</h2>
+    <ul>
+      {% for item in page.related %}
+      <li><a href="{{ item.url }}">{{ item.title }}</a>{% if item.note %}<span>{{ item.note }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </aside>
+  {% endif %}
   <nav class="tutorial-pager" aria-label="Tutorial navigation">
     <div class="pager-prev">
       {% if prev %}
