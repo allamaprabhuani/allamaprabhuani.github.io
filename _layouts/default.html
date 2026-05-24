@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="googlebot" content="index,follow,max-image-preview:large">
+{% assign robots_directive = page.robots | default: 'index,follow,max-image-preview:large' %}
+<meta name="robots" content="{{ robots_directive }}">
+<meta name="googlebot" content="{{ robots_directive }}">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14110d" media="(prefers-color-scheme: dark)">

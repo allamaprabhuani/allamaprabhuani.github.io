@@ -1,3 +1,9 @@
+---
+title: Notebook Sources
+robots: noindex,follow
+sitemap: false
+---
+
 # notebooks
 
 Source `.ipynb` files for the tutorials at https://allamaprabhuani.github.io/tutorials/

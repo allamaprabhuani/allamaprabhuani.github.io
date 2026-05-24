@@ -1,3 +1,9 @@
+---
+title: Site Assets
+robots: noindex,follow
+sitemap: false
+---
+
 # Profile photo
 
 Drop your photo here as `me.jpg` (or `me.png`).

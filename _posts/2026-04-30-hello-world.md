@@ -4,6 +4,8 @@ title: "hello, world"
 subtitle: "first post on the blog"
 date: 2026-04-30
 tags: [meta]
+sitemap: false
+robots: noindex,follow
 ---
 
 This is the first post on the blog.

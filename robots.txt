@@ -2,4 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://allamaprabhuani.github.io/sitemap.xml
-Sitemap: https://allamaprabhuani.github.io/feed.xml
