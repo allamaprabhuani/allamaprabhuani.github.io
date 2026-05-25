@@ -5,13 +5,19 @@ description: Free runnable PyTorch, scikit-learn, CNN, and PINN tutorials create
 permalink: /tutorials/
 image: /assets/og/tutorials.png
 ---
+{% assign sorted = site.tutorials | sort: "order" %}
+{% assign tutorial_items_json = '' %}
+{% assign tutorial_pos = 0 %}
+{% for t in sorted %}
+{% assign tutorial_pos = tutorial_pos | plus: 1 %}
+{% capture tutorial_items_json %}{{ tutorial_items_json }}{% if tutorial_items_json != '' %},{% endif %}{"@type":"ListItem","position":{{ tutorial_pos }},"url":{{ t.url | absolute_url | jsonify }},"name":{{ t.title | jsonify }}}{% endcapture %}
+{% endfor %}
 <header class="blog-header">
   <h1>machine learning tutorials</h1>
   <p class="muted">A five-part path from the training loop to physics-informed neural networks. Each tutorial is a runnable notebook plus a visual explainer: the goal is not just to run code, but to understand what the model is doing.</p>
   <p class="muted">I created these tutorials while assisting <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> with teaching at <a href="https://www.qmul.ac.uk/">Queen Mary University of London</a>. The notebooks and explanations published here are my authored and maintained teaching materials.</p>
 </header>
 
-{% assign sorted = site.tutorials | sort: "order" %}
 <nav class="topic-hubs" aria-label="Tutorial topic hubs">
   <a href="/tutorials/pytorch/">PyTorch tutorials</a>
   <a href="/tutorials/ml-fundamentals/">ML fundamentals</a>
@@ -64,3 +70,32 @@ image: /assets/og/tutorials.png
 </li>
 {% endfor %}
 </ul>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Machine Learning Tutorials",
+  "description": "Tutorials on PyTorch, scikit-learn, neural networks, CNNs, and PINNs.",
+  "url": {{ page.url | absolute_url | jsonify }},
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": {{ site.title | jsonify }},
+    "url": {{ site.url | jsonify }}
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Home","item":{{ site.url | append: "/" | jsonify }}},
+      {"@type":"ListItem","position":2,"name":"Tutorials","item":{{ page.url | absolute_url | jsonify }}}
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Machine Learning Tutorials",
+    "itemListOrder": "https://schema.org/ItemListOrderAscending",
+    "numberOfItems": {{ sorted | size }},
+    "itemListElement": [{{ tutorial_items_json }}]
+  }
+}
+</script>

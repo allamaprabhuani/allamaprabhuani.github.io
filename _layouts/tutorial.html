@@ -1,6 +1,17 @@
 ---
 layout: default
 ---
+{% assign tutorial_slug = page.path | split: "/" | last | replace: ".md", "" %}
+{% assign topic = site.data.tutorial_topics | where_exp: "item", "item.tutorials contains tutorial_slug" | first %}
+{% assign breadcrumb_items = '' %}
+{% capture breadcrumb_items %}{"@type":"ListItem","position":1,"name":"Home","item":"{{ site.url }}/"}{% endcapture %}
+{% capture breadcrumb_items %}{{ breadcrumb_items }},{"@type":"ListItem","position":2,"name":"Tutorials","item":"{{ site.url }}/tutorials/"}{% endcapture %}
+{% if topic %}
+{% capture breadcrumb_items %}{{ breadcrumb_items }},{"@type":"ListItem","position":3,"name":{{ topic.title | jsonify }},"item":{{ topic.permalink | absolute_url | jsonify }}}{% endcapture %}
+{% capture breadcrumb_items %}{{ breadcrumb_items }},{"@type":"ListItem","position":4,"name":{{ page.title | jsonify }},"item":{{ page.url | absolute_url | jsonify }}}{% endcapture %}
+{% else %}
+{% capture breadcrumb_items %}{{ breadcrumb_items }},{"@type":"ListItem","position":3,"name":{{ page.title | jsonify }},"item":{{ page.url | absolute_url | jsonify }}}{% endcapture %}
+{% endif %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -24,13 +35,24 @@ layout: default
     "@type": "WebPage",
     "@id": {{ page.url | absolute_url | jsonify }}
   },
+  {% if topic %}
+  "isPartOf": {
+    "@type": "CollectionPage",
+    "name": {{ topic.title | jsonify }},
+    "url": {{ topic.permalink | absolute_url | jsonify }}
+  },
+  {% endif %}
   "about": {{ page.tags | default: empty_array | jsonify }},
   "proficiencyLevel": {{ page.level | default: "beginner" | jsonify }},
   {% if page.duration %}
   "timeRequired": {{ page.duration | jsonify }},
   {% endif %}
   "learningResourceType": "tutorial",
-  "isAccessibleForFree": true
+  "isAccessibleForFree": true,
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [{{ breadcrumb_items }}]
+  }
 }
 </script>
 {% assign sorted = site.tutorials | sort: "order" %}

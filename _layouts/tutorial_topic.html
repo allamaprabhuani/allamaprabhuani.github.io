@@ -3,6 +3,15 @@ layout: default
 ---
 {% assign topic = site.data.tutorial_topics | where: "slug", page.topic_slug | first %}
 {% assign sorted = site.tutorials | sort: "order" %}
+{% assign itemlist_json = '' %}
+{% assign item_pos = 0 %}
+{% for t in sorted %}
+{% assign tutorial_slug = t.path | split: "/" | last | replace: ".md", "" %}
+{% if topic.tutorials contains tutorial_slug %}
+{% assign item_pos = item_pos | plus: 1 %}
+{% capture itemlist_json %}{{ itemlist_json }}{% if itemlist_json != '' %},{% endif %}{"@type":"ListItem","position":{{ item_pos }},"url":{{ t.url | absolute_url | jsonify }},"name":{{ t.title | jsonify }}}{% endcapture %}
+{% endif %}
+{% endfor %}
 
 <header class="blog-header">
   <p class="post-meta"><a href="/tutorials/">tutorials</a></p>
@@ -58,6 +67,21 @@ layout: default
     "@type": "WebSite",
     "name": {{ site.title | jsonify }},
     "url": {{ site.url | jsonify }}
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Home","item":{{ site.url | append: "/" | jsonify }}},
+      {"@type":"ListItem","position":2,"name":"Tutorials","item":{{ site.url | append: "/tutorials/" | jsonify }}},
+      {"@type":"ListItem","position":3,"name":{{ topic.title | jsonify }},"item":{{ topic.permalink | absolute_url | jsonify }}}
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": {{ topic.title | jsonify }},
+    "itemListOrder": "https://schema.org/ItemListOrderAscending",
+    "numberOfItems": {{ topic.tutorials | size }},
+    "itemListElement": [{{ itemlist_json }}]
   }
 }
 </script>
