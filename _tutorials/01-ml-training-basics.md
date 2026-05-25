@@ -120,7 +120,7 @@ tells you whether the model is *learning* or just *memorising*.
 
 ## Source
 
-Created as teaching-support material while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at the CEMS Lab, Queen Mary University of London (2025). This is my personal open version.
+Created by Allamaprabhu S Ani to support teaching by [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at Queen Mary University of London (2025). I authored and maintain this open version here.
 
 ## Next
 
@@ -133,6 +133,4 @@ Created as teaching-support material while assisting [Dr Sathiskumar Ponnusami](
 
 1. Srivastava, Hinton et al. (2014). **Dropout.** *JMLR* 15(56). [JMLR](https://jmlr.org/papers/v15/srivastava14a.html)
 2. Kingma &amp; Ba (2015). **Adam: A method for stochastic optimization.** [arXiv:1412.6980](https://arxiv.org/abs/1412.6980)
-3. Karpathy (2022). **The spelled-out intro to neural networks and backpropagation: building micrograd.** [YouTube](https://www.youtube.com/watch?v=VMj-3S1tku0) and [micrograd](https://github.com/karpathy/micrograd) — the cleanest scalar-DAG view of forward and backward propagation.
-4. Karpathy (2019). **A Recipe for Training Neural Networks.** [karpathy.github.io](https://karpathy.github.io/2019/04/25/recipe/)
-5. Goodfellow, Bengio &amp; Courville (2016). **Deep Learning** (MIT Press), chs 7–8. [deeplearningbook.org](https://www.deeplearningbook.org/)
+3. Goodfellow, Bengio &amp; Courville (2016). **Deep Learning** (MIT Press), chs 7–8. [deeplearningbook.org](https://www.deeplearningbook.org/)
