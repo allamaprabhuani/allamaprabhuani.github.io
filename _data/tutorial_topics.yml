@@ -1,0 +1,28 @@
+- slug: pytorch
+  title: PyTorch Tutorials for Scientific Machine Learning
+  description: Runnable PyTorch tutorials by Allamaprabhu S Ani covering training loops, neural networks, CNNs, autograd, and PINNs with notebooks and Colab links.
+  permalink: /tutorials/pytorch/
+  tutorials:
+    - 01-ml-training-basics
+    - 03-neural-networks-intro
+    - 04-cnns
+    - 05-pinns
+
+- slug: ml-fundamentals
+  title: Machine Learning Fundamentals Tutorials
+  description: Free machine learning fundamentals tutorials covering loss functions, gradients, overfitting, scikit-learn regression, classifiers, and visual model diagnostics.
+  permalink: /tutorials/ml-fundamentals/
+  tutorials:
+    - 01-ml-training-basics
+    - 02-scikit-learn-intro
+    - 03-neural-networks-intro
+    - 04-cnns
+
+- slug: scientific-ml
+  title: Scientific Machine Learning Tutorials
+  description: Scientific machine learning tutorials connecting PyTorch autograd, differentiable models, neural operators, and physics-informed neural networks.
+  permalink: /tutorials/scientific-ml/
+  tutorials:
+    - 01-ml-training-basics
+    - 03-neural-networks-intro
+    - 05-pinns

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#14110d"/>
+  <g fill="none" stroke="#8fb7d5" stroke-width="3" opacity=".55">
+    <path d="M112 442c118-106 236-126 356-60 129 71 264 53 405-55 67-52 138-79 213-82"/>
+    <path d="M90 504c148-80 287-88 417-23 143 71 282 54 418-50"/>
+    <circle cx="142" cy="418" r="8" fill="#8fb7d5"/>
+    <circle cx="468" cy="382" r="8" fill="#8fb7d5"/>
+    <circle cx="873" cy="327" r="8" fill="#8fb7d5"/>
+  </g>
+  <g fill="#fbfaf7">
+    <text x="78" y="166" font-family="Georgia, 'Times New Roman', serif" font-size="70" font-weight="700">Machine Learning Tutorials</text>
+    <text x="82" y="236" font-family="Helvetica, Arial, sans-serif" font-size="32">PyTorch · scikit-learn · CNNs · PINNs</text>
+    <text x="82" y="296" font-family="Helvetica, Arial, sans-serif" font-size="26">Runnable notebooks with visual explanations and from-scratch code</text>
+  </g>
+  <g transform="translate(914 104)" fill="none" stroke="#fbfaf7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 24h150v118H48z"/>
+    <path d="M78 62h88M78 94h58M78 126h96"/>
+    <path d="M198 64l36-28v134l-36-28"/>
+  </g>
+</svg>

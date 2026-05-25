@@ -3,6 +3,7 @@ layout: default
 title: Free PyTorch and Machine Learning Tutorials with Jupyter Notebooks
 description: Free runnable PyTorch, scikit-learn, CNN, and PINN tutorials authored by Allamaprabhu S Ani while assisting Dr Sathiskumar Ponnusami at Queen Mary University of London, with Jupyter notebooks, Colab, visual explanations, and from-scratch code.
 permalink: /tutorials/
+image: /assets/og/tutorials.png
 ---
 <header class="blog-header">
   <h1>machine learning tutorials</h1>
@@ -11,6 +12,12 @@ permalink: /tutorials/
 </header>
 
 {% assign sorted = site.tutorials | sort: "order" %}
+<nav class="topic-hubs" aria-label="Tutorial topic hubs">
+  <a href="/tutorials/pytorch/">PyTorch tutorials</a>
+  <a href="/tutorials/ml-fundamentals/">ML fundamentals</a>
+  <a href="/tutorials/scientific-ml/">Scientific ML</a>
+</nav>
+
 <nav class="series-map" aria-label="Tutorial series map">
   <p class="series-label">series map</p>
   <ol>
@@ -38,7 +45,7 @@ permalink: /tutorials/
     <p class="post-meta">
       <span class="t-level t-level-{{ t.level | default: 'intro' }}">{{ t.level | default: "intro" }}</span>
       {% if t.status != 'published' %}<span class="status status-{{ t.status | default: 'draft' }}">{{ t.status | default: "draft" }}</span>{% endif %}
-      {% if t.tags %} · {% for tag in t.tags %}<a href="/tutorials/#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}
+      {% if t.tags %} · {% for tag in t.tags %}<span class="tag-chip">{{ tag }}</span>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}
     </p>
     <h3>
       {% if t.status == 'coming-soon' %}

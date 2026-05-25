@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#fbfaf7"/>
+  <path d="M0 500c175-122 340-142 497-60 137 72 259 69 411-20 104-61 198-84 292-74v284H0Z" fill="#e7eef2"/>
+  <g fill="none" stroke="#8fb7d5" stroke-width="3" opacity=".55">
+    <path d="M78 438C230 312 388 292 552 378s322 60 485-84"/>
+    <path d="M112 506c135-91 266-104 394-41 144 72 288 56 433-48"/>
+  </g>
+  <g fill="#14110d">
+    <text x="78" y="176" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700">Allamaprabhu S Ani</text>
+    <text x="82" y="244" font-family="Helvetica, Arial, sans-serif" font-size="32">Computational mechanics, fracture, and scientific machine learning</text>
+    <text x="82" y="304" font-family="Helvetica, Arial, sans-serif" font-size="26">Differentiable physics · neural operators · GPU-native solvers</text>
+  </g>
+  <g transform="translate(930 92)">
+    <rect width="164" height="164" rx="36" fill="#14110d"/>
+    <path d="M38 113 72 38h19l34 75h-18l-8-20H64l-8 20H38Zm31-32h25L82 49h-1L69 81Z" fill="#fbfaf7"/>
+    <path d="M43 128c22-24 41-28 60-19 10 5 20 6 30-3" fill="none" stroke="#8fb7d5" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>

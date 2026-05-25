@@ -7,8 +7,8 @@ author:
 
 # Fallback image when a page has no `image` in its frontmatter
 # (jekyll-seo-tag uses this for og:image / twitter:image).
-image: /assets/me.jpg
-logo: /favicon.png
+image: /assets/og/home.png
+logo: /assets/icons/favicon-192.png
 social:
   name: Allamaprabhu S Ani
   links:
