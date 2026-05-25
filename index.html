@@ -103,6 +103,7 @@ description: Allamaprabhu S Ani is a PhD researcher in computational mechanics, 
 <aside class="toc" aria-label="Section navigation">
   <p class="toc-label">contents <span class="toc-progress" id="toc-progress">·</span></p>
   <ul>
+    <li><a href="#tutorials"><span class="toc-dot"></span><span class="toc-name">tutorials</span></a></li>
     <li><a href="#shipped"><span class="toc-dot"></span><span class="toc-name">shipped</span></a></li>
     <li><a href="#archive"><span class="toc-dot"></span><span class="toc-name">archive</span></a></li>
     <li><a href="#papers"><span class="toc-dot"></span><span class="toc-name">papers</span></a></li>
@@ -156,6 +157,36 @@ description: Allamaprabhu S Ani is a PhD researcher in computational mechanics, 
     </ul>
   </div>
 </header>
+
+<section id="tutorials" class="home-tutorials">
+  <div class="section-lede">
+    <h2>machine learning tutorials</h2>
+    <p class="muted">Runnable notebooks and visual explainers for the path I keep using in my own work: training loops, scikit-learn, neural networks, CNNs, and physics-informed neural networks.</p>
+  </div>
+  {% assign home_tutorials = site.tutorials | sort: "order" %}
+  <ol class="home-tutorial-grid">
+    {% for t in home_tutorials %}
+    <li>
+      {% if t.image %}
+      <a class="home-tutorial-thumb" href="{{ t.url }}" aria-label="{{ t.title }}">
+        <img src="{{ t.image.path | relative_url }}"
+             alt="{{ t.image_alt | default: t.title }}"
+             loading="lazy"
+             {% if t.image.width %}width="{{ t.image.width }}" height="{{ t.image.height }}"{% endif %}>
+      </a>
+      {% endif %}
+      <p class="home-tutorial-meta">
+        <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+        <span>{{ t.level }}</span>
+        {% if t.runtime %}<span>{{ t.runtime }}</span>{% endif %}
+      </p>
+      <h3><a href="{{ t.url }}">{{ t.title }}</a></h3>
+      {% if t.hook %}<p>{{ t.hook }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  <p class="section-link"><a href="/tutorials/">Open the full tutorial path →</a></p>
+</section>
 
 <section id="shipped">
   <h2>things I've shipped</h2>
