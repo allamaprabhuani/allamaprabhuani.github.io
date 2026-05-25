@@ -1108,6 +1108,18 @@ body:not(.landing) .toc { display: block; }
   font-family: var(--font-mono);
 }
 .post-body pre code { background: none; padding: 0; border-radius: 0; }
+.post-body mjx-container[jax="CHTML"][display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 4px 0;
+}
+.post-body mjx-container {
+  color: var(--ink);
+}
+.post-body mjx-container a {
+  color: inherit;
+}
 .post-foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
 
 /* ---- Tutorial prev/next pager ---- */
