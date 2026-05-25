@@ -149,6 +149,10 @@ model handles a whole family of inputs in milliseconds:
   derives the theory from scratch — the recommended next watch after this
   tutorial.
 
+## Source
+
+Created as teaching-support material while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at the CEMS Lab, Queen Mary University of London (2025). This is my personal open version. The damped-oscillator PINN demo is adapted from [Ben Moseley's introductory PINN tutorial](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/).
+
 ## Prerequisites
 
 - [Tutorial 03](/tutorials/03-neural-networks-intro/) — the PyTorch
@@ -159,7 +163,7 @@ model handles a whole family of inputs in milliseconds:
 ## References
 
 1. Raissi, Perdikaris &amp; Karniadakis (2019). **Physics-informed neural networks.** *J. Comp. Physics* 378. [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)
-2. Moseley (2021). **So, what is a physics-informed neural network?** [benmoseley.blog](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/) — the tutorial this notebook's demo is built around.
+2. Moseley (2021). **So, what is a physics-informed neural network?** [benmoseley.blog](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/) — the tutorial this notebook's damped-oscillator demo is built around.
 3. Krishnapriyan et al. (2021). **Characterizing possible failure modes in PINNs.** [arXiv:2109.01050](https://arxiv.org/abs/2109.01050)
 4. Lu, Jin et al. (2021). **DeepONet.** *Nat Machine Intelligence* 3. [arXiv:1910.03193](https://arxiv.org/abs/1910.03193)
 5. Mishra (2024). **Learning operators — CIRM lecture series.** [YouTube](https://www.youtube.com/watch?v=5CnctvgyssU) — recommended next watch.

@@ -127,7 +127,7 @@ intuition to internalise early.
 
 ## Source
 
-Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.saponnusami.com/) (2025).
+Created as teaching-support material while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at the CEMS Lab, Queen Mary University of London (2025). This is my personal open version.
 
 ## Next
 

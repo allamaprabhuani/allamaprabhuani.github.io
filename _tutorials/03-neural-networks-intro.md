@@ -141,7 +141,7 @@ This tutorial is for the model and metrics, not for clinical deployment.
 
 ## Source
 
-Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.saponnusami.com/) (2025).
+Created as teaching-support material while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at the CEMS Lab, Queen Mary University of London (2025). This is my personal open version.
 
 ## Next
 
@@ -153,4 +153,5 @@ Adapted from teaching notes co-developed with [Dr S. Ponnusami](https://www.sapo
 
 1. Wolberg &amp; Mangasarian (1990). **Multisurface method of pattern separation for medical diagnosis applied to breast cytology** — the Wisconsin dataset. [doi:10.1073/pnas.87.23.9193](https://doi.org/10.1073/pnas.87.23.9193)
 2. Rumelhart, Hinton &amp; Williams (1986). **Learning representations by back-propagating errors.** *Nature* 323. [doi:10.1038/323533a0](https://doi.org/10.1038/323533a0)
-3. Fawcett (2006). **An introduction to ROC analysis.** [doi:10.1016/j.patrec.2005.10.010](https://doi.org/10.1016/j.patrec.2005.10.010)
+3. Karpathy (2022). **The spelled-out intro to neural networks and backpropagation: building micrograd.** [YouTube](https://www.youtube.com/watch?v=VMj-3S1tku0) and [micrograd](https://github.com/karpathy/micrograd)
+4. Fawcett (2006). **An introduction to ROC analysis.** [doi:10.1016/j.patrec.2005.10.010](https://doi.org/10.1016/j.patrec.2005.10.010)

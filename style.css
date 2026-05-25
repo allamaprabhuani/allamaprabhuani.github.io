@@ -1298,6 +1298,12 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   display: flex; flex-wrap: wrap; gap: 8px;
   margin: 16px 0 4px;
 }
+.tutorial-origin {
+  margin: 14px 0 0;
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
 .btn-action {
   display: inline-flex; align-items: center;
   padding: 6px 12px;
@@ -1314,6 +1320,10 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   border-color: var(--accent);
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+.btn-secondary {
+  color: var(--muted);
+  background: transparent;
 }
 
 .related-concepts {
