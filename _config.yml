@@ -1,8 +1,8 @@
-title: Allamaprabhu S Ani
-description: Allamaprabhu S Ani is a doctoral researcher in computational mechanics, fracture mechanics, and deep learning at City, St George's, University of London.
+title: Allamaprabhu Ani
+description: Allamaprabhu Ani is a doctoral researcher in computational mechanics, fracture mechanics, and deep learning at City, St George's, University of London.
 url: https://allamaprabhuani.github.io
 author:
-  name: Allamaprabhu S Ani
+  name: Allamaprabhu Ani
   email: allamaprabhuani@gmail.com
 
 # Fallback image when a page has no `image` in its frontmatter
@@ -10,7 +10,7 @@ author:
 image: /assets/og/home.png
 logo: /assets/icons/favicon-192.png
 social:
-  name: Allamaprabhu S Ani
+  name: Allamaprabhu Ani
   links:
     - https://github.com/allamaprabhuani
     - https://scholar.google.com/citations?user=dX3xKGsAAAAJ

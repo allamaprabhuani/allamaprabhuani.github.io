@@ -151,7 +151,7 @@ model handles a whole family of inputs in milliseconds:
 
 ## Source
 
-Created by Allamaprabhu S Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me. The damped-oscillator PINN demo is adapted from [Ben Moseley's introductory PINN tutorial](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/).
+Created by Allamaprabhu Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me. The damped-oscillator PINN demo is adapted from [Ben Moseley's introductory PINN tutorial](https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/).
 
 ## Prerequisites
 

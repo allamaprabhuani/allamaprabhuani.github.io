@@ -141,7 +141,7 @@ This tutorial is for the model and metrics, not for clinical deployment.
 
 ## Source
 
-Created by Allamaprabhu S Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
+Created by Allamaprabhu Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
 
 ## Next
 

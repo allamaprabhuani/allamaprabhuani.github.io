@@ -6,7 +6,7 @@
     <path d="M112 506c135-91 266-104 394-41 144 72 288 56 433-48"/>
   </g>
   <g fill="#14110d">
-    <text x="78" y="176" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700">Allamaprabhu S Ani</text>
+    <text x="78" y="176" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700">Allamaprabhu Ani</text>
     <text x="82" y="244" font-family="Helvetica, Arial, sans-serif" font-size="32">Computational mechanics, fracture, and scientific machine learning</text>
     <text x="82" y="304" font-family="Helvetica, Arial, sans-serif" font-size="26">Differentiable physics · neural operators · GPU-native solvers</text>
   </g>
