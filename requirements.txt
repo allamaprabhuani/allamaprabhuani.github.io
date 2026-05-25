@@ -1,4 +1,4 @@
-# Binder / repo2docker environment for the tutorial notebooks.
+# Colab-friendly notebook environment for the tutorial notebooks.
 # All five tutorials and the blog post code samples run under these.
 numpy>=1.26
 scipy>=1.11

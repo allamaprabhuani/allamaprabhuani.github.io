@@ -228,7 +228,7 @@ The notebook's 8 × 8 digit version of the same interpretation:
 
 ## Source
 
-Created by Allamaprabhu S Ani to support teaching by [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at Queen Mary University of London (2025). I authored and maintain this open version here.
+Created by Allamaprabhu S Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
 
 ## Next
 

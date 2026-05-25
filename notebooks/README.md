@@ -46,5 +46,5 @@ Source `.ipynb` files for the tutorials at https://allamaprabhuani.github.io/tut
 
 ## Why both `.ipynb` and `.html`?
 
-- `.ipynb` is the source of truth, lives in `git log`, and is what Colab/Binder load via the buttons.
+- `.ipynb` is the source of truth, lives in `git log`, and is what Colab loads via the tutorial buttons.
 - `.html` is the pre-rendered version served instantly to the static site (no Python at request time).

@@ -141,7 +141,7 @@ This tutorial is for the model and metrics, not for clinical deployment.
 
 ## Source
 
-Created by Allamaprabhu S Ani to support teaching by [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) at Queen Mary University of London (2025). I authored and maintain this open version here.
+Created by Allamaprabhu S Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
 
 ## Next
 
@@ -154,3 +154,4 @@ Created by Allamaprabhu S Ani to support teaching by [Dr Sathiskumar Ponnusami](
 1. Wolberg &amp; Mangasarian (1990). **Multisurface method of pattern separation for medical diagnosis applied to breast cytology** — the Wisconsin dataset. [doi:10.1073/pnas.87.23.9193](https://doi.org/10.1073/pnas.87.23.9193)
 2. Rumelhart, Hinton &amp; Williams (1986). **Learning representations by back-propagating errors.** *Nature* 323. [doi:10.1038/323533a0](https://doi.org/10.1038/323533a0)
 3. Fawcett (2006). **An introduction to ROC analysis.** [doi:10.1016/j.patrec.2005.10.010](https://doi.org/10.1016/j.patrec.2005.10.010)
+4. Karpathy (2022). **The spelled-out intro to neural networks and backpropagation.** [karpathy.ai](https://karpathy.ai/zero-to-hero.html)
