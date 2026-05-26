@@ -105,9 +105,11 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   <p class="toc-label">contents <span class="toc-progress" id="toc-progress">·</span></p>
   <ul>
     <li><a href="#tutorials"><span class="toc-dot"></span><span class="toc-name">tutorials</span></a></li>
-    <li><a href="#shipped"><span class="toc-dot"></span><span class="toc-name">shipped</span></a></li>
+    <li><a href="#news"><span class="toc-dot"></span><span class="toc-name">news</span></a></li>
+    <li><a href="#shipped"><span class="toc-dot"></span><span class="toc-name">outputs</span></a></li>
     <li><a href="#archive"><span class="toc-dot"></span><span class="toc-name">archive</span></a></li>
     <li><a href="#papers"><span class="toc-dot"></span><span class="toc-name">papers</span></a></li>
+    <li><a href="/teaching/"><span class="toc-dot"></span><span class="toc-name">teaching</span></a></li>
     <li><a href="#awards"><span class="toc-dot"></span><span class="toc-name">bragspace</span></a></li>
     <li><a href="#about"><span class="toc-dot"></span><span class="toc-name">about</span></a></li>
     <li><a href="#mottos"><span class="toc-dot"></span><span class="toc-name">mottos</span></a></li>
@@ -157,7 +159,31 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
       <li>The full <a href="/tutorials/">tutorial series</a> &mdash; from the <a href="/tutorials/01-ml-training-basics/">PyTorch training loop</a> to <a href="/tutorials/05-pinns/">physics-informed neural networks</a>.</li>
     </ul>
   </div>
+  <div class="contact-band" aria-label="Primary contact links">
+    <a href="mailto:allamaprabhuani@gmail.com">Email</a>
+    <a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a>
+    <a href="https://github.com/allamaprabhuani">GitHub profile</a>
+    <a href="https://www.linkedin.com/in/allamaprabhu-ani">LinkedIn</a>
+    <a href="/assets/resume-master.pdf">Resume</a>
+  </div>
 </header>
+
+<section id="news">
+  <h2>news</h2>
+  <ul class="stack">
+    {% if site.posts.size > 0 %}
+    {% assign news_posts = site.posts | sort: "date" | reverse %}
+    {% for post in news_posts limit: 4 %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a> · <span class="muted">{{ post.date | date: "%Y-%m-%d" }}</span>
+      {% if post.subtitle %}<span class="brag-aside">{{ post.subtitle }}</span>{% endif %}
+    </li>
+    {% endfor %}
+    {% else %}
+    <li>No posts yet. Check back soon.</li>
+    {% endif %}
+  </ul>
+</section>
 
 <section id="tutorials" class="home-tutorials">
   <div class="section-lede">
@@ -191,8 +217,8 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 </section>
 
 <section id="shipped">
-  <h2>things I've shipped</h2>
-  <p class="muted">working software or products &gt; published papers, in my opinion, but I'll let you decide.</p>
+  <h2>selected outputs</h2>
+  <p class="muted">A compact portfolio of released code, papers, and reusable methods from current research.</p>
   <ul class="stack">
     <li>
       <b><a href="https://github.com/allamaprabhuani/bjsfm">BJSFM</a></b>
@@ -209,6 +235,17 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
     <li>
       <b>A small library of classical hand-calculation tools</b>
       <span class="brag-aside">Lug strength, Cozzone plastic-bending, fastener load-transfer, ABD matrices, column buckling. Most still in private repos; rolling them out as the design agent absorbs them.</span>
+    </li>
+  </ul>
+</section>
+
+<section id="teaching">
+  <h2>teaching</h2>
+  <p class="muted">QMUL teaching materials and tutorial governance at a glance.</p>
+  <ul class="stack">
+    <li>
+      <b><a href="/teaching/">See complete teaching dossier</a></b>
+      <span class="brag-aside">Expanded teaching context, teaching artifacts, and course-facing narrative now lives on the dedicated Teaching page.</span>
     </li>
   </ul>
 </section>
