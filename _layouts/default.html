@@ -45,11 +45,24 @@
   }
   document.documentElement.setAttribute('data-theme', theme);
 
-  // Generate random light blue/sky blue per page load
-  var randHue = Math.floor(Math.random() * 40 + 190); // 190 to 230
-  var randSat = Math.floor(Math.random() * 30 + 50);  // 50% to 80%
-  document.documentElement.style.setProperty('--bg-h', randHue);
-  document.documentElement.style.setProperty('--bg-s', randSat + '%');
+  // Generate random light and dark backgrounds per page load
+  var r = Math.random();
+  var darkH, darkS, darkL;
+  if (r < 0.3) { darkH = 0; darkS = 0; darkL = 0; } // pitch black
+  else if (r < 0.6) { darkH = 210; darkS = 10; darkL = Math.floor(Math.random() * 10 + 5); } // dark grey/slate (5-15%)
+  else { darkH = Math.floor(Math.random() * 40 + 190); darkS = Math.floor(Math.random() * 40 + 40); darkL = Math.floor(Math.random() * 8 + 4); } // dark blue
+  
+  var lightH = Math.floor(Math.random() * 60 + 180); // 180 to 240 (cyan to blue)
+  var lightS = Math.floor(Math.random() * 30 + 40);  // 40% to 70%
+  var lightL = Math.floor(Math.random() * 6 + 88);   // 88% to 94%
+
+  document.documentElement.style.setProperty('--bg-h-dark', darkH);
+  document.documentElement.style.setProperty('--bg-s-dark', darkS + '%');
+  document.documentElement.style.setProperty('--bg-l-dark', darkL + '%');
+
+  document.documentElement.style.setProperty('--bg-h-light', lightH);
+  document.documentElement.style.setProperty('--bg-s-light', lightS + '%');
+  document.documentElement.style.setProperty('--bg-l-light', lightL + '%');
 
   function cycleNext(key, len) {
     var fullKey = key + '-' + C.KEY_VERSION;

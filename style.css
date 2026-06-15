@@ -13,9 +13,9 @@
 /* ---- Theme tokens ---- */
 :root {
   color-scheme: light;
-  --bg-h: 210;
-  --bg-s: 65%;
-  --bg-l: 96%;
+  --bg-h: var(--bg-h-light, 210);
+  --bg-s: var(--bg-s-light, 65%);
+  --bg-l: var(--bg-l-light, 96%);
   --bg: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
   --ink: #1b2633;
   --muted: #647b91;
@@ -27,7 +27,9 @@
 }
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg-l: 10%;
+  --bg-h: var(--bg-h-dark, 210);
+  --bg-s: var(--bg-s-dark, 65%);
+  --bg-l: var(--bg-l-dark, 10%);
   --bg: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
   --ink: #e6f0fa;
   --muted: #889fb5;
@@ -36,6 +38,18 @@ html[data-theme="dark"] {
   --link: #8bcbf2;
   --bg-code: #142230;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+}
+
+@media (dynamic-range: high) {
+  .nav-mark, .kannada {
+    color: color(display-p3 0.1 0.6 1.0);
+    text-shadow: 0 0 16px color(display-p3 0.1 0.6 1.0);
+  }
+  html[data-theme="dark"] .nav-mark,
+  html[data-theme="dark"] .kannada {
+    color: color(display-p3 0.6 0.9 1.0);
+    text-shadow: 0 0 16px color(display-p3 0.6 0.9 1.0);
+  }
 }
 
 /* Accent palettes: light + dark per accent */

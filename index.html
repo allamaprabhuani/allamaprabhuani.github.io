@@ -106,77 +106,81 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
  * Homepage Layout Overrides
  * Centers everything, expands width, and optimizes for mobile 
  */
-body.landing #main-content {
+#main-content {
   max-width: 900px;
   margin: 0 auto;
   padding: 0 20px;
   text-align: center;
 }
-body.landing .toc {
+#main-content .toc {
   display: none !important;
 }
-body.landing section {
+#main-content section {
   margin-top: 80px;
   margin-bottom: 80px;
 }
-body.landing .section-lede {
+#main-content .section-lede {
   max-width: 600px;
   margin: 0 auto 40px;
 }
-body.landing h2 {
+#main-content h2 {
   font-size: 2rem;
   margin-bottom: 24px;
 }
-body.landing .hero {
+.hero {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 60px;
 }
-body.landing .hero-row {
+.hero-row {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
 }
-body.landing .hero-text {
+.hero-text {
   text-align: center;
 }
-body.landing .hero .tag {
+.hero .tag {
   max-width: 600px;
   margin: 0 auto;
   font-size: 1.15rem;
   line-height: 1.6;
 }
-body.landing .social-links {
+.social-links {
   justify-content: center;
   margin-top: 24px;
 }
-body.landing .hire-me-banner {
+.hire-me-banner {
   max-width: 700px;
   margin: 40px auto;
   text-align: center;
 }
-body.landing .about-text {
+.about-text {
   text-align: left;
   max-width: 700px;
   margin: 0 auto;
   font-size: 1.05rem;
   line-height: 1.7;
 }
-body.landing .about-text p {
+.about-text p {
   margin-bottom: 16px;
 }
-body.landing .stack, body.landing .papers {
+#main-content .stack, #main-content .papers {
   text-align: left;
   max-width: 800px;
   margin: 0 auto;
 }
+.home-tutorial-grid h3, .home-tutorial-grid p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 @media (max-width: 768px) {
-  body.landing .hero .tag { font-size: 1rem; }
-  body.landing .about-text { font-size: 1rem; }
-  body.landing h2 { font-size: 1.75rem; }
-  body.landing section { margin-top: 50px; margin-bottom: 50px; }
+  .hero .tag { font-size: 1rem; }
+  .about-text { font-size: 1rem; }
+  #main-content h2 { font-size: 1.75rem; }
+  #main-content section { margin-top: 50px; margin-bottom: 50px; }
 }
 </style>
 
@@ -245,7 +249,7 @@ body.landing .stack, body.landing .papers {
     </li>
     <li>
       <b>A small library of classical hand-calculation tools</b>
-      <span class="brag-aside">Lug strength, Cozzone plastic-bending, fastener load-transfer, ABD matrices, column buckling. Rolling them out as my design agent absorbs them.</span>
+      <span class="brag-aside">Lug strength, Cozzone plastic-bending, fastener load-transfer, ABD matrices, column buckling. Currently digitizing them into a single Python library.</span>
     </li>
   </ul>
 </section>
