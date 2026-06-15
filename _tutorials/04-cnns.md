@@ -226,10 +226,6 @@ The notebook's 8 × 8 digit version of the same interpretation:
   training loop
 - Comfort with image tensor shapes `[N, C, H, W]`
 
-## Source
-
-Created by Allamaprabhu Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
-
 ## Next
 
 - [`05 — Physics-Informed Neural Networks`](/tutorials/05-pinns/) — what

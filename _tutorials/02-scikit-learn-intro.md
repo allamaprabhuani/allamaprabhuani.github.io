@@ -125,10 +125,6 @@ intuition to internalise early.
 - Comfortable with pandas DataFrames
 - Knowing what a `for` loop is
 
-## Source
-
-Created by Allamaprabhu Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
-
 ## Next
 
 - [`03 — Introduction to Neural Networks`](/tutorials/03-neural-networks-intro/) — what changes when the model is a network and the framework is PyTorch.

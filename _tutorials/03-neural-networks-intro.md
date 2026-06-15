@@ -139,10 +139,6 @@ This tutorial is for the model and metrics, not for clinical deployment.
 - [Tutorial 01](/tutorials/01-ml-training-basics/) — the training loop
 - [Tutorial 02](/tutorials/02-scikit-learn-intro/) — train/test splits
 
-## Source
-
-Created by Allamaprabhu Ani while assisting [Dr Sathiskumar Ponnusami](https://www.saponnusami.com/) with teaching at Queen Mary University of London (2025). The notebook and explanation on this page are authored and maintained by me.
-
 ## Next
 
 - [`04 — Convolutional Neural Networks`](/tutorials/04-cnns/) — what
