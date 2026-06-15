@@ -1307,7 +1307,15 @@ body:not(.landing) .toc { display: block; }
 }
 .tutorial-list .tutorial-card:first-child { padding-top: 6px; }
 .tutorial-list .tutorial-card:last-child { border-bottom: none; }
-.tutorial-list .tutorial-card-body h3 { margin: 6px 0 6px; }
+.tutorial-list .tutorial-card-body h3 { 
+  margin: 6px 0 6px; 
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.tutorial-list .tutorial-card-body p {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 .tutorial-list .tutorial-card-body .post-meta { margin: 0 0 4px; }
 .tutorial-hook {
   margin: 8px 0 0;
