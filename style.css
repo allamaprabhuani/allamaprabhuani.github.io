@@ -1,8 +1,3 @@
-/* ---- Type stack tokens ----
- * Body / headings: warm transitional serif (Iowan Old Style on macOS,
- * Georgia everywhere else). UI chrome stays in our monospace.
- * Inspired by thinkingmachines.ai (Iowan Old Style + Gruvbox-leaning palette).
- */
 :root {
   --font-mono: 'Courier Prime', 'Courier New', Courier, monospace;
   --font-serif: 'Iowan Old Style BT', 'Iowan Old Style', 'Source Serif 4', 'Source Serif Pro', Georgia, 'Times New Roman', serif;
@@ -10,7 +5,6 @@
   --font-kannada: 'Noto Sans Kannada', var(--font-mono);
 }
 
-/* ---- Theme tokens ---- */
 :root {
   color-scheme: light;
   --bg-h: var(--bg-h-light, 210);
@@ -52,7 +46,6 @@ html[data-theme="dark"] {
   }
 }
 
-/* Accent palettes: light + dark per accent */
 html[data-accent="steel"]                           { --accent: #3a5775; }
 html[data-theme="dark"][data-accent="steel"]        { --accent: #9bc0e0; }
 html[data-accent="slate"]                           { --accent: #4a5b73; }
@@ -62,7 +55,6 @@ html[data-theme="dark"][data-accent="navy"]         { --accent: #7a9cd4; }
 html[data-accent="graphite"]                        { --accent: #3a3a3a; }
 html[data-theme="dark"][data-accent="graphite"]     { --accent: #c4c4c0; }
 
-/* Derived tokens (computed from --accent so they stay in sync) */
 html {
   --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
   --bg-decor-1: color-mix(in srgb, var(--accent) 10%, transparent);
@@ -75,7 +67,6 @@ html[data-theme="dark"] {
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-/* a11y: visible focus ring everywhere (custom cursor doesn't track keyboard) */
 *:focus { outline: none; }
 *:focus-visible {
   outline: 2px solid var(--accent);
@@ -83,7 +74,6 @@ html, body { margin: 0; padding: 0; }
   border-radius: 3px;
 }
 
-/* skip-to-content link for keyboard / screen reader users */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -116,7 +106,6 @@ body {
   transition: background-color .25s ease, color .25s ease;
 }
 
-/* ---- Backgrounds (random per session via data-bg) ---- */
 .bg-layer {
   position: fixed;
   inset: 0;
@@ -125,7 +114,6 @@ body {
   overflow: hidden;
 }
 
-/* aurora: two large, slowly drifting radial gradients */
 [data-bg="aurora"] .bg-layer::before,
 [data-bg="aurora"] .bg-layer::after {
   content: "";
@@ -148,7 +136,6 @@ body {
 @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(8vw, 6vw); } }
 @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-6vw, -4vw); } }
 
-/* constellation: static dots, three pulse */
 [data-bg="constellation"] .bg-layer {
   background-image:
     radial-gradient(circle, var(--muted) 1px, transparent 1.5px),
@@ -174,7 +161,6 @@ body {
   50%      { opacity: 0.55; transform: scale(1.4); }
 }
 
-/* sunrise: single warm radial blob top-right */
 [data-bg="sunrise"] .bg-layer::before {
   content: "";
   position: absolute;
@@ -186,14 +172,12 @@ body {
   opacity: 0.85;
 }
 
-/* linen: soft tactile noise */
 @media (prefers-reduced-motion: reduce) {
   [data-bg="aurora"] .bg-layer::before,
   [data-bg="aurora"] .bg-layer::after,
   [data-bg="constellation"] .bg-layer::before { animation: none; }
 }
 
-/* shooting-stars: hidden by default, only shown when active */
 .bg-layer .star, .bg-layer .neural-svg { display: none; }
 [data-bg="shooting-stars"] .bg-layer .star { display: block; }
 .star {
@@ -217,7 +201,6 @@ body {
 @keyframes shoot5 { 0%{ top:70%; left:-150px; transform:rotate(10deg); opacity:0; } 6%{opacity:.6;}  70%{opacity:.45;} 100%{ top:92%; left:110vw; transform:rotate(10deg); opacity:0; } }
 @keyframes shoot6 { 0%{ top:40%; left:-150px; transform:rotate(22deg); opacity:0; } 6%{opacity:.8;}  70%{opacity:.55;} 100%{ top:70%; left:110vw; transform:rotate(22deg); opacity:0; } }
 
-/* neural-net: faint network with pulsing nodes */
 [data-bg="neural-net"] .bg-layer .neural-svg {
   display: block;
   position: absolute;
@@ -236,7 +219,6 @@ body {
   50%      { opacity: 1;   r: 6; }
 }
 
-/* ---- Custom site cursor (4 variants, randomised per refresh) ---- */
 .site-cursor {
   position: fixed; top: 0; left: 0;
   pointer-events: none;
@@ -249,7 +231,6 @@ body {
 }
 .site-cursor.active { opacity: 0.92; }
 
-/* circle (default) */
 [data-cursor="circle"] .site-cursor {
   width: 18px; height: 18px;
   border: 1.5px solid var(--accent);
@@ -260,7 +241,6 @@ body {
   background: var(--accent-soft);
 }
 
-/* dot */
 [data-cursor="dot"] .site-cursor {
   width: 8px; height: 8px;
   background: var(--accent);
@@ -272,7 +252,6 @@ body {
   box-shadow: 0 0 0 12px var(--accent-soft);
 }
 
-/* hide native cursor on fine-pointer devices when our custom cursor is active */
 @media (pointer: fine) {
   body, a, button, input, label, textarea, select,
   .photo, .upvote, .nav-btn, .btn-action {
@@ -285,7 +264,6 @@ body {
   .photo, .upvote, .nav-btn, .btn-action { cursor: auto; }
 }
 
-/* ---- Top navigation ---- */
 .topnav {
   position: sticky; top: 0; z-index: 10;
   background: color-mix(in srgb, var(--bg) 90%, transparent);
@@ -328,7 +306,6 @@ body {
   transition: filter .25s ease, transform .25s ease, color .25s ease;
 }
 @media (max-width: 600px) { .nav-mark { font-size: 2rem; } }
-/* HDR-bright glyph in dark mode — uses display-p3 wide-gamut white where supported */
 html[data-theme="dark"] .nav-mark {
   color: #ffffff;
   text-shadow:
@@ -390,10 +367,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
   .nav-btn { width: 28px; height: 28px; }
 }
 @media (max-width: 420px) {
-  /* drop secondary items so the row fits on a single line on small phones */
-  .topnav ul li:nth-child(3),  /* papers */
-  .topnav ul li:nth-child(6)   /* about */
-   { display: none; }
+  .topnav ul li:nth-child(3),  .topnav ul li:nth-child(6)   { display: none; }
   .topnav ul { gap: 8px; }
 }
 
@@ -406,7 +380,6 @@ main {
 }
 main > section[id] { scroll-margin-top: 72px; }
 
-/* ---- Type ---- */
 a {
   color: var(--link);
   text-decoration: none;
@@ -422,8 +395,6 @@ h1, h2, h3 {
   line-height: 1.25;
   color: var(--ink);
 }
-/* Generous sizes; serif at 18px base wants larger headings to feel
-   anchored without being shouty. */
 h1 { font-size: 2.3rem; margin: 6px 0 18px; line-height: 1.2; }
 h2 {
   font-family: var(--font-serif);
@@ -436,8 +407,6 @@ h2 {
   border-bottom: none;
   line-height: 1.25;
 }
-/* Accent bar marker — slimmer than before so it reads as a punctuation
-   mark, not a decoration. Keeps the visual identity hook. */
 main > section > h2,
 .blog-header h1,
 .post-header .post-title {
@@ -467,7 +436,6 @@ h3 {
 p { margin: 0 0 14px; }
 .muted { color: var(--muted); font-size: 0.94em; }
 
-/* ---- Hero ---- */
 .hero { padding-bottom: 8px; }
 .hero-row { display: flex; gap: 36px; align-items: flex-start; }
 .hero-text { flex: 1; min-width: 0; }
@@ -526,7 +494,6 @@ body:not(.landing) .hero-photo .photo-caption {
   letter-spacing: 0.01em;
 }
 
-/* ---- Hover-image proof (e.g. EFM most-downloaded screenshot) ---- */
 .proof-hover {
   position: relative;
   border-bottom: 1px dashed var(--accent);
@@ -562,7 +529,6 @@ body:not(.landing) .hero-photo .photo-caption {
   white-space: nowrap;
 }
 
-/* ---- Latest-from-blog (homepage, between intro and now-block) ---- */
 .latest-posts {
   margin-top: 28px;
   padding: 22px 24px 18px;
@@ -624,7 +590,6 @@ body:not(.landing) .hero-photo .photo-caption {
 .latest-posts a { color: var(--ink); border-bottom: 1px solid transparent; font-weight: 500; }
 .latest-posts a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-/* freshness indicators on each post */
 .post-pulse {
   display: inline-block;
   width: 8px; height: 8px;
@@ -660,7 +625,6 @@ body:not(.landing) .hero-photo .photo-caption {
   .post-pulse.pulse-1, .post-pulse.pulse-2 { animation: none; }
 }
 
-/* ---- Currently-obsessed-with block ---- */
 .now-block {
   margin-top: 32px;
   padding: 18px 22px;
@@ -701,7 +665,6 @@ body:not(.landing) .hero-photo .photo-caption {
 .obsessions li:last-child { border-bottom: none; }
 .obsessions b { color: var(--ink); }
 
-/* ---- Lists ---- */
 ul.stack, ol.papers { list-style: none; padding: 0; margin: 0; }
 ul.stack li, ol.papers li { padding: 14px 0; border-bottom: 1px solid var(--rule); }
 ul.stack li:last-child, ol.papers li:last-child { border-bottom: none; }
@@ -727,7 +690,6 @@ ol.papers li::before {
 .card h3 a { color: var(--ink); border-bottom: 1px solid var(--accent); }
 .card h3 a:hover { color: var(--accent); }
 
-/* ---- Homepage tutorial path ---- */
 .section-lede {
   max-width: 760px;
   margin-bottom: 18px;
@@ -836,7 +798,6 @@ ol.papers li::before {
   height: 20px; 
 }
 
-/* Simple Icons (monochrome) recolored via mask */
 .si-icon {
   display: inline-block;
   width: 20px;
@@ -852,7 +813,6 @@ ol.papers li::before {
   .home-tutorial-grid { grid-template-columns: 1fr; }
 }
 
-/* ---- Mottos ---- */
 ul.mottos { list-style: none; padding: 0; margin: 0; }
 ul.mottos li {
   padding: 10px 18px;
@@ -867,7 +827,6 @@ ul.mottos li {
 }
 ul.mottos li:hover { border-left-color: var(--accent); padding-left: 22px; }
 
-/* ---- Footer ---- */
 .site-footer {
   width: 100%;
   border-top: 1px solid var(--rule);
@@ -928,8 +887,6 @@ ul.links li:first-child::before { content: ""; }
 .cite-badge .cite-count { font-weight: 700; }
 .cite-badge .cite-src { opacity: 0.6; font-size: 0.72rem; }
 .cite-badge a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-/* Stack the paper citation, the editorial note, and the badge strip on
-   their own lines so the metadata never breaks the prose. */
 ol.papers li .paper-cite { display: block; }
 ol.papers li .paper-note { display: block; margin-top: 6px; }
 ol.papers li .paper-meta {
@@ -950,7 +907,6 @@ ol.papers li .paper-meta {
   text-transform: uppercase;
 }
 
-/* ---- Upvote buttons ---- */
 .bucket-list li { display: flex; align-items: flex-start; gap: 12px; }
 .bucket-list .bucket-text { flex: 1; }
 .upvote {
@@ -981,7 +937,6 @@ ol.papers li .paper-meta {
 }
 .upvote.voted:hover { transform: none; }
 
-/* ---- Quiet visit tally ---- */
 .visit-tally {
   position: fixed;
   bottom: 14px;
@@ -1003,7 +958,6 @@ ol.papers li .paper-meta {
   font-size: 0.85em;
 }
 
-/* ---- Landing mode ---- */
 body.landing main > section:not(.hero) { display: none; }
 body.landing .now-block { display: none; }
 body.landing .hero-photo .photo-caption { animation: pulseCaption 2.4s ease-in-out infinite; }
@@ -1017,7 +971,6 @@ body:not(.landing) main > section:not(.hero) { animation: revealFade 0.45s ease-
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ---- Sidebar TOC ---- */
 .toc {
   position: fixed;
   left: 24px;
@@ -1103,7 +1056,6 @@ body:not(.landing) .toc { display: block; }
 }
 @media (max-width: 1180px) { .toc { display: none !important; } }
 
-/* ---- Blog list + post ---- */
 .blog-header { margin-top: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
 .blog-header h1 { font-size: 2rem; margin: 0 0 8px; }
 
@@ -1184,7 +1136,6 @@ body:not(.landing) .toc { display: block; }
 }
 .post-foot { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
 
-/* ---- Tutorial prev/next pager ---- */
 .tutorial-pager {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1217,7 +1168,6 @@ body:not(.landing) .toc { display: block; }
   .tutorial-pager .pager-next { text-align: left; }
 }
 
-/* ---- Tutorials ---- */
 .topic-hubs {
   display: flex;
   flex-wrap: wrap;
@@ -1380,17 +1330,11 @@ body:not(.landing) .toc { display: block; }
   border-radius: 999px;
   border: 1px solid currentColor;
 }
-.t-level-intro        { color: #2f8755; }   /* green   */
-.t-level-intermediate { color: #b57614; }   /* amber   */
-.t-level-advanced     { color: #b03a30; }   /* red     */
-html[data-theme="dark"] .t-level-intro        { color: #6fc28f; }
+.t-level-intro        { color: #2f8755; }   .t-level-intermediate { color: #b57614; }   .t-level-advanced     { color: #b03a30; }   html[data-theme="dark"] .t-level-intro        { color: #6fc28f; }
 html[data-theme="dark"] .t-level-intermediate { color: #e3b96e; }
 html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 .t-pending { color: var(--muted); }
 
-/* Cite badges ship with the `hidden` attribute set; site.js un-hides
-   them when OpenAlex returns a positive count. The native `hidden`
-   handles the display:none. */
 .status {
   display: inline-block;
   padding: 1px 8px;
@@ -1473,7 +1417,6 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   font-size: 0.88rem;
 }
 
-/* ---- Tutorial figure / interactive embed ---- */
 .tutorial-fig {
   margin: 22px 0;
 }
@@ -1504,11 +1447,9 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   display: block;
 }
 
-/* ---- Embedded nbconvert (template: basic) cells ---- */
 .post-body .cell { margin: 14px 0; }
 .post-body .cell .prompt {
-  display: none; /* hide In [n]: / Out[n]: prompts */
-}
+  display: none; }
 .post-body .cell .input_area,
 .post-body .cell .output_text {
   background: var(--card);
@@ -1543,7 +1484,6 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   padding: 6px 10px;
   font-size: 0.88rem;
 }
-/* pygments mapping (minimal) */
 .post-body .highlight .k,
 .post-body .highlight .kn,
 .post-body .highlight .kc { color: #a626a4; font-weight: 600; }
@@ -1561,7 +1501,6 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 .post-body .highlight .o,
 .post-body .highlight .ow { color: #383a42; }
 
-/* ---- Search button in nav ---- */
 .search-btn {
   gap: 6px;
   padding: 4px 8px 4px 6px;
@@ -1582,7 +1521,6 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 }
 @media (max-width: 720px) { .search-kbd { display: none; } }
 
-/* ---- Search modal ---- */
 .search-modal {
   position: fixed; inset: 0;
   display: none;
@@ -1727,7 +1665,6 @@ html[data-theme="dark"] .search-row.active {
   margin-right: 4px;
 }
 
-/* ---- Word reel (vertical scrolling cycle) ---- */
 .word-reel {
   display: flex;
   align-items: baseline;
@@ -1777,7 +1714,6 @@ html[data-theme="dark"] .search-row.active {
   .reel-word { animation: none; }
 }
 
-/* ---- Flow diagram ---- */
 .flow-diagram {
   display: flex;
   align-items: stretch;
@@ -1855,7 +1791,6 @@ html[data-theme="dark"] .search-row.active {
   .flow-in, .flow-mid, .flow-out, .flow-pulse { animation: none; }
 }
 
-/* ---- Mobile ---- */
 @media (max-width: 600px) {
   main { padding: 44px 18px 64px; }
   .hero-row { flex-direction: column; gap: 18px; align-items: flex-start; }

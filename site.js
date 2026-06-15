@@ -1,5 +1,4 @@
 (function(){
-  // Read pools from the bootstrap script (single source of truth).
   var C = window.SITE_CONFIG || { BGS: [], ACCENTS: [], CURSORS: [] };
   var BGS = C.BGS, ACCENTS = C.ACCENTS;
   var INTERACTIVE_SELECTOR = 'a, button, .photo, .upvote, .nav-btn, .btn-action, [tabindex="0"]';
@@ -14,7 +13,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function(){
-    /* ---- Landing-gate reveal ---- */
     var photo = document.querySelector('.hero-photo .photo');
     if (photo) {
       photo.addEventListener('click', function(e){
@@ -41,12 +39,10 @@
       if (!document.body.classList.contains('landing')) return;
       if (['ArrowDown','PageDown','End',' ','Spacebar','Enter'].indexOf(e.key) !== -1) reveal();
     });
-    // a11y: any keyboard focus into the page also reveals
     window.addEventListener('focusin', function(e){
       if (document.body.classList.contains('landing') && e.target !== photo) reveal();
     });
 
-    /* ---- Custom site cursor (desktop only, respects reduced motion) ---- */
     var prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var coarse = window.matchMedia('(pointer: coarse)').matches;
     if (!prm && !coarse) {
@@ -66,25 +62,19 @@
       document.addEventListener('mouseout',  function(e){ if (isInteractive(e.target)) cursor.classList.remove('hover'); });
     }
 
-    /* ---- Theme toggle ---- */
     var themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
       themeBtn.addEventListener('click', function(){
         var cur = document.documentElement.getAttribute('data-theme') || 'light';
         var next = cur === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
-        // iOS Safari: a position-fixed bg-layer prevents the rest of the page
-        // from repainting on a CSS-variable swap until the user scrolls.
-        // Setting colorScheme + nudging layout forces a synchronous repaint.
         document.documentElement.style.colorScheme = next;
         void document.body.offsetWidth;
         try { localStorage.setItem('theme', next); } catch(e) {}
       });
     }
-    // Mirror the bootstrap-set theme onto colorScheme on first paint.
     document.documentElement.style.colorScheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-    /* ---- Shuffle: step bg + accent + cursor each click (matches refresh cycling) ---- */
     var shuffleBtn = document.getElementById('shuffle-bg');
     if (shuffleBtn) {
       shuffleBtn.addEventListener('click', function(){
@@ -100,7 +90,6 @@
       });
     }
 
-    /* ---- Inject neural-net SVG only when active (and remove when not) ---- */
     var bgLayer = document.querySelector('.bg-layer');
     function syncNeuralNet() {
       if (!bgLayer) return;
@@ -116,12 +105,11 @@
     syncNeuralNet();
     new MutationObserver(syncNeuralNet).observe(document.documentElement, { attributes: true, attributeFilter: ['data-bg'] });
 
-    /* ---- Visit counter (cached + hidden on failure) ---- */
     var visitEl = document.getElementById('visit-count');
     var visitTally = document.querySelector('.visit-tally');
     if (visitEl && visitTally) {
       var CACHE_KEY = 'visit-count-cache';
-      var TTL_MS = 6 * 60 * 60 * 1000;  // 6 hours
+      var TTL_MS = 6 * 60 * 60 * 1000;
       var cached = null;
       try {
         var raw = localStorage.getItem(CACHE_KEY);
@@ -136,8 +124,6 @@
         visitTally.style.opacity = '0';
       }
       var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
-      // counterapi v1 has opposite slash conventions: GET <key>/ needs the
-      // slash; GET <key>/up must NOT have one. Wrong form → 301 without CORS.
       var endpoint = bumped
         ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/'
         : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up';
@@ -151,10 +137,9 @@
             if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
           }
         })
-        .catch(function(){ /* if no cache, tally stays hidden */ });
+        .catch(function(){ });
     }
 
-    /* ---- Sidebar TOC scrollspy ---- */
     var tocLinks = document.querySelectorAll('.toc a');
     if (tocLinks.length) {
       var tocMap = {};
@@ -178,19 +163,12 @@
       }
     }
 
-    /* ---- Upvote buttons (rollback UI on API failure) ---- */
     var ns = 'allamaprabhu-bucket';
     document.querySelectorAll('.upvote').forEach(function(btn){
       var key = btn.getAttribute('data-key');
       var countEl = btn.querySelector('.up-count');
       var voted = localStorage.getItem('voted-' + key) === '1';
       if (voted) btn.classList.add('voted');
-
-      // Trailing slash matters — see visit-counter note above.
-      // counterapi returns 400 "record not found" until the key is first
-      // incremented, so treat any non-numeric response as 0 (not "—" or "·").
-      // Show the count only when we have a positive number from the API.
-      // 0 / failure / "record not found" → leave the count slot empty.
       countEl.textContent = '';
       fetch('https://api.counterapi.dev/v1/' + ns + '/' + key + '/')
         .then(function(r){ return r.json().catch(function(){ return null; }); })
@@ -220,7 +198,6 @@
             }
           })
           .catch(function(){
-            // rollback: restore old count, allow retry, don't mark voted
             countEl.textContent = prevText;
             btn.classList.remove('voted');
             btn.disabled = false;
@@ -228,9 +205,8 @@
       });
     });
 
-    /* ---- Live citation counts from OpenAlex (CORS-friendly, no auth) ---- */
     var CITE_CACHE_KEY = 'openalex-cites-v1';
-    var CITE_TTL_MS = 24 * 60 * 60 * 1000;  // 24 h
+    var CITE_TTL_MS = 24 * 60 * 60 * 1000;
     var citeCache = {};
     try {
       var rawCites = localStorage.getItem(CITE_CACHE_KEY);
@@ -241,9 +217,6 @@
     } catch(e) {}
     var citeNodes = document.querySelectorAll('.cite-count[data-openalex]');
     function applyCite(el, count){
-      // Hide the whole "cited X · OpenAlex" badge if count is 0 or unknown —
-      // a "cited 0" badge advertises a weak paper, an empty placeholder
-      // ("·") just looks broken. Better to render nothing.
       var badge = el.closest('.cite-badge');
       if (typeof count === 'number' && count > 0) {
         el.textContent = count;
@@ -255,7 +228,6 @@
     citeNodes.forEach(function(el){
       var id = el.getAttribute('data-openalex');
       if (citeCache[id] != null) { applyCite(el, citeCache[id]); return; }
-      // Polite-pool email per OpenAlex docs — adds you to the fast queue.
       var url = 'https://api.openalex.org/works/' + id + '?select=cited_by_count&mailto=allamaprabhuani@gmail.com';
       fetch(url)
         .then(function(r){ return r.ok ? r.json() : null; })
@@ -270,8 +242,6 @@
         .catch(function(){ applyCite(el, null); });
     });
 
-    /* ---- Defer the heavy proof-img screenshot until first hover ---- */
-    /* HTML ships the URL as data-src; we promote to src on first interaction. */
     document.querySelectorAll('.proof-hover').forEach(function(span){
       var img = span.querySelector('.proof-img[data-src]');
       if (!img) return;
