@@ -185,7 +185,6 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
         <img src="/assets/me.jpg" alt="Headshot of Allamaprabhu Ani" width="180" height="180" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');" style="margin-bottom: 10px;">
         <span class="photo-fallback" aria-hidden="true">A</span>
       </a>
-      <canvas id="hero-canvas" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none; opacity: 0.6;"></canvas>
     </div>
     <div class="hero-text">
       <h1>Allamaprabhu Ani</h1>
@@ -217,52 +216,6 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   </div>
 </header>
 
-<!-- Three.js Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-  
-  // Make the canvas a square that frames the headshot
-  renderer.setSize(300, 300);
-  
-  // Create an Icosahedron (fractured look)
-  const geometry = new THREE.IcosahedronGeometry(2, 1);
-  const material = new THREE.MeshBasicMaterial({ 
-      color: 0x888888, 
-      wireframe: true,
-      transparent: true,
-      opacity: 0.3
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-  
-  camera.position.z = 4.5;
-  
-  let mouseX = 0;
-  let mouseY = 0;
-  document.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-  });
-  
-  function animate() {
-      requestAnimationFrame(animate);
-      mesh.rotation.x += 0.002;
-      mesh.rotation.y += 0.003;
-      mesh.rotation.x += mouseY * 0.01;
-      mesh.rotation.y += mouseX * 0.01;
-      renderer.render(scene, camera);
-  }
-  animate();
-});
-</script>
-
 <section id="about">
   <h2>About Me</h2>
   <div class="about-text">
@@ -293,16 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <span class="brag-aside">Lug strength, Cozzone plastic-bending, fastener load-transfer, ABD matrices, column buckling. Currently digitizing them into a single Python library.</span>
     </li>
   </ul>
-</section>
-
-<section id="demo" style="max-width: 900px; margin: 80px auto;">
-  <div class="section-lede">
-    <h2>Interactive Physics Demo</h2>
-    <p class="muted">A Physics-Informed Neural Network (PINN) learning to simulate a damped oscillator. The yellow region is the training data; the right side is extrapolation guided entirely by the physics loss. Drag the slider to watch it train.</p>
-  </div>
-  <div class="tutorial-interactive" style="border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent); border-radius: 12px; overflow: hidden; background: color-mix(in srgb, var(--text-color) 2%, transparent); padding: 10px;">
-    <iframe src="/assets/tutorials/05/training-interactive.html" loading="lazy" title="Interactive PINN training" style="width: 100%; height: 500px; border: none;"></iframe>
-  </div>
 </section>
 
 <section id="tutorials" class="home-tutorials">
@@ -353,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <section id="papers">
-  <h2>Papers</h2>
+  <h2>Papers &amp; Track Record</h2>
   <ol class="papers">
     <li data-openalex="W4416918453">
       <span class="paper-cite">
@@ -368,75 +311,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <b>A. S. Ani</b>, A. B. Deoghare. Leveraging machine learning for enhanced fatigue life prediction in aluminium alloys. <i>Lecture Notes in Mechanical Engineering</i>, Dec 2024.
       </span>
     </li>
-    <li>
-      <span class="paper-cite">
-        C. V. Srinivasa, <b>A. S. Ani</b>, B. M. Jyothi Prasad.
-        <a href="https://doi.org/10.1088/1757-899X/925/1/012048">Protective coatings for bio-composites, a review</a>.
-        <i>IOP Conf. Ser. Mater. Sci. Eng.</i>, 2020.
-      </span>
-    </li>
   </ol>
-  <p class="muted">Full list on <a href="https://scholar.google.com/citations?user=dX3xKGsAAAAJ">Google Scholar</a>.</p>
-</section>
-
-<section id="awards">
-  <h2>Awards & Honors</h2>
-  <ul class="stack">
+  
+  <ul class="stack" style="margin-top: 40px;">
     <li><b>Mar 2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship</b>. <span class="brag-aside">One of three winners across all London universities, for "AI-accelerated modelling for fracture prediction."</span></li>
-    <li><b>Apr 2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's. <span class="brag-aside">Nominated by my own students. The same instinct for making complex systems explainable also shapes the open engineering tools I build.</span></li>
-    <li><b>2024</b> &middot; Associate Fellow of the Higher Education Academy (AFHEA).</li>
+    <li><b>Apr 2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's.</li>
     <li><b>2023</b> &middot; <b>Fully-funded PhD scholarship</b>, <i>Modelling for Failure Analysis</i> studentship, City, St George's, University of London.</li>
-    <li><b>2020</b> &middot; Inspiring Student Award for Mechanical Engineering, VTU.</li>
-  </ul>
-</section>
-
-
-<section id="mottos">
-  <h2>Principles</h2>
-  <ul class="mottos">
-    <li>Theory makes the world go round. Creativity makes it worth living in.</li>
-    <li>Engineering should feel like play, play with consequences, but play.</li>
-    <li>I'd rather ship a small honest tool today than a perfect speculative one in five years.</li>
-    <li>Imagination first, equations second. Most interesting ideas start with a sketch and a stupid question.</li>
-    <li>Result-oriented and relentless. The working solution, not the elegant excuse.</li>
-  </ul>
-</section>
-
-<section id="archive">
-  <h2>Projects Roadmap & Archive</h2>
-  <p class="muted">A public to-do list.</p>
-  <ul class="stack bucket-list">
-    <li><span class="bucket-text"><span class="roadmap-target">2026</span>A public-MIT slice of the phase-field solver, packaged so another researcher can rerun the validation benchmarks.</span></li>
-    <li><span class="bucket-text"><span class="roadmap-target">2027+</span>A foundation model for fracture, trained on millions of GPU-hours of validated physics simulations, deployed as a public service.</span></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A short open video series explaining Bruhn, Niu and ESDU page by page, in the way I wish they had been explained to me.</span></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>An open dataset of GD&amp;T mistakes from production drawings, the wrong tolerances, the unholdable callouts, the things that cost hours on the shop floor.</span></li>
-    <li><span class="bucket-text"><span class="roadmap-target">someday</span>A small library of solved Bruhn problems with code.</span></li>
-    <li><span class="bucket-text"><span class="roadmap-target">one day</span>A raga concert in front of an audience that includes engineers I admire. Adventurous goal.</span></li>
-  </ul>
-</section>
-
-<section id="recommend">
-  <h2>Recommended Links</h2>
-  <ul class="stack">
-    <li>
-      <b><a href="https://basavaprabhuani.github.io/">basavaprabhuani.github.io</a></b>
-      <span class="brag-aside">My brother's science scrapbook.</span>
-    </li>
-    <li>
-      <b><a href="https://www.saponnusami.com/">saponnusami.com</a></b>
-      <span class="brag-aside">My PhD supervisor, Dr Sathiskumar Ponnusami. Runs the <a href="https://github.com/CEMS-Lab">CEMS Lab</a> at Queen Mary, one of the rare places where computational mechanics, materials, and AI are taken equally seriously.</span>
-    </li>
-    <li>
-      <b><a href="https://github.com/DrSimulate/gallery">DrSimulate / gallery</a></b>
-      <span class="brag-aside">A beautiful gallery of simulation work. Reminds me why I love this field.</span>
-    </li>
-    <li>
-      <b><a href="https://beltoforion.de/en/">beltoforion.de</a></b>
-      <span class="brag-aside">Ingo Berg's deep, careful explainers on physics and computation. The kind of writing that makes hard things obvious.</span>
-    </li>
-    <li>
-      <b><a href="https://jalammar.github.io/">Jay Alammar</a></b>
-      <span class="brag-aside">The gold standard for visualising how transformers and modern ML actually work. I learned half of what I know about LLMs here.</span>
-    </li>
   </ul>
 </section>
