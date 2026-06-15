@@ -13,25 +13,25 @@
 /* ---- Theme tokens ---- */
 :root {
   color-scheme: light;
-  --bg: #faf7f0;
-  --ink: #1f1d1a;
-  --muted: #6b6866;
-  --rule: #e6dfd1;
-  --accent: #6b2c3a;
-  --link: #1d6fa3;
-  --bg-code: #f1ede2;
-  --shadow: 0 6px 22px rgba(28, 22, 14, 0.06);
+  --bg: #f2f7fc;
+  --ink: #1b2633;
+  --muted: #647b91;
+  --rule: #dce5ef;
+  --accent: #1e6fa3;
+  --link: #0c5685;
+  --bg-code: #e8f0f8;
+  --shadow: 0 6px 22px rgba(18, 43, 64, 0.06);
 }
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #14110d;
-  --ink: #f0ece2;
-  --muted: #b8b2a4;
-  --rule: #2a2620;
-  --accent: #b888bd;
-  --link: #5fc1ec;
-  --bg-code: #1a1815;
-  --shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+  --bg: #0b131a;
+  --ink: #e6f0fa;
+  --muted: #889fb5;
+  --rule: #1c2e40;
+  --accent: #5db0e5;
+  --link: #8bcbf2;
+  --bg-code: #142230;
+  --shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
 }
 
 /* Accent palettes: light + dark per accent */
