@@ -49,12 +49,22 @@ loss = nn.BCEWithLogitsLoss()(model(x), y)
   <figcaption>Left — a neuron is a weighted sum plus a bias, then a non-linearity. Right — the three activation functions you'll meet most often: sigmoid, tanh, ReLU. The choice matters.</figcaption>
 </figure>
 
-## From neuron to layer
+## From neuron to layer: the matrix form
 
-A *layer* is many neurons applied to the same input in parallel. One
-matrix multiply handles the whole minibatch:
+A *layer* is many neurons applied to the same input in parallel. Instead of
+computing one weighted sum at a time, a single matrix multiplication handles
+the whole minibatch:
 
 $$\mathbf{Z} = \mathbf{X}\,\mathbf{W} + \mathbf{B}, \qquad \mathbf{A} = f(\mathbf{Z})$$
+
+- $\mathbf{X}$ is the input data.
+- $\mathbf{W}$ is the weight matrix.
+- $\mathbf{B}$ is the bias vector.
+- $f$ is the non-linear activation function.
+
+The activation function is what makes a stack of layers nonlinear. Without
+it, several linear layers collapse into one linear map, so depth alone would
+not add representational power.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/03/layer-matrix.png' | relative_url }}"
@@ -65,10 +75,15 @@ $$\mathbf{Z} = \mathbf{X}\,\mathbf{W} + \mathbf{B}, \qquad \mathbf{A} = f(\mathb
 ## Capacity matters — what one neuron cannot do
 
 The cleanest demonstration of why we need *multiple* neurons is to try
-fitting a sine wave with one. The single neuron can pick the right
-range (with tanh) but not the right *shape* — it is a smooth S-curve
-and the sine wave wiggles. An MLP with **one** hidden layer of 16
-tanh units fits the same data perfectly.
+fitting a sine wave with one.
+
+A single `tanh` neuron can choose the right output range, but its shape is
+still a smooth S-curve. It cannot follow a periodic function that turns up,
+down, and up again over the interval.
+
+A hidden layer changes the situation. A multilayer perceptron (MLP) with
+one hidden layer of 16 `tanh` units can combine several shifted S-curves, so
+it fits the oscillation much more closely.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/03/sine-progression.png' | relative_url }}"

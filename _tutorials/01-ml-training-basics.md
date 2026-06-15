@@ -60,6 +60,77 @@ follow the data — past the point where it starts memorising the noise.
           title="Interactive overfit demo"></iframe>
 </div>
 
+## The gradient by hand
+
+Before writing code, it is useful to see one update without autograd. Suppose
+the model is a line,
+
+$$\hat{y} = w x + b,$$
+
+and the loss is mean squared error,
+
+$$
+\mathcal{L}(w,b) = \frac{1}{N}\sum_{i=1}^{N}(\hat{y}_i-y_i)^2
+= \frac{1}{N}\sum_{i=1}^{N}(w x_i+b-y_i)^2 .
+$$
+
+Let \(e_i = \hat{y}_i-y_i\). The chain rule gives
+
+$$
+\frac{\partial \mathcal{L}}{\partial w}
+= \frac{2}{N}\sum_{i=1}^{N} e_i x_i,
+\qquad
+\frac{\partial \mathcal{L}}{\partial b}
+= \frac{2}{N}\sum_{i=1}^{N} e_i .
+$$
+
+Gradient descent then moves in the opposite direction to the gradient:
+
+$$
+w \leftarrow w-\alpha\frac{\partial\mathcal{L}}{\partial w},
+\qquad
+b \leftarrow b-\alpha\frac{\partial\mathcal{L}}{\partial b}.
+$$
+
+The learning rate \(\alpha\) controls the step size. If it is too small,
+training crawls; if it is too large, the update can jump over the minimum.
+
+## From the derivative to code
+
+In NumPy, the forward pass and the two derivatives have to be written
+explicitly:
+
+```python
+for epoch in range(100):
+    y_pred = w * x + b
+
+    error = y_pred - y
+    loss = (error ** 2).mean()
+
+    grad_w = 2 * (error * x).mean()
+    grad_b = 2 * error.mean()
+
+    w -= learning_rate * grad_w
+    b -= learning_rate * grad_b
+```
+
+For a deep network, writing every derivative by hand is not practical.
+PyTorch records the forward computation and applies the chain rule during
+`loss.backward()`:
+
+```python
+for epoch in range(100):
+    y_pred = model(x)
+    loss = loss_fn(y_pred, y)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
+
+That is the same mathematical update, but PyTorch computes the gradients
+for all trainable parameters automatically.
+
 ## The loss landscape
 
 For a linear model `ŷ = w·x + b` with mean-squared-error loss, fixing

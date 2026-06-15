@@ -34,13 +34,24 @@ it, and why your first PINN will train to a flat function unless you do a
 few specific things.
 
 ```python
+# Track derivatives with respect to input time.
 t = t.requires_grad_(True)
+
+# Network prediction u(t).
 u = model(t)
+
+# First time derivative from autograd.
 du_dt = torch.autograd.grad(u, t, torch.ones_like(u),
                             create_graph=True)[0]
+
+# Second time derivative from autograd.
 d2u_dt2 = torch.autograd.grad(du_dt, t, torch.ones_like(du_dt),
                               create_graph=True)[0]
+
+# ODE residual for u'' + 2 zeta omega0 u' + omega0^2 u = 0.
 residual = d2u_dt2 + 2 * zeta * omega0 * du_dt + omega0**2 * u
+
+# Physics loss: make the residual small at collocation points.
 physics_loss = (residual ** 2).mean()
 ```
 
@@ -88,6 +99,16 @@ If you only care about one figure on this page, make it this one. **Plain
 NNs diverge the moment the data runs out.** Pure PINNs are stable but slow.
 Hybrid (data + physics) gives error a couple orders of magnitude lower
 than either, across the whole window.
+
+Why does the data-only NN fail outside the training window? It is only
+penalised on \(t \in [0,0.4]\). Beyond that interval, the prediction is
+just the continuation implied by the learned weights and activation
+functions; there is no loss term telling it to obey the oscillator equation.
+
+The physics loss changes that. Even where there are no observations, the
+network is penalised if \(u(t)\), \(u'(t)\), and \(u''(t)\) do not satisfy
+the ODE. It is still a neural approximation, but it is constrained by the
+differential equation rather than only by the observed data.
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/05/error-comparison.png' | relative_url }}"
