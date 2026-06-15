@@ -45,6 +45,12 @@
   }
   document.documentElement.setAttribute('data-theme', theme);
 
+  // Generate random light blue/sky blue per page load
+  var randHue = Math.floor(Math.random() * 40 + 190); // 190 to 230
+  var randSat = Math.floor(Math.random() * 30 + 50);  // 50% to 80%
+  document.documentElement.style.setProperty('--bg-h', randHue);
+  document.documentElement.style.setProperty('--bg-s', randSat + '%');
+
   function cycleNext(key, len) {
     var fullKey = key + '-' + C.KEY_VERSION;
     var i;

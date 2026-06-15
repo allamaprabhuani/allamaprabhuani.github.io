@@ -13,7 +13,10 @@
 /* ---- Theme tokens ---- */
 :root {
   color-scheme: light;
-  --bg: #f2f7fc;
+  --bg-h: 210;
+  --bg-s: 65%;
+  --bg-l: 96%;
+  --bg: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
   --ink: #1b2633;
   --muted: #647b91;
   --rule: #dce5ef;
@@ -24,7 +27,8 @@
 }
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0b131a;
+  --bg-l: 10%;
+  --bg: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
   --ink: #e6f0fa;
   --muted: #889fb5;
   --rule: #1c2e40;
