@@ -62,18 +62,41 @@
       document.addEventListener('mouseout',  function(e){ if (isInteractive(e.target)) cursor.classList.remove('hover'); });
     }
 
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      }
+    }
+
+    function storedTheme() {
+      var theme;
+      try { theme = localStorage.getItem('theme-preference'); } catch(e) {}
+      return theme === 'light' || theme === 'dark' ? theme : null;
+    }
+
     var themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
+      themeBtn.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
       themeBtn.addEventListener('click', function(){
         var cur = document.documentElement.getAttribute('data-theme') || 'light';
         var next = cur === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        document.documentElement.style.colorScheme = next;
+        setTheme(next);
         void document.body.offsetWidth;
-        try { localStorage.setItem('theme', next); } catch(e) {}
+        try { localStorage.setItem('theme-preference', next); } catch(e) {}
       });
     }
     document.documentElement.style.colorScheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+    var schemeQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (schemeQuery) {
+      var syncSystemTheme = function(e){
+        if (!storedTheme()) setTheme(e.matches ? 'dark' : 'light');
+      };
+      if (schemeQuery.addEventListener) schemeQuery.addEventListener('change', syncSystemTheme);
+      else if (schemeQuery.addListener) schemeQuery.addListener(syncSystemTheme);
+    }
 
     var shuffleBtn = document.getElementById('shuffle-bg');
     if (shuffleBtn) {

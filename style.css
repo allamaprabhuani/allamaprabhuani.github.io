@@ -1480,6 +1480,20 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   border: 0;
   display: block;
 }
+.tutorial-interactive iframe.tutorial-tall {
+  height: 680px;
+}
+
+.post-body mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 4px 0;
+}
+
+.post-body mjx-container[display="true"] > svg {
+  max-width: none;
+}
 
 .post-body .cell { margin: 14px 0; }
 .post-body .cell .prompt {

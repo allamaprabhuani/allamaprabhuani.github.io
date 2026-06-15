@@ -31,13 +31,15 @@
   };
   var C = window.SITE_CONFIG;
 
-  // Theme: localStorage override > simple local-time sunset (after 19:00 / before 7:00).
-  // Approximate to ±90 min of true sunset, but no permission prompt and no lookup.
+  // Theme: saved manual choice first, otherwise follow the browser/OS setting.
+  // The old "theme" key is cleared so previous local-time choices do not block auto mode.
   var theme;
-  try { theme = localStorage.getItem('theme'); } catch(e) {}
+  try {
+    localStorage.removeItem('theme');
+    theme = localStorage.getItem('theme-preference');
+  } catch(e) {}
   if (theme !== 'light' && theme !== 'dark') {
-    var h = new Date().getHours();
-    theme = (h < 7 || h >= 19) ? 'dark' : 'light';
+    theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
   document.documentElement.setAttribute('data-theme', theme);
 

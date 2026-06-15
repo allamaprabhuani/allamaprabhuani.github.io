@@ -82,10 +82,10 @@ right is extrapolation.
 
 ## The setup
 
-Light underdamped oscillator, $\omega_0 = 2\pi$ (period 1, one full cycle
-in the window) and $\zeta = 0.05$. 12 noisy observations in
-$t \in [0, 0.4]$. The exact solution is a decaying cosine — which lets us
-measure error directly across the full window $t \in [0, 1]$.
+Light underdamped oscillator, \(\omega_0 = 2\pi\) (period 1, one full cycle
+in the window) and \(\zeta = 0.05\). 12 noisy observations in
+\(t \in [0, 0.4]\). The exact solution is a decaying cosine — which lets us
+measure error directly across the full window \(t \in [0, 1]\).
 
 <figure class="tutorial-fig">
   <img src="{{ '/assets/tutorials/05/setup.png' | relative_url }}"
@@ -131,7 +131,7 @@ differential equation rather than only by the observed data.
 - Three models, same architecture: **NN (data only)**, **PINN (physics only)**, **hybrid (data + physics)**
 - The `torch.autograd.grad` recipe for higher-order PDE residuals
 - Soft initial conditions, loss balancing, and the activation-function rule that bites everyone once
-- A pointer at **inverse problems** — recover the unknown $\omega_0$ and $\zeta$ from the same 12 points
+- A pointer at **inverse problems** — recover the unknown \(\omega_0\) and \(\zeta\) from the same 12 points
 - A pointer at **neural operators** — what comes when one trained model needs to solve a *family* of problems
 
 ## Why this matters for my own research
@@ -141,7 +141,7 @@ network the equation and asked it to find the function. You can also
 **give** it the function (some experimental measurements) and ask it to
 find the equation — specifically, the *coefficients* of the equation.
 
-Treat $\omega_0$ and $\zeta$ as `torch.nn.Parameter`s and put them into
+Treat \(\omega_0\) and \(\zeta\) as `torch.nn.Parameter`s and put them into
 the optimiser alongside the network weights. PyTorch's autograd will
 backpropagate the data-loss gradient all the way through the physics
 residual to those two parameters. This is called an **inverse problem**,
@@ -150,8 +150,8 @@ from data" pitch.
 
 This is the bridge between toy PINNs like this one and my own research
 on [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
-— a PyTorch fracture-mechanics solver where the unknown isn't $\omega_0$
-but the material toughness $G_c$, recovered from a handful of
+— a PyTorch fracture-mechanics solver where the unknown isn't \(\omega_0\)
+but the material toughness \(G_c\), recovered from a handful of
 displacement observations of a real cracked specimen. The maths is
 genuinely harder (the energy is non-convex, damage cannot heal, the
 time-stepping is conditionally stable) but the autograd pattern is

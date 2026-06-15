@@ -135,7 +135,12 @@ smaller and significantly better.
 
 A 2-D convolution is a local weighted sum:
 
-$$\quad \text{output}(i, j) = \sum_m \sum_n \text{input}(i + m, j + n) \cdot \text{kernel}(m, n)$$
+\[
+\text{output}(i, j)
+= \sum_m \sum_n
+\text{input}(i + m, j + n)\,
+\text{kernel}(m, n).
+\]
 
 In words: place a small **kernel** of learnable weights on a patch of
 the input, multiply element-wise, sum, write the scalar into the
@@ -146,6 +151,13 @@ output. Slide the kernel one step, repeat.
        alt="Three panels showing a 5x5 input, a 3x3 vertical-edge kernel, and the resulting 3x3 output">
   <figcaption>One step of a 3 × 3 convolution on a 5 × 5 input. Output size = ⌊(5 − 3) / 1⌋ + 1 = 3. The kernel here is a vertical-edge detector; the output's columns reflect column differences in the input.</figcaption>
 </figure>
+
+<div class="tutorial-interactive">
+  <iframe class="tutorial-tall"
+          src="{{ '/assets/tutorials/04/conv-playground.html' | relative_url }}"
+          loading="lazy"
+          title="Interactive convolution playground"></iframe>
+</div>
 
 ### Padding and stride
 

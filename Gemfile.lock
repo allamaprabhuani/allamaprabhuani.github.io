@@ -77,6 +77,7 @@ GEM
     terminal-table (2.0.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
     unicode-display_width (1.8.0)
+    webrick (1.9.2)
 
 PLATFORMS
   aarch64-linux-gnu
@@ -99,6 +100,7 @@ DEPENDENCIES
   jekyll-feed (~> 0.17)
   jekyll-seo-tag (~> 2.8)
   jekyll-sitemap (~> 1.4)
+  webrick (~> 1.9)
 
 CHECKSUMS
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
@@ -145,6 +147,7 @@ CHECKSUMS
   sassc (2.4.0) sha256=4c60a2b0a3b36685c83b80d5789401c2f678c1652e3288315a1551d811d9f83e
   terminal-table (2.0.0) sha256=904b528e60a98fcb0801d24f634a3116eaec500692c751765b587b6208cc2ba3
   unicode-display_width (1.8.0) sha256=0292132d364d59fcdd83f144910c48b3c8332b28a14c5c04bb093dd165600488
+  webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
 
 BUNDLED WITH
    2.6.9
