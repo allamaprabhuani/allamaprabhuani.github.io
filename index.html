@@ -133,6 +133,26 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   align-items: center;
   gap: 24px;
 }
+.hero-photo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 240px;
+  min-height: 240px;
+}
+.hero-orbit {
+  position: absolute;
+  inset: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  pointer-events: none;
+  opacity: 0.82;
+}
+.hero-photo .photo {
+  position: relative;
+  z-index: 1;
+}
 .hero-text {
   text-align: center;
 }
@@ -171,6 +191,8 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   overflow-wrap: break-word;
 }
 @media (max-width: 768px) {
+  .hero-photo { min-width: 190px; min-height: 190px; }
+  .hero-orbit { inset: -24px; width: calc(100% + 48px); height: calc(100% + 48px); }
   .hero .tag { font-size: 1rem; }
   .about-text { font-size: 1rem; }
   #main-content h2 { font-size: 1.75rem; }
@@ -181,6 +203,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 <header class="hero">
   <div class="hero-row">
     <div class="hero-photo">
+      <canvas id="hero-orbit" class="hero-orbit" width="260" height="260" aria-hidden="true"></canvas>
       <a href="#shipped" class="photo" aria-label="Scroll to shipped work">
         <img src="/assets/me.jpg" alt="Headshot of Allamaprabhu Ani" width="180" height="180" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');" style="margin-bottom: 10px;">
         <span class="photo-fallback" aria-hidden="true">A</span>
@@ -215,6 +238,8 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
     </a>
   </div>
 </header>
+
+<script src="/assets/hero-orbit.js" defer></script>
 
 <section id="about">
   <h2>About Me</h2>

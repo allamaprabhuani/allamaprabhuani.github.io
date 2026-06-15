@@ -60,8 +60,14 @@ layout: default
 {% assign next = nil %}
 {% for t in sorted %}
   {% if t.order == page.order %}
-    {% if forloop.first == false %}{% assign prev = sorted[forloop.index0 | minus: 1] %}{% endif %}
-    {% unless forloop.last %}{% assign next = sorted[forloop.index0 | plus: 1] %}{% endunless %}
+    {% if forloop.first == false %}
+      {% assign prev_index = forloop.index0 | minus: 1 %}
+      {% assign prev = sorted[prev_index] %}
+    {% endif %}
+    {% unless forloop.last %}
+      {% assign next_index = forloop.index0 | plus: 1 %}
+      {% assign next = sorted[next_index] %}
+    {% endunless %}
   {% endif %}
 {% endfor %}
 <article class="tutorial">
