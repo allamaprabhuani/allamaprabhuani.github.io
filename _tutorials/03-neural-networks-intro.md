@@ -28,7 +28,7 @@ The confusing part of neural networks is not the word "neural"; it is
 the jump from one weighted sum to a system that can learn curved
 decision boundaries. This tutorial keeps that jump small.
 
-A neural network is what you get when you stack a lot of \(f(w \cdot x + b)\)
+A neural network is what you get when you stack a lot of $$f(w \cdot x + b)$$
 neurons and let gradient descent set the weights. We build that stack
 one layer at a time, then use the same pattern for a classifier on the
 Wisconsin breast-cancer dataset (569 patients, 30 features).
@@ -55,12 +55,12 @@ A *layer* is many neurons applied to the same input in parallel. Instead of
 computing one weighted sum at a time, a single matrix multiplication handles
 the whole minibatch:
 
-\[\mathbf{Z} = \mathbf{X}\,\mathbf{W} + \mathbf{B}, \qquad \mathbf{A} = f(\mathbf{Z}).\]
+$$ \mathbf{Z} = \mathbf{X}\,\mathbf{W} + \mathbf{B}, \qquad \mathbf{A} = f(\mathbf{Z}). $$
 
-- \(\mathbf{X}\) is the input data.
-- \(\mathbf{W}\) is the weight matrix.
-- \(\mathbf{B}\) is the bias vector.
-- \(f\) is the non-linear activation function.
+- $$\mathbf{X}$$ is the input data.
+- $$\mathbf{W}$$ is the weight matrix.
+- $$\mathbf{B}$$ is the bias vector.
+- $$f$$ is the non-linear activation function.
 
 The activation function is what makes a stack of layers nonlinear. Without
 it, several linear layers collapse into one linear map, so depth alone would

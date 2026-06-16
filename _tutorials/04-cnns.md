@@ -135,12 +135,12 @@ smaller and significantly better.
 
 A 2-D convolution is a local weighted sum:
 
-\[
+$$
 \text{output}(i, j)
 = \sum_m \sum_n
 \text{input}(i + m, j + n)\,
 \text{kernel}(m, n).
-\]
+$$
 
 In words: place a small **kernel** of learnable weights on a patch of
 the input, multiply element-wise, sum, write the scalar into the

@@ -65,34 +65,34 @@ follow the data — past the point where it starts memorising the noise.
 Before writing code, it is useful to see one update without autograd. Suppose
 the model is a line,
 
-\[\hat{y} = w x + b.\]
+$$ \hat{y} = w x + b. $$
 
 and the loss is mean squared error,
 
-\[
+$$
 \mathcal{L}(w,b) = \frac{1}{N}\sum_{i=1}^{N}(\hat{y}_i-y_i)^2
 = \frac{1}{N}\sum_{i=1}^{N}(w x_i+b-y_i)^2 .
-\]
+$$
 
-Let \(e_i = \hat{y}_i-y_i\). The chain rule gives
+Let $$e_i = \hat{y}_i-y_i$$. The chain rule gives
 
-\[
+$$
 \frac{\partial \mathcal{L}}{\partial w}
 = \frac{2}{N}\sum_{i=1}^{N} e_i x_i,
 \qquad
 \frac{\partial \mathcal{L}}{\partial b}
 = \frac{2}{N}\sum_{i=1}^{N} e_i .
-\]
+$$
 
 Gradient descent then moves in the opposite direction to the gradient:
 
-\[
+$$
 w \leftarrow w-\alpha\frac{\partial\mathcal{L}}{\partial w},
 \qquad
 b \leftarrow b-\alpha\frac{\partial\mathcal{L}}{\partial b}.
-\]
+$$
 
-The learning rate \(\alpha\) controls the step size. If it is too small,
+The learning rate $$\alpha$$ controls the step size. If it is too small,
 training crawls; if it is too large, the update can jump over the minimum.
 
 ## From the derivative to code
