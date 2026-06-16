@@ -34,6 +34,17 @@ do the same job. The second half is the failure mode every useful model
 eventually hits: training loss keeps falling while validation loss turns
 around and climbs.
 
+<nav class="tutorial-mini-toc" aria-label="In this tutorial">
+  <p>In this tutorial</p>
+  <ol>
+    <li><a href="#the-gradient-by-hand">derive one gradient by hand</a></li>
+    <li><a href="#from-the-derivative-to-code">turn the derivative into code</a></li>
+    <li><a href="#video-explainers-layer-forward-pass">watch the layer forward pass</a></li>
+    <li><a href="#try-the-layer-yourself">try the layer calculation yourself</a></li>
+    <li><a href="#reading-a-loss-curve">read train and validation loss curves</a></li>
+  </ol>
+</nav>
+
 ```python
 for xb, yb in train_loader:
     pred = model(xb)
@@ -135,24 +146,18 @@ for all trainable parameters automatically.
 
 ## Video explainers: layer forward pass
 
-These two short videos show the same layer calculation in light and dark
-recordings. The page shows the version that matches your current theme.
+Watch this before continuing if the forward pass still feels abstract.
+The page loads only the recording that matches your current light or dark
+theme.
 
 <div class="video-grid">
   <article class="video-card">
-    <iframe class="video-frame video-mode-light"
-            src="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/preview"
-            title="Layer forward pass with code view, light mode"
-            allow="autoplay; fullscreen"
-            allowfullscreen
-            loading="lazy"></iframe>
-    <iframe class="video-frame video-mode-dark"
-            src="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/preview"
-            title="Layer forward pass with code view, dark mode"
-            allow="autoplay; fullscreen"
-            allowfullscreen
-            loading="lazy"></iframe>
+    <div class="video-embed"
+         data-video-title="Layer forward pass"
+         data-light-src="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/preview"
+         data-dark-src="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/preview"></div>
     <div class="video-card-body">
+      <p class="video-label">visual explainer</p>
       <h3>Layer forward pass</h3>
       <p class="muted">A compact walkthrough of how inputs, weights, bias, and activation produce the output of one neural-network layer.</p>
       <p class="section-link">
@@ -164,6 +169,46 @@ recordings. The page shows the version that matches your current theme.
 </div>
 
 <p class="section-link"><a href="https://www.youtube.com/@allamaprabhuani" target="_blank" rel="noopener noreferrer">Open the YouTube channel →</a></p>
+
+## Try the layer yourself
+
+This is the scalar version of a neural-network layer. Change the input,
+weight, bias, and activation. The page computes the pre-activation value
+\(z = wx + b\), then applies the activation function to produce the layer
+output.
+
+<div class="layer-demo" data-layer-demo>
+  <div class="layer-demo-controls">
+    <label>
+      <span>input \(x\)</span>
+      <input type="range" min="-3" max="3" step="0.1" value="1.2" data-layer-input="x">
+    </label>
+    <label>
+      <span>weight \(w\)</span>
+      <input type="range" min="-3" max="3" step="0.1" value="1.5" data-layer-input="w">
+    </label>
+    <label>
+      <span>bias \(b\)</span>
+      <input type="range" min="-3" max="3" step="0.1" value="-0.4" data-layer-input="b">
+    </label>
+    <label>
+      <span>activation</span>
+      <select data-layer-input="activation">
+        <option value="relu">ReLU</option>
+        <option value="tanh">tanh</option>
+        <option value="sigmoid">sigmoid</option>
+        <option value="linear">linear</option>
+      </select>
+    </label>
+  </div>
+  <div class="layer-demo-readout" aria-live="polite">
+    <span><b>x</b> = <output data-layer-output="x">1.20</output></span>
+    <span><b>w</b> = <output data-layer-output="w">1.50</output></span>
+    <span><b>b</b> = <output data-layer-output="b">-0.40</output></span>
+    <span><b>z = wx + b</b> = <output data-layer-output="z">1.40</output></span>
+    <span><b>output</b> = <output data-layer-output="y">1.40</output></span>
+  </div>
+</div>
 
 ## The loss landscape
 

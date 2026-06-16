@@ -62,12 +62,32 @@
       document.addEventListener('mouseout',  function(e){ if (isInteractive(e.target)) cursor.classList.remove('hover'); });
     }
 
+    function syncThemeVideos() {
+      var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      document.querySelectorAll('.video-embed').forEach(function(holder){
+        var src = holder.getAttribute(theme === 'dark' ? 'data-dark-src' : 'data-light-src');
+        if (!src) src = holder.getAttribute('data-light-src') || holder.getAttribute('data-dark-src');
+        var current = holder.querySelector('iframe');
+        if (current && current.getAttribute('src') === src) return;
+        holder.textContent = '';
+        var iframe = document.createElement('iframe');
+        iframe.className = 'video-frame';
+        iframe.src = src;
+        iframe.title = holder.getAttribute('data-video-title') || 'Video explainer';
+        iframe.allow = 'autoplay; fullscreen';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        holder.appendChild(iframe);
+      });
+    }
+
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       document.documentElement.style.colorScheme = theme;
       if (themeBtn) {
         themeBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
       }
+      syncThemeVideos();
     }
 
     function storedTheme() {
@@ -88,6 +108,7 @@
       });
     }
     document.documentElement.style.colorScheme = document.documentElement.getAttribute('data-theme') || 'light';
+    syncThemeVideos();
 
     var schemeQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
     if (schemeQuery) {
@@ -97,6 +118,43 @@
       if (schemeQuery.addEventListener) schemeQuery.addEventListener('change', syncSystemTheme);
       else if (schemeQuery.addListener) schemeQuery.addListener(syncSystemTheme);
     }
+
+    document.querySelectorAll('[data-layer-demo]').forEach(function(demo){
+      var inputs = {
+        x: demo.querySelector('[data-layer-input="x"]'),
+        w: demo.querySelector('[data-layer-input="w"]'),
+        b: demo.querySelector('[data-layer-input="b"]'),
+        activation: demo.querySelector('[data-layer-input="activation"]')
+      };
+      var outputs = {};
+      demo.querySelectorAll('[data-layer-output]').forEach(function(el){
+        outputs[el.getAttribute('data-layer-output')] = el;
+      });
+      function activationValue(z, name) {
+        if (name === 'relu') return Math.max(0, z);
+        if (name === 'tanh') return Math.tanh(z);
+        if (name === 'sigmoid') return 1 / (1 + Math.exp(-z));
+        return z;
+      }
+      function fmt(v) { return Number(v).toFixed(2); }
+      function updateLayerDemo() {
+        var x = parseFloat(inputs.x.value);
+        var w = parseFloat(inputs.w.value);
+        var b = parseFloat(inputs.b.value);
+        var z = w * x + b;
+        var y = activationValue(z, inputs.activation.value);
+        outputs.x.textContent = fmt(x);
+        outputs.w.textContent = fmt(w);
+        outputs.b.textContent = fmt(b);
+        outputs.z.textContent = fmt(z);
+        outputs.y.textContent = fmt(y);
+      }
+      Object.keys(inputs).forEach(function(k){
+        inputs[k].addEventListener('input', updateLayerDemo);
+        inputs[k].addEventListener('change', updateLayerDemo);
+      });
+      updateLayerDemo();
+    });
 
     var shuffleBtn = document.getElementById('shuffle-bg');
     if (shuffleBtn) {

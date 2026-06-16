@@ -1485,6 +1485,28 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   margin-top: 8px;
   text-align: center;
 }
+.tutorial-mini-toc {
+  margin: 22px 0 26px;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card) 74%, transparent);
+}
+.tutorial-mini-toc p {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.tutorial-mini-toc ol {
+  margin: 0;
+  padding-left: 20px;
+}
+.tutorial-mini-toc li {
+  margin: 3px 0;
+}
 .tutorial-interactive {
   margin: 22px 0;
   border: 1px solid var(--rule);
@@ -1514,6 +1536,10 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   overflow: hidden;
   background: var(--card);
 }
+.video-embed {
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
 .video-frame {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1523,6 +1549,14 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 }
 .video-card-body {
   padding: 14px 16px 16px;
+}
+.video-label {
+  margin: 0 0 7px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 .video-card h3 {
   margin: 0 0 8px;
@@ -1545,6 +1579,68 @@ html[data-theme="dark"] .video-mode-dark {
 }
 @media (max-width: 760px) {
   .video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.layer-demo {
+  margin: 24px 0;
+  padding: 18px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+}
+.layer-demo-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+.layer-demo label {
+  display: grid;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.layer-demo input,
+.layer-demo select {
+  width: 100%;
+}
+.layer-demo select {
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-family: var(--font-mono);
+}
+.layer-demo-readout {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+.layer-demo-readout span {
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+.layer-demo-readout b {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+}
+.layer-demo-readout output {
+  color: var(--ink);
+  font-weight: 700;
+}
+@media (max-width: 760px) {
+  .layer-demo-controls,
+  .layer-demo-readout {
     grid-template-columns: 1fr;
   }
 }
