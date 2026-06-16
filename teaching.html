@@ -40,43 +40,6 @@ image: /assets/og/tutorials.png
   gap: 1.5rem;
   margin: 30px 0;
 }
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-  margin-top: 24px;
-}
-.video-card {
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--card);
-}
-.video-frame {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  display: block;
-  background: #000;
-}
-.video-card-body {
-  padding: 14px 16px 16px;
-}
-.video-card h3 {
-  margin: 0 0 8px;
-  font-size: 1rem;
-}
-.video-card p {
-  margin: 0;
-}
-.video-card .section-link {
-  margin-top: 10px;
-}
-@media (max-width: 760px) {
-  .video-grid {
-    grid-template-columns: 1fr;
-  }
-}
 </style>
 
 <section class="home-tutorials">
@@ -101,45 +64,6 @@ image: /assets/og/tutorials.png
   </ul>
 
   <p class="section-link"><a href="/tutorials/">Browse the full tutorial hub →</a></p>
-</section>
-
-<section id="video-explainers">
-  <div class="section-lede">
-    <h2>video explainers</h2>
-    <p class="muted">Short visual walkthroughs that pair with the neural-network tutorials.</p>
-  </div>
-
-  <div class="video-grid">
-    <article class="video-card">
-      <iframe class="video-frame"
-              src="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/preview"
-              title="Layer forward pass with code view"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-              loading="lazy"></iframe>
-      <div class="video-card-body">
-        <h3>Layer forward pass: code view</h3>
-        <p class="muted">A compact walkthrough of how activations move through a neural-network layer.</p>
-        <p class="section-link"><a href="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/view?usp=sharing" target="_blank" rel="noopener noreferrer">Open in Drive →</a></p>
-      </div>
-    </article>
-
-    <article class="video-card">
-      <iframe class="video-frame"
-              src="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/preview"
-              title="Layer forward pass with whiteboard view"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-              loading="lazy"></iframe>
-      <div class="video-card-body">
-        <h3>Layer forward pass: whiteboard view</h3>
-        <p class="muted">The same idea explained visually, using the layer as a sequence of simple operations.</p>
-        <p class="section-link"><a href="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/view?usp=sharing" target="_blank" rel="noopener noreferrer">Open in Drive →</a></p>
-      </div>
-    </article>
-  </div>
-
-  <p class="section-link"><a href="https://www.youtube.com/@allamaprabhuani" target="_blank" rel="noopener noreferrer">Open the YouTube channel →</a></p>
 </section>
 
 <section id="teaching-curriculum">

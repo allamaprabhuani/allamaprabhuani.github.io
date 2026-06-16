@@ -65,34 +65,36 @@ follow the data — past the point where it starts memorising the noise.
 Before writing code, it is useful to see one update without autograd. Suppose
 the model is a line,
 
-$$ \hat{y} = w x + b. $$
+\[
+\hat{y} = w x + b.
+\]
 
 and the loss is mean squared error,
 
-$$
+\[
 \mathcal{L}(w,b) = \frac{1}{N}\sum_{i=1}^{N}(\hat{y}_i-y_i)^2
 = \frac{1}{N}\sum_{i=1}^{N}(w x_i+b-y_i)^2 .
-$$
+\]
 
-Let $$e_i = \hat{y}_i-y_i$$. The chain rule gives
+Let \(e_i = \hat{y}_i-y_i\). The chain rule gives
 
-$$
+\[
 \frac{\partial \mathcal{L}}{\partial w}
 = \frac{2}{N}\sum_{i=1}^{N} e_i x_i,
 \qquad
 \frac{\partial \mathcal{L}}{\partial b}
 = \frac{2}{N}\sum_{i=1}^{N} e_i .
-$$
+\]
 
 Gradient descent then moves in the opposite direction to the gradient:
 
-$$
+\[
 w \leftarrow w-\alpha\frac{\partial\mathcal{L}}{\partial w},
 \qquad
 b \leftarrow b-\alpha\frac{\partial\mathcal{L}}{\partial b}.
-$$
+\]
 
-The learning rate $$\alpha$$ controls the step size. If it is too small,
+The learning rate \(\alpha\) controls the step size. If it is too small,
 training crawls; if it is too large, the update can jump over the minimum.
 
 ## From the derivative to code
@@ -130,6 +132,38 @@ for epoch in range(100):
 
 That is the same mathematical update, but PyTorch computes the gradients
 for all trainable parameters automatically.
+
+## Video explainers: layer forward pass
+
+These two short videos show the same layer calculation in light and dark
+recordings. The page shows the version that matches your current theme.
+
+<div class="video-grid">
+  <article class="video-card">
+    <iframe class="video-frame video-mode-light"
+            src="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/preview"
+            title="Layer forward pass with code view, light mode"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            loading="lazy"></iframe>
+    <iframe class="video-frame video-mode-dark"
+            src="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/preview"
+            title="Layer forward pass with code view, dark mode"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            loading="lazy"></iframe>
+    <div class="video-card-body">
+      <h3>Layer forward pass</h3>
+      <p class="muted">A compact walkthrough of how inputs, weights, bias, and activation produce the output of one neural-network layer.</p>
+      <p class="section-link">
+        <a class="video-mode-light" href="https://drive.google.com/file/d/1F0QTA-4KQtAHr743-4gv2zeUVTeGsNh_/view?usp=sharing" target="_blank" rel="noopener noreferrer">Open the light-mode video in Drive →</a>
+        <a class="video-mode-dark" href="https://drive.google.com/file/d/1Vbqxwivro73lzHTl-jj88dkkx2hLUJG5/view?usp=sharing" target="_blank" rel="noopener noreferrer">Open the dark-mode video in Drive →</a>
+      </p>
+    </div>
+  </article>
+</div>
+
+<p class="section-link"><a href="https://www.youtube.com/@allamaprabhuani" target="_blank" rel="noopener noreferrer">Open the YouTube channel →</a></p>
 
 ## The loss landscape
 

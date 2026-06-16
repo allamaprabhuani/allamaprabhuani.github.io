@@ -1502,6 +1502,53 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
   height: 680px;
 }
 
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 22px;
+  margin: 24px 0;
+}
+.video-card {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--card);
+}
+.video-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+  background: #000;
+}
+.video-card-body {
+  padding: 14px 16px 16px;
+}
+.video-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.video-card p {
+  margin: 0;
+}
+.video-card .section-link {
+  margin-top: 10px;
+}
+.video-mode-dark {
+  display: none;
+}
+html[data-theme="dark"] .video-mode-light {
+  display: none;
+}
+html[data-theme="dark"] .video-mode-dark {
+  display: block;
+}
+@media (max-width: 760px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .post-body mjx-container[display="true"] {
   overflow-x: auto;
   overflow-y: hidden;
