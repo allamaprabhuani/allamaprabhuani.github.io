@@ -18,6 +18,14 @@
   --link: #0c5685;
   --bg-code: #e8f0f8;
   --shadow: 0 6px 22px rgba(18, 43, 64, 0.06);
+  --syn-text: #24292e;
+  --syn-keyword: #d73a49;
+  --syn-string: #032f62;
+  --syn-comment: #22863a;
+  --syn-builtin: #005cc5;
+  --syn-number: #005cc5;
+  --syn-function: #6f42c1;
+  --syn-operator: #e36209;
 }
 html[data-theme="dark"] {
   color-scheme: dark;
@@ -32,6 +40,14 @@ html[data-theme="dark"] {
   --link: #8bcbf2;
   --bg-code: #142230;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+  --syn-text: #c9d1d9;
+  --syn-keyword: #ff7b72;
+  --syn-string: #a5d6ff;
+  --syn-comment: #7ee787;
+  --syn-builtin: #79c0ff;
+  --syn-number: #79c0ff;
+  --syn-function: #d2a8ff;
+  --syn-operator: #ffab70;
 }
 
 @media (dynamic-range: high) {
@@ -1140,6 +1156,7 @@ body:not(.landing) .toc { display: block; }
 }
 .post-body code {
   background: var(--bg-code);
+  color: var(--syn-text);
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 0.92em;
@@ -1147,6 +1164,7 @@ body:not(.landing) .toc { display: block; }
 }
 .post-body pre {
   background: var(--bg-code);
+  color: var(--syn-text);
   padding: 14px 16px;
   border-radius: 6px;
   border: 1px solid var(--rule);
@@ -1534,20 +1552,20 @@ html[data-theme="dark"] .t-level-advanced     { color: #e6907c; }
 }
 .post-body .highlight .k,
 .post-body .highlight .kn,
-.post-body .highlight .kc { color: #a626a4; font-weight: 600; }
+.post-body .highlight .kc { color: var(--syn-keyword); font-weight: 600; }
 .post-body .highlight .s,
 .post-body .highlight .s1,
-.post-body .highlight .s2 { color: #50a14f; }
+.post-body .highlight .s2 { color: var(--syn-string); }
 .post-body .highlight .c,
 .post-body .highlight .c1,
-.post-body .highlight .cm { color: var(--muted); font-style: italic; }
-.post-body .highlight .nb { color: #c18401; }
+.post-body .highlight .cm { color: var(--syn-comment); font-style: italic; }
+.post-body .highlight .nb { color: var(--syn-builtin); }
 .post-body .highlight .mi,
-.post-body .highlight .mf { color: #986801; }
+.post-body .highlight .mf { color: var(--syn-number); }
 .post-body .highlight .nf,
-.post-body .highlight .nc { color: #4078f2; }
+.post-body .highlight .nc { color: var(--syn-function); }
 .post-body .highlight .o,
-.post-body .highlight .ow { color: #383a42; }
+.post-body .highlight .ow { color: var(--syn-operator); }
 
 .search-btn {
   gap: 6px;
