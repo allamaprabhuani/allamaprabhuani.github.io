@@ -18,3 +18,7 @@ Anusuya Ponnusami.
 The paper presents a PyTorch-native phase-field fracture implementation with
 matrix-free explicit dynamics, implicit damage solves, dynamic and quasi-static
 benchmarks, and gradient-based inverse recovery of fracture energy.
+
+The public project documentation is available at
+[cems-lab.github.io/PhAST](https://cems-lab.github.io/PhAST/), with source code
+on [GitHub](https://github.com/CEMS-Lab/PhAST).
