@@ -18,9 +18,9 @@ Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page,
 
 ## P1 — Content / accuracy
 
-- [ ] **Master profile says you have 6 citations on the EFM paper.** OpenAlex currently shows 1; Scholar will be a bit higher. The live badge will resolve which number is real — if you're proud of the Scholar number, decide whether to keep "OpenAlex" as the source or switch the badge to a manual override.
-- [ ] **`assets/me.jpg` `alt` text** is just "Allamaprabhu Ani" — fine for a portrait, but consider a one-line description for screen readers ("Allamaprabhu Ani, headshot, smiling, brown background").
-- [ ] **EFM "first comprehensive review"** claim — true per your own paper's framing, but it appears twice on the homepage (hero + papers list). Consider making one of them slightly different to avoid the echo.
+- [x] **Citation source of truth.** Keep OpenAlex as the live displayed citation source rather than a manual Scholar override. Checked 2026-06-23: OpenAlex reports 3 citations for `W4416918453`; the site fetches OpenAlex live and labels the source.
+- [x] **`assets/me.jpg` `alt` text** expanded to "Headshot of Allamaprabhu Ani, smiling, brown background" for better screen-reader context.
+- [x] **EFM "first comprehensive review"** echo reduced. The About section now says "a widely read review of ML for fracture mechanics"; the stronger "field's first comprehensive review" phrasing remains only in the Papers section.
 - [ ] **Bragspace dates** — "2026 Worshipful Company… Yeoman status" plus "2026 SST Dean's Award" both labelled 2026. The Tin Plate award was March, the Dean's was around April. If the section starts to fill up, distinguish month or quarter.
 - [ ] **EPFL visit framing** — site says "in 2025 I spent some time at EPFL". That's vague; if it was a specific period (e.g., "summer 2025, six weeks"), it sounds more credible.
 
@@ -32,7 +32,7 @@ Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page,
 
 ## P2 — Performance / SEO
 
-- [ ] No `<meta name="author" content="Allamaprabhu Ani">`. jekyll-seo-tag handles most of this, but a manual author meta helps a few non-Google crawlers.
+- [x] Added `<meta name="author" content="Allamaprabhu Ani">` via `_layouts/default.html` as a fallback for non-Google crawlers.
 - [ ] Hero image `me.jpg` is 33 KB — fine. Phoenix favicon should be a 32×32 PNG plus a 180×180 apple-touch-icon for iOS home-screen pinning.
 - [ ] `proof-img` (EFM screenshot) — confirm it's <800 KB. If larger, downscale to ~1200 px wide.
 - [ ] Add `<link rel="canonical">` per page (jekyll-seo-tag should emit this; verify in dev).
