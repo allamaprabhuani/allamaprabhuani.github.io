@@ -2,7 +2,7 @@
 layout: default
 landing: true
 image: /assets/og/home.png
-description: Allamaprabhu Ani is a PhD researcher in computational mechanics, phase-field fracture, and scientific machine learning at City, St George's, University of London and the CEMS Lab at Queen Mary University of London.
+description: Allamaprabhu Ani is a PhD researcher in computational mechanics, phase-field fracture, and scientific machine learning at City, St George's, University of London, and a teaching assistant at Queen Mary University of London.
 ---
 
 <script type="application/ld+json">
@@ -25,7 +25,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
       "@type": "CollegeOrUniversity",
       "name": "Queen Mary University of London",
       "url": "https://www.qmul.ac.uk/sems/",
-      "department": "School of Engineering and Materials Science (CEMS Lab)"
+      "department": "School of Engineering and Materials Science"
     }
   ],
   "knowsAbout": ["Computational Mechanics", "Phase-Field Fracture", "Deep Learning", "PyTorch", "Bruhn structural analysis", "GD&T", "Composite materials", "Neural Operators", "Physics-Informed Neural Networks", "Fracture Mechanics"],
@@ -41,8 +41,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
     "jobTitle": "Senior Lecturer",
     "url": "https://www.saponnusami.com/",
     "affiliation": [
-      {"@type": "CollegeOrUniversity", "name": "Queen Mary University of London"},
-      {"@type": "Organization", "name": "CEMS Lab", "url": "https://github.com/CEMS-Lab"}
+      {"@type": "CollegeOrUniversity", "name": "Queen Mary University of London"}
     ]
   },
   "colleague": [
@@ -96,6 +95,27 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   "url": "https://www.sciencedirect.com/science/article/pii/S0013794425009798",
   "identifier": "PII:S0013794425009798",
   "keywords": "machine learning, fracture mechanics, damage mechanics, neural networks, review"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "A matrix-free, differentiable PyTorch solver for phase-field fracture: Formulation, benchmarks, and inverse analysis",
+  "headline": "A matrix-free, differentiable PyTorch solver for phase-field fracture: Formulation, benchmarks, and inverse analysis",
+  "datePublished": "2026-06-22",
+  "publisher": {"@type": "Organization", "name": "arXiv"},
+  "author": [
+    {"@type": "Person", "name": "Allamaprabhu Ani", "url": "https://allamaprabhuani.github.io/", "identifier": "https://orcid.org/0000-0003-1039-7622"},
+    {"@type": "Person", "name": "Jean-François Molinari", "url": "https://www.epfl.ch/labs/lsms/"},
+    {"@type": "Person", "name": "Ghatu Subhash"},
+    {"@type": "Person", "name": "Sathiskumar Anusuya Ponnusami", "url": "https://www.saponnusami.com/"}
+  ],
+  "url": "https://arxiv.org/abs/2606.23458",
+  "identifier": "arXiv:2606.23458",
+  "sameAs": "https://doi.org/10.48550/arXiv.2606.23458",
+  "keywords": "phase-field fracture, PyTorch, differentiable simulation, matrix-free finite elements, inverse analysis"
 }
 </script>
 
@@ -212,7 +232,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
     <div class="hero-text">
       <h1>Allamaprabhu Ani</h1>
       <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
-      <p class="tag">PhD researcher in AI for Science, Computational Mechanics, and Deep Learning, registered at <a href="https://www.city.ac.uk/">City, St George's, University of London</a> and embedded in the <a href="https://github.com/CEMS-Lab">CEMS Lab</a> at <a href="https://www.qmul.ac.uk/sems/">Queen Mary University of London</a>.</p>
+      <p class="tag">PhD researcher in AI for Science, Computational Mechanics, and Deep Learning, registered at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, with teaching and research-facing activity at <a href="https://www.qmul.ac.uk/sems/">Queen Mary University of London's School of Engineering and Materials Science</a>.</p>
     </div>
   </div>
 
@@ -258,8 +278,8 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   <h2>Selected Code &amp; Projects</h2>
   <ul class="stack">
     <li>
-      <b>PhAST: A PyTorch-native, GPU-accelerated differentiable physics engine</b>
-      <span class="brag-aside">Designed with a commercial-grade, scalable software architecture. Runs on a single GPU, ~8&times; faster than standard reference codes. Open-source release queued for the moment the next paper hits arXiv.</span>
+      <b><a href="https://arxiv.org/abs/2606.23458">PhAST: A PyTorch-native, GPU-accelerated differentiable physics engine</a></b>
+      <span class="brag-aside">The matrix-free differentiable phase-field fracture solver paper is now online at arXiv. The implementation supports explicit dynamics, implicit damage solves, autograd-compatible inverse analysis, and million-node GPU runs.</span>
     </li>
     <li>
       <b><a href="https://github.com/allamaprabhuani/bjsfm">BJSFM</a></b>
@@ -326,6 +346,14 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 <section id="papers">
   <h2>Papers &amp; Track Record</h2>
   <ol class="papers">
+    <li>
+      <span class="paper-cite">
+        <b>A. S. Ani</b>, J.-F. Molinari, G. Subhash, S. A. Ponnusami.
+        <a href="https://arxiv.org/abs/2606.23458">A matrix-free, differentiable PyTorch solver for phase-field fracture: Formulation, benchmarks, and inverse analysis</a>.
+        <i>arXiv</i>:2606.23458 [cs.CE], 2026.
+      </span>
+      <span class="paper-note muted">Preprint introducing the matrix-free PyTorch phase-field fracture solver, dynamic and quasi-static benchmarks, and gradient-based inverse recovery of fracture energy.</span>
+    </li>
     <li data-openalex="W4416918453">
       <span class="paper-cite">
         <b>A. S. Ani</b>, R. Nakka, G. Subhash, J.-F. Molinari, S. A. Ponnusami.
