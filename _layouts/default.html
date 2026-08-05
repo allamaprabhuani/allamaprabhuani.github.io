@@ -112,7 +112,7 @@ window.MathJax = {
 {% seo title=false %}
 {% feed_meta %}
 </head>
-<body{% if page.landing %} class="landing"{% endif %}>
+<body class="{% if page.landing %}landing {% endif %}{% if page.home %}home{% endif %}">
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="bg-layer" aria-hidden="true">
   <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>

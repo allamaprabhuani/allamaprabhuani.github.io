@@ -1,5 +1,5 @@
 title: Allamaprabhu Ani
-description: Allamaprabhu Ani is a doctoral researcher in computational mechanics, fracture mechanics, and deep learning at City, St George's, University of London.
+description: Allamaprabhu Ani is a PhD candidate in computational mechanics, phase-field fracture, and scientific machine learning at City, St George's, University of London.
 url: https://allamaprabhuani.github.io
 author:
   name: Allamaprabhu Ani
@@ -16,7 +16,7 @@ social:
     - https://scholar.google.com/citations?user=dX3xKGsAAAAJ
     - https://orcid.org/0000-0003-1039-7622
     - https://www.linkedin.com/in/allamaprabhu-ani
-    - https://www.saponnusami.com/
+    - https://www.citystgeorges.ac.uk/about/people/research-students/allamaprabhu-ani
 markdown: kramdown
 highlighter: rouge
 permalink: /blog/:year/:month/:day/:title/

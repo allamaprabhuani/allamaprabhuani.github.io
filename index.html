@@ -1,8 +1,8 @@
 ---
 layout: default
-landing: true
+home: true
 image: /assets/og/home.png
-description: Allamaprabhu Ani is a PhD researcher in computational mechanics, phase-field fracture, and scientific machine learning at City, St George's, University of London, and a teaching assistant at Queen Mary University of London.
+description: Allamaprabhu Ani is a PhD candidate in computational mechanics, phase-field fracture, and scientific machine learning at City, St George's, University of London. He also creates open tutorial material while assisting Dr Sathiskumar Ponnusami's teaching at Queen Mary University of London.
 ---
 
 <script type="application/ld+json">
@@ -14,18 +14,12 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   "url": "https://allamaprabhuani.github.io/",
   "image": "https://allamaprabhuani.github.io/assets/me.jpg",
   "email": "allamaprabhuani@gmail.com",
-  "jobTitle": "Doctoral Researcher",
+  "jobTitle": "PhD Candidate",
   "affiliation": [
     {
       "@type": "CollegeOrUniversity",
       "name": "City, St George's, University of London",
       "url": "https://www.city.ac.uk/"
-    },
-    {
-      "@type": "CollegeOrUniversity",
-      "name": "Queen Mary University of London",
-      "url": "https://www.qmul.ac.uk/sems/",
-      "department": "School of Engineering and Materials Science"
     }
   ],
   "knowsAbout": ["Computational Mechanics", "Phase-Field Fracture", "Deep Learning", "PyTorch", "Bruhn structural analysis", "GD&T", "Composite materials", "Neural Operators", "Physics-Informed Neural Networks", "Fracture Mechanics"],
@@ -140,127 +134,19 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 }
 </script>
 
-<style>
-#main-content {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 20px;
-  text-align: center;
-}
-#main-content .toc {
-  display: none !important;
-}
-#main-content section {
-  margin-top: 80px;
-  margin-bottom: 80px;
-}
-#main-content .section-lede {
-  max-width: 600px;
-  margin: 0 auto 40px;
-}
-#main-content h2 {
-  font-size: 2rem;
-  margin-bottom: 24px;
-}
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 60px;
-}
-.hero-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-.hero-photo {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 240px;
-  min-height: 240px;
-}
-.hero-orbit {
-  position: absolute;
-  inset: -30px;
-  width: calc(100% + 60px);
-  height: calc(100% + 60px);
-  pointer-events: none;
-  opacity: 0.82;
-}
-.hero-photo .photo {
-  position: relative;
-  z-index: 1;
-}
-.hero-text {
-  text-align: center;
-}
-.hero .tag {
-  max-width: 600px;
-  margin: 0 auto;
-  font-size: 1.15rem;
-  line-height: 1.6;
-}
-.social-links {
-  justify-content: center;
-  margin-top: 24px;
-}
-.hire-me-banner {
-  max-width: 700px;
-  margin: 40px auto;
-  text-align: center;
-}
-.about-text {
-  text-align: left;
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.05rem;
-  line-height: 1.7;
-}
-.about-text p {
-  margin-bottom: 16px;
-}
-#main-content .stack, #main-content .papers {
-  text-align: left;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.home-tutorial-grid h3, .home-tutorial-grid p {
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-@media (max-width: 768px) {
-  .hero-photo { min-width: 190px; min-height: 190px; }
-  .hero-orbit { inset: -24px; width: calc(100% + 48px); height: calc(100% + 48px); }
-  .hero .tag { font-size: 1rem; }
-  .about-text { font-size: 1rem; }
-  #main-content h2 { font-size: 1.75rem; }
-  #main-content section { margin-top: 50px; margin-bottom: 50px; }
-}
-</style>
-
 <header class="hero">
-  <div class="hero-row">
-    <div class="hero-photo">
-      <canvas id="hero-orbit" class="hero-orbit" width="260" height="260" aria-hidden="true"></canvas>
-      <a href="#shipped" class="photo" aria-label="Scroll to shipped work">
-        <img src="/assets/me.jpg" alt="Headshot of Allamaprabhu Ani, smiling, brown background" width="180" height="180" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.parentElement.classList.add('no-photo');" style="margin-bottom: 10px;">
-        <span class="photo-fallback" aria-hidden="true">A</span>
-      </a>
-    </div>
-    <div class="hero-text">
-      <h1>Allamaprabhu Ani</h1>
-      <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
-      <p class="tag">PhD researcher in AI for Science, Computational Mechanics, and Deep Learning, registered at <a href="https://www.city.ac.uk/">City, St George's, University of London</a>, with teaching and research-facing activity at <a href="https://www.qmul.ac.uk/sems/">Queen Mary University of London's School of Engineering and Materials Science</a>.</p>
-    </div>
+  <p class="hero-eyebrow">Allamaprabhu Ani · AI for engineering</p>
+  <div class="hero-identity">
+    <img src="/assets/me.jpg" alt="Headshot of Allamaprabhu Ani, smiling, brown background" width="96" height="96" decoding="async" fetchpriority="high">
+    <p class="kannada" lang="kn" aria-label="Allamaprabhu Ani in Kannada">ಅಲ್ಲಮಪ್ರಭು ಅಣಿ</p>
   </div>
-
-  <div class="hire-me-banner" style="padding: 16px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid var(--accent); font-weight: 500;">
-    <strong>I am currently wrapping up my PhD and actively seeking full-time industrial R&amp;D roles (Applied Scientist / ML Engineer) starting in late 2026. Reach out if you are building AI for engineering.</strong>
+  <h1>I build differentiable simulation systems for engineering decisions.</h1>
+  <p class="tag">PhD candidate in computational mechanics and scientific machine learning at <a href="https://www.city.ac.uk/">City St George's, University of London</a>. My work combines PyTorch, finite elements, and model validation for fracture and damage simulation.</p>
+  <div class="hero-actions" aria-label="Primary links">
+    <a class="action-primary" href="https://cems-lab.github.io/PhAST/">Explore PhAST</a>
+    <a class="action-secondary" href="#papers">View research</a>
   </div>
-
+  <p class="hero-availability">Open to research-engineering and AI-for-science roles from late 2026.</p>
   <div class="social-links" role="list" aria-label="Social and contact links">
     <a href="mailto:allamaprabhuani@gmail.com" aria-label="Email" class="social-link" role="listitem">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -283,28 +169,55 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   </div>
 </header>
 
-<script src="/assets/hero-orbit.js" defer></script>
+<section class="proof-rail" aria-label="Research proof points">
+  <div><span>PUBLIC SOFTWARE</span><a href="https://cems-lab.github.io/PhAST/">PhAST documentation</a></div>
+  <div><span>PREPRINT</span><a href="https://arxiv.org/abs/2606.23458">Differentiable phase-field fracture</a></div>
+  <div><span>RECENT TALK</span><a href="#news">WCCM-ECCOMAS 2026 · MS220A</a></div>
+</section>
 
 <section id="about">
-  <h2>About Me</h2>
+  <p class="section-kicker">Research profile</p>
+  <h2>Mechanics first. Learning where it earns its place.</h2>
   <div class="about-text">
-    <p>I build fast, scalable, and differentiable solvers for PDEs at the intersection of scientific computing and machine learning. <strong>Currently, I am working on</strong> finishing my thesis and the phase-field solver paper, alongside a public release of the codebase. I also author a <a href="/tutorials/">comprehensive tutorial series</a> — from PyTorch training loops to <strong>Physics-Informed Neural Networks (PINNs)</strong> and Neural Operators.</p>
-    <p>Before my PhD, I read a lot of Bruhn and Niu while my classmates were learning ANSYS, did an MTech at NIT Silchar, and at 24 founded a small engineering company called <b>Aeroknacks</b>. We shipped automated aerospace structural-analysis tools, reducing 4-hour commercial sizing workflows to just 5 minutes. The bolted-joint tool that paid the bills is now MIT-licensed on GitHub.</p>
-    <p>In 2025, I spent time at <a href="https://www.epfl.ch/labs/lsms/">EPFL's Computational Solid Mechanics lab</a> with Prof. Jean-François Molinari, where we published <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">a widely read review of ML for fracture mechanics</a>.</p>
+    <p>I develop matrix-free, differentiable solvers for PDEs at the intersection of scientific computing and machine learning. I am completing my thesis while continuing the validation and development of <a href="https://cems-lab.github.io/PhAST/">PhAST</a>. I also author a <a href="/tutorials/">tutorial series</a> that runs from PyTorch training loops to <strong>Physics-Informed Neural Networks (PINNs)</strong> and Neural Operators.</p>
+    <p>Before my PhD, I completed an MTech at the National Institute of Technology Silchar and founded <b>Aeroknacks</b>, where I built aerospace structural-analysis automation tools around established hand-calculation methods.</p>
+    <p>In 2025, I worked with <a href="https://www.epfl.ch/labs/lsms/">EPFL's Computational Solid Mechanics lab</a> and Prof. Jean-François Molinari. That collaboration contributed to our <a href="https://www.sciencedirect.com/science/article/pii/S0013794425009798">review of machine learning for fracture mechanics</a>.</p>
     <p>Outside the lab, I've practiced Hindustani classical singing since I was 3. The ragas are familiar; the riyaz is the lifelong part.</p>
   </div>
 </section>
 
 <section id="shipped">
-  <h2>Selected Code &amp; Projects</h2>
+  <p class="section-kicker">Selected work</p>
+  <h2>Research software and engineering tools</h2>
+  <div class="case-studies">
+    <article class="case-study">
+      <p class="case-label">Case study 01 · Differentiable simulation</p>
+      <h3>PhAST: matrix-free phase-field fracture in PyTorch</h3>
+      <p>PhAST is a public research codebase for phase-field fracture that combines matrix-free finite-element operations, explicit dynamics, damage solves, and autograd-compatible inverse-analysis examples.</p>
+      <dl class="case-facts">
+        <div><dt>Question</dt><dd>How can fracture simulation remain inspectable while supporting differentiable analysis?</dd></div>
+        <div><dt>Evidence</dt><dd>Public formulation, benchmark, and inverse-analysis material.</dd></div>
+        <div><dt>Boundary</dt><dd>Performance and validation claims are scoped to the documented examples.</dd></div>
+      </dl>
+      <p class="case-links"><a href="/phast-evidence/">Read the evidence summary</a><a href="https://cems-lab.github.io/PhAST/">Documentation</a><a href="https://arxiv.org/abs/2606.23458">Preprint</a></p>
+    </article>
+    <article class="case-study">
+      <p class="case-label">Case study 02 · Learned assistance</p>
+      <h3>Solver-audited neural proposals for fracture</h3>
+      <p>Presented at WCCM-ECCOMAS 2026, this work tests a narrow role for learning: propose a damage field, then project and audit it; when the proposal fails, retain the exact solver route.</p>
+      <dl class="case-facts">
+        <div><dt>Question</dt><dd>Where can a learned model help without becoming the authority on fracture state?</dd></div>
+        <div><dt>Method</dt><dd>Proposal, projection, audit, then acceptance or exact fallback.</dd></div>
+        <div><dt>Result</dt><dd>A transparent feasibility route, with the current timing limitation stated openly.</dd></div>
+      </dl>
+      <p class="case-links"><a href="/blog/2026/07/28/wccm-eccomas-2026/">Read the conference note</a><a href="https://cems-lab.github.io/PhAST/">PhAST</a></p>
+    </article>
+  </div>
+  <h3 class="supporting-work-heading">Additional engineering work</h3>
   <ul class="stack">
     <li>
-      <b><a href="https://cems-lab.github.io/PhAST/">PhAST: A PyTorch-native, GPU-accelerated differentiable physics engine</a></b>
-      <span class="brag-aside">Project documentation for the matrix-free differentiable phase-field fracture solver. The implementation supports explicit dynamics, implicit damage solves, autograd-compatible inverse analysis, and million-node GPU runs. <a href="https://github.com/CEMS-Lab/PhAST">Source</a>.</span>
-    </li>
-    <li>
-      <b><a href="https://github.com/allamaprabhuani/bjsfm">BJSFM</a></b>
-      <span class="brag-aside">A bolted-joint stress-field tool I wrote during my MTech, shipped to a company through Aeroknacks, and recently re-opened on GitHub with upstream MIT attribution restored. The Lekhnitskii / de Jong analytical solution, in plain Python.</span>
+      <b><a href="https://cems-lab.github.io/PhAST/">PhAST: A PyTorch-native, matrix-free differentiable solver for phase-field fracture</a></b>
+      <span class="brag-aside">Project documentation for the matrix-free differentiable phase-field fracture solver. It supports explicit dynamics, implicit damage solves, and autograd-compatible inverse analysis; the associated preprint documents the benchmark configuration and numerical scope. <a href="/phast-evidence/">Evidence summary</a> · <a href="https://github.com/CEMS-Lab/PhAST">Source</a>.</span>
     </li>
     <li>
       <b><a href="https://github.com/allamaprabhuani/geometric-transformations">Geometric Transformations</a></b>
@@ -319,12 +232,14 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 
 <section id="tutorials" class="home-tutorials">
   <div class="section-lede">
-    <h2>Machine Learning Tutorials</h2>
-    <p class="muted">Runnable notebooks and visual explainers for the path I keep using in my own work.</p>
+    <p class="section-kicker">Open learning</p>
+    <h2>Advanced scientific machine learning, explained</h2>
+    <p class="muted">The advanced modules connect PyTorch autograd to physics-informed learning and inverse problems. The complete series was created and maintained by Allamaprabhu Ani to assist Dr Sathiskumar Anusuya Ponnusami's teaching at Queen Mary University of London.</p>
   </div>
   {% assign home_tutorials = site.tutorials | sort: "order" %}
+  {% assign home_advanced_tutorials = home_tutorials | where_exp: "t", "t.order >= 4" %}
   <ol class="home-tutorial-grid">
-    {% for t in home_tutorials %}
+    {% for t in home_advanced_tutorials %}
     <li>
       {% if t.image %}
       <a class="home-tutorial-thumb" href="{{ t.url }}" aria-label="{{ t.title }}">
@@ -344,11 +259,12 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
     </li>
     {% endfor %}
   </ol>
-  <p class="section-link" style="text-align: center;"><a href="/tutorials/">Open the full tutorial path →</a></p>
+  <p class="section-link"><a href="/tutorials/">Explore the foundations and complete tutorial path →</a></p>
 </section>
 
 <section id="news" style="max-width: 800px; margin: 0 auto; text-align: left;">
-  <h2 style="text-align: center;">Recent News &amp; Updates</h2>
+  <p class="section-kicker">Updates</p>
+  <h2>Recent News &amp; Updates</h2>
   <ul class="stack">
     {% if site.posts.size > 0 %}
     {% assign news_posts = site.posts | sort: "date" | reverse %}
@@ -365,6 +281,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
 </section>
 
 <section id="papers">
+  <p class="section-kicker">Publications</p>
   <h2>Papers &amp; Track Record</h2>
   <ol class="papers">
     <li>
@@ -382,7 +299,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
         <i>Engineering Fracture Mechanics</i>, Vol 332, Art 111778, 2026.
         <span class="cite-badge" hidden><span class="cite-count" data-openalex="W4416918453">0</span> cited · <span class="cite-src">OpenAlex</span></span>
       </span>
-      <span class="paper-note muted">The field's first comprehensive review; ranked #1 on the journal's most-downloaded list.</span>
+      <span class="paper-note muted">A comprehensive review of machine learning methods, evidence, and open validation problems in fracture and damage mechanics.</span>
     </li>
     <li>
       <span class="paper-cite">
@@ -392,7 +309,7 @@ description: Allamaprabhu Ani is a PhD researcher in computational mechanics, ph
   </ol>
   
   <ul class="stack" style="margin-top: 40px;">
-    <li><b>Mar 2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship</b>. <span class="brag-aside">One of three winners across all London universities, for "AI-accelerated modelling for fracture prediction."</span></li>
+    <li><b>Mar 2026</b> &middot; <b>Worshipful Company of Tin Plate Workers Travelling Scholarship</b>. <span class="brag-aside">Awarded to support conference travel and dissemination for AI-accelerated fracture modelling.</span></li>
     <li><b>Apr 2026</b> &middot; <b>SST Dean's Award for Outstanding Teaching Support</b>, City, St George's.</li>
     <li><b>2023</b> &middot; <b>Fully-funded PhD scholarship</b>, <i>Modelling for Failure Analysis</i> studentship, City, St George's, University of London.</li>
   </ul>

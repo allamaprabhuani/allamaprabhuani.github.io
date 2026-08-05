@@ -14,8 +14,8 @@ image: /assets/og/tutorials.png
 {% endfor %}
 <header class="blog-header">
   <h1>machine learning tutorials</h1>
-  <p class="muted">A five-part path from the training loop to physics-informed neural networks. Every tutorial is a runnable notebook with visual explainers. The goal isn't just to run code, but to understand what the model is actually doing.</p>
-  <p class="muted">I wrote these while assisting <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> at <a href="https://www.qmul.ac.uk/">Queen Mary University of London</a>.</p>
+  <p class="muted">A five-part path from the training loop to physics-informed neural networks. Every tutorial is a runnable notebook with visual explainers. The goal is not just to run code, but to understand what the model is actually doing.</p>
+  <p class="muted">Created and maintained by Allamaprabhu Ani to assist <a href="https://www.saponnusami.com/">Dr Sathiskumar Anusuya Ponnusami</a>'s teaching at <a href="https://www.qmul.ac.uk/">Queen Mary University of London</a>.</p>
 </header>
 
 <nav class="topic-hubs" aria-label="Tutorial topic hubs">
@@ -36,8 +36,15 @@ image: /assets/og/tutorials.png
   </ol>
 </nav>
 
+{% assign foundations = sorted | where_exp: "t", "t.order <= 3" %}
+{% assign advanced = sorted | where_exp: "t", "t.order >= 4" %}
+
+<section class="tutorial-track" aria-labelledby="foundations-heading">
+<p class="section-kicker">Teaching foundations</p>
+<h2 id="foundations-heading">Build the mental models first</h2>
+<p class="muted">Core courseware on training loops, evaluation, and neural-network fundamentals.</p>
 <ul class="post-list tutorial-list">
-{% for t in sorted %}
+{% for t in foundations %}
 <li class="tutorial-card tutorial-card-{{ t.status | default: 'draft' }}">
   {% if t.image %}
   <a class="tutorial-thumb" href="{{ t.url }}" aria-hidden="true" tabindex="-1">
@@ -70,6 +77,39 @@ image: /assets/og/tutorials.png
 </li>
 {% endfor %}
 </ul>
+</section>
+
+<section class="tutorial-track" aria-labelledby="advanced-heading">
+<p class="section-kicker">Advanced scientific ML</p>
+<h2 id="advanced-heading">Move from learned functions to physics-aware models</h2>
+<p class="muted">Computer vision, autograd, physics-informed learning, and inverse-problem concepts that connect directly to the research work.</p>
+<ul class="post-list tutorial-list">
+{% for t in advanced %}
+<li class="tutorial-card tutorial-card-{{ t.status | default: 'draft' }}">
+  {% if t.image %}
+  <a class="tutorial-thumb" href="{{ t.url }}" aria-hidden="true" tabindex="-1">
+    <img src="{{ t.image.path | relative_url }}"
+         alt="{{ t.image_alt | default: t.title }}"
+         loading="lazy"
+         {% if t.image.width %}width="{{ t.image.width }}" height="{{ t.image.height }}"{% endif %}>
+  </a>
+  {% endif %}
+  <div class="tutorial-card-body">
+    <p class="post-meta">
+      <span class="t-level t-level-{{ t.level | default: 'intro' }}">{{ t.level | default: "intro" }}</span>
+      {% if t.status != 'published' %}<span class="status status-{{ t.status | default: 'draft' }}">{{ t.status | default: "draft" }}</span>{% endif %}
+      {% if t.tags %} · {% for tag in t.tags %}<span class="tag-chip">{{ tag }}</span>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}
+    </p>
+    <h3>{% if t.status == 'coming-soon' %}<span class="t-pending">{{ t.title }}</span>{% else %}<a href="{{ t.url }}">{{ t.title }}</a>{% endif %}</h3>
+    {% if t.subtitle %}<p class="muted">{{ t.subtitle }}</p>{% endif %}
+    {% if t.hook %}<p class="tutorial-hook">{{ t.hook }}</p>{% endif %}
+    {% if t.order == 5 %}<aside class="tutorial-bridge"><strong>Research bridge:</strong> Continue from ODE autograd to continuum mechanics with <a href="/blog/2026/05/17/annotated-phase-field-solver/">The Annotated Phase-Field Solver</a> and the <a href="/phast-evidence/">PhAST evidence summary</a>.</aside>{% endif %}
+    <p class="tutorial-card-meta">{% if t.runtime %}<span>{{ t.runtime }}</span>{% endif %}{% if t.notebook %}<span>Colab + notebook</span>{% endif %}</p>
+  </div>
+</li>
+{% endfor %}
+</ul>
+</section>
 
 <script type="application/ld+json">
 {
