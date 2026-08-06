@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Annotated Phase-Field Solver"
-subtitle: "An educational walk-through of phase-field fracture and the care required when building differentiable solvers in PyTorch."
+subtitle: "An explainer for the differentiable, autograd-friendly phase-field fracture solvers that have quietly become a category, written for someone who knows PyTorch but has never solved a PDE before."
 description: "A from-scratch explainer of differentiable phase-field fracture solvers in PyTorch — variational form, alternating min, the four pitfalls, inverse problems."
 image:
   path: /assets/blog/annotated-phase-field/fig5-gc-recovery.png
@@ -9,7 +9,9 @@ image:
   height: 398
 date: 2026-05-17
 tags: [phase-field, fracture, scientific-ml, autograd, pytorch]
-published: true
+# Hidden until thesis + papers are public. Re-publish: flip to true.
+# Tracked in lifeops issue. Target re-publish: August 2026.
+published: false
 ---
 
 A phase-field fracture solver is a strange object. It is a finite-element
@@ -25,8 +27,9 @@ field solver looks the way it does, what's hard about turning one into a
 PyTorch module, and why differentiability changes what you can do with
 one.
 
-The annotated walk-through format is inspired by Sasha Rush's
-[*Annotated Transformer*](https://nlp.seas.harvard.edu/2018/04/03/attention.html).
+The annotated walk-through format is borrowed from Sasha Rush's
+[*Annotated Transformer*](https://nlp.seas.harvard.edu/2018/04/03/attention.html);
+if you've never read it, go read it first — it's the template.
 
 ## 1. The thing we are modelling
 
@@ -108,9 +111,8 @@ Drag the slider below to feel how ℓ controls width:
 
 The continuous energy is unhelpful for a computer. We discretise:
 
-- Mesh the domain. Linear triangles or bilinear quads are a useful
-  starting point; the appropriate discretisation still depends on the
-  material model, regularisation length, and verification target.
+- Mesh the domain. Use linear triangles or bilinear quads; nothing
+  fancier helps for phase-field.
 - `u` lives on the nodes as a vector field (dim × n_nodes degrees of
   freedom).
 - `d` lives on the nodes as a scalar field (n_nodes DOFs).
@@ -138,11 +140,10 @@ nonsense.
 
 ## 4. The 80-line PyTorch sketch
 
-The following is an illustrative 1D bar in tension. It makes the
-alternating structure visible, but it is not a production solver: it uses
-penalty boundary conditions and gradient-descent updates where a research
-code would normally use verified discretisation, linear algebra, and
-convergence controls.
+The shortest convincing phase-field solver you can write in PyTorch is
+something like the following. This is a 1D bar in tension — the dumbest
+possible PF example, but everything you'd add for 2D/3D is just more
+indexing.
 
 ```python
 import torch
@@ -153,7 +154,7 @@ xs = torch.linspace(0, L, N)
 dx = float(xs[1] - xs[0])
 E0, Gc, ell, cw = 100.0, 1.0, 0.04, 8/3  # AT1 normaliser
 
-# State tensors for the illustrative updates below
+# State (trainable wrt energy)
 u = torch.zeros(N, requires_grad=True)
 d = torch.zeros(N, requires_grad=True)
 
@@ -173,7 +174,7 @@ def energy(u, d, u_app):
     bc = 1e4 * (u[0] ** 2 + (u[-1] - u_app) ** 2)
     return elastic + surface + bc
 
-# Alternating-minimisation sketch: fixed iteration counts are illustrative.
+# Alternating-minimisation outer loop
 d_prev = d.detach().clone()
 for u_app in torch.linspace(0, 0.04, 50):
     for k in range(40):                  # u-step (fixed d)
@@ -193,11 +194,11 @@ for u_app in torch.linspace(0, 0.04, 50):
     d_prev = d.detach().clone()
 ```
 
-That is the basic alternating structure. Research solvers use related
-staggered or monolithic formulations, but differ in their constitutive
-assumptions, boundary-condition treatment, nonlinear algorithms, convergence
-criteria, and mesh strategies. The compact example above is a map of the
-ingredients, not a replacement for those codes.
+That's it. Two coupled minimisations, an irreversibility projection, a
+load loop. Real production solvers — Akantu's phase-field module,
+PhaFiDyn, Bourdin's original FreeFEM++ codes, PRACE-scale MPI codes —
+are doing exactly this with better linear solvers, smarter convergence
+criteria, and adaptive meshing. The math is unchanged.
 
 The toy version above produces this:
 
@@ -211,14 +212,14 @@ The toy version above produces this:
 
 This is where most people get hurt. A short, opinionated list.
 
-**Non-smooth derivatives matter.** The d-step gradient passes through
+**Higher-order derivatives matter.** The d-step gradient passes through
 `(1 - d)² ψ(u)`, and the u-step gradient passes through
 `(1 - d)² ψ(u)` again. Both are smooth. But if you ever introduce a
 **spectral split** (Miehe et al., 2010) to prevent crack-closure in
-compression, you have `max(0, ε⁺) · max(0, ε⁻)` terms whose derivatives are
-non-smooth at eigenvalue crossings. Automatic differentiation can still
-provide derivatives away from those points, but the resulting nonlinear
-iterations and sensitivities need careful numerical checks.
+compression, you have `max(0, ε⁺) · max(0, ε⁻)` terms whose derivatives
+are well-defined almost everywhere but pathological at the eigenvalue
+crossings. Naïve autograd produces gradients that look fine numerically
+but make Newton iterations stall. This is the single biggest pitfall.
 
 **Irreversibility breaks the variational structure.** The constraint
 `d(t+Δt) ≥ d(t)` is a hard inequality, not part of the energy. You
@@ -230,34 +231,31 @@ have zero descent direction for further damage growth, so your line
 search sees a kink. Production codes use projected-gradient or
 active-set methods.
 
-**Stability under explicit dynamics.** Dynamic fracture formulations may use
-explicit updates for mechanics together with a separate damage solve. The
-stable time increment and coupling behaviour depend on the chosen scheme,
-damage model, mesh, and loading. They should be verified on the intended
-benchmark rather than inferred from an elastic CFL estimate alone.
+**Operator-split instability under explicit dynamics.** For dynamic
+fracture you advance `(u, d)` via a Verlet-style explicit scheme. The
+CFL condition is *not* just the elastic CFL — it tightens dramatically
+as damage approaches 1. If you ignore this (because your elastic CFL
+felt safe) your damage field gets gradient blow-up of order 10^96 and
+the solver eats memory until OOM. Ask me how I know.
 
-**`requires_grad` semantics inside a load loop.** Unrolling every update can
-retain a large computational graph and become memory-intensive. Detaching
-states controls that memory cost, but also changes which sensitivities are
-available. Checkpointing and implicit-differentiation approaches are possible
-alternatives, with assumptions that must be stated explicitly for each method.
+**`requires_grad` semantics inside a load loop.** PyTorch's tape grows
+unboundedly if you keep reusing the same `Parameter`s without detaching
+between load steps. For a 10⁵-node mesh and 10³ load steps, you'll
+exhaust GPU memory before you reach crack initiation. The fix is to
+`.detach()` between load steps and reattach inside each minimisation,
+which obviously breaks differentiability across load steps — which is
+*exactly the thing* you wanted for the inverse-problem story below.
+Resolving that tension is the subject of a whole sub-literature
+([Akhare et al., 2025](https://arxiv.org/abs/2504.02260) is the
+state-of-the-art for stable implicit fixed-point regimes).
 
 ## 6. What differentiability buys you
 
-PyTorch makes it possible to differentiate through the operations retained in
-the computational graph. That does not make every formulation smoothly
-differentiable: projections, active constraints, convergence tolerances, and
-detached states all determine which sensitivities are meaningful. A useful
-differentiable solver documents those choices and verifies the gradients it
-uses.
-
-> **Sensitivity boundary in this article.** The toy sketch above illustrates
-> unrolled automatic differentiation through the operations it retains. It
-> does not implement an implicit-function-theorem or active-set adjoint, and
-> its projected and detached updates should not be read as globally smooth
-> gradients. The [PhAST documentation](https://cems-lab.github.io/PhAST/) and
-> [evidence summary](/phast-evidence/) are the appropriate references for the
-> implemented public examples.
+The PyTorch sketch in §4 has a property the legacy solvers don't:
+**every output is a differentiable function of every input.** That
+includes the irreversibility projection, the load loop, and the
+alternating min — autograd will carry the gradient back through all of
+it, as long as you avoid the four pitfalls in §5.
 
 That single property is the door. Once it's open, the material
 parameters in the equation (`G_c`, `E`, ℓ) stop being constants and
@@ -270,7 +268,7 @@ high-speed camera — and you can recover the material parameters that
 <figure class="tutorial-fig">
   <img src="{{ '/assets/blog/annotated-phase-field/fig5-gc-recovery.png' | relative_url }}"
        alt="Recovered Gc estimate converging to the true value across outer iterations">
-  <figcaption>An illustrative recovery of <code>G_c</code> from a load-curve mismatch. In a differentiable implementation, the chosen sensitivity route supplies a gradient to an outer optimiser; its validity should be checked for the formulation and constraints in use.</figcaption>
+  <figcaption>Outer-loop convergence of <code>G_c</code> recovered by backpropagating a load-curve mismatch through a phase-field simulation. The forward simulation is differentiable; the gradient comes back through every alternating-min iteration and tells the outer optimiser which direction to nudge <code>G_c</code>.</figcaption>
 </figure>
 
 The same simulation read two ways: a fracture mechanician calls it a
@@ -278,27 +276,29 @@ The same simulation read two ways: a fracture mechanician calls it a
 researcher calls it an *inverse problem* (load curve → material).
 Differentiability is what lets one piece of code be both.
 
-The same modelling direction can support several research workflows:
+The same property unlocks three other things people are actually
+shipping today:
 
 - **Gradient-based topology optimisation** of toughened structures —
   design a part to maximise fracture resistance, not just stiffness.
-- **Hybrid learned assistance** — train a model to propose a next damage
-  field, while a physics-based audit and exact fallback retain solver
-  authority.
+- **Hybrid neural acceleration** — train a small network to predict
+  the next damage increment, with the physics solver as a verifier
+  (rejection sampling on residual norm).
 - **Differentiable digital twins** — assimilate live sensor data into
   a phase-field simulation by gradient descent on initial conditions.
 
-Each requires its own validation, data, and uncertainty treatment before it
-can support an engineering decision.
+None of these are speculative. People are shipping all three.
 
 ## 7. What's actually hard (and where the field is going)
 
 A short editorial.
 
-- **Benchmarks.** Fracture has valuable community reference problems, such as
-  dynamic branching and Kalthoff-type impact cases, but cross-code comparison
-  still depends heavily on stated material models, discretisation choices,
-  loading, and observables. Better benchmark practice remains an open need.
+- **Benchmarks.** PINN / neural-operator literature has Burgers',
+  Navier-Stokes, Darcy. *Fracture has no canonical benchmark suite of
+  the same rigor.* The closest things are the Borden 2012 dynamic
+  branching cases and the Kalthoff impact test, both of which require
+  significant interpretation to compare against. Building a
+  GPQA-equivalent for fracture is genuinely open.
 
 - **Neural operators on PF data.** Once you have a differentiable
   solver, generating large datasets is cheap. The hard part is the
@@ -308,14 +308,19 @@ A short editorial.
   [neural-operator lecture series](https://www.youtube.com/watch?v=5CnctvgyssU)
   for the theory.
 
-- **Implicit-step differentiability.** Differentiating through implicit PDE
-  solves can use unrolling or implicit-function-theorem approaches. For
-  fracture, active constraints and damage coupling make the numerical and
-  modelling assumptions especially important.
+- **Implicit-step differentiability.** The state of the art for
+  differentiable *implicit* PDE solvers is implicit-function-theorem
+  adjoints
+  ([Akhare 2025, Im-PiNDiff](https://arxiv.org/abs/2504.02260)). For
+  *explicit* time-stepping with damage coupling — the dominant regime
+  in dynamic fracture — gradient stability is still an open problem,
+  and is the main thrust of my own thesis work.
 
-- **Hybrid generalisation.** A learned next-step damage proposal can overfit
-  a single geometry or loading history. Held-out geometries, load paths, and
-  audit/fallback behaviour should be part of its evaluation.
+- **Hybrid causation vs correlation.** Neural surrogates that learn
+  the next-step damage map are seductive but trivially overfit to a
+  single load history. Until benchmarks include held-out *out-of-
+  distribution* loadings, the literature will continue to claim 100×
+  speedups that don't generalise.
 
 ## 8. Where to go from here
 
@@ -333,16 +338,17 @@ If you want to build one of these yourself:
   is the canonical implementation; Akantu has a maintained C++ phase-field
   module; [PhaFiDyn](https://github.com/Vinh-Tran/PhaFiDyn) is a
   validated explicit-dynamics FEniCS code worth reading end-to-end.
-- **My own work** — [PhAST](https://cems-lab.github.io/PhAST/) is the public
-  PyTorch-native, matrix-free phase-field fracture project associated with
-  this material. Its [documentation](https://cems-lab.github.io/PhAST/),
-  [source code](https://github.com/CEMS-Lab/PhAST), and
-  [preprint](https://arxiv.org/abs/2606.23458) describe the implemented
-  formulation and demonstrated examples.
+- **My own work** — [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
+  is a GPU-native, matrix-free phase-field solver in pure PyTorch with
+  full adjoint + autograd + checkpoint differentiability. Currently
+  private (it's tied to in-flight thesis chapters); I'm carving out a
+  public adjoint-demo slice — the inverse-problem cartoon above will
+  be a runnable notebook in that repo.
 
-If you want to use one without building it, start with the documentation and
-examples of an established code, then choose a formulation and verification
-case that match the question you need to answer.
+If you want to use one without building it: pick Akantu (C++, fast,
+limited Python interface), or write a thin wrapper around the
+80-line sketch above and add your physics there. The barrier to entry
+is much lower than the literature suggests.
 
 If you read this far and have feedback or want to discuss differentiable
 solvers more generally, my email is in the

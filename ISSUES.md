@@ -2,18 +2,6 @@
 
 Sources verified: Google Scholar profile (`dX3xKGsAAAAJ`), IOP Science DOI page, OpenAlex, IEEE Xplore, counterapi.dev live behaviour.
 
-## 2026-07-13 consolidation
-
-- [x] Homepage and tutorial hub build cleanly; canonical links, OpenGraph
-  metadata, JSON-LD, `robots.txt`, and `sitemap.xml` are present.
-- [x] Teaching attribution now distinguishes authorship of the open tutorials
-  from assisting Dr Sathiskumar Ponnusami's teaching at QMUL.
-- [x] Removed the supervisor website from the site's `sameAs` list and added
-  the City researcher profile instead.
-- [x] Softened public claims that lacked a stable primary source, while keeping
-  the arXiv-supported PhAST capability statement.
-- [ ] Sync the public CV PDFs whenever the approved LifeOps CVs change.
-
 ---
 
 ## P0 — Credibility (fix before anything else)

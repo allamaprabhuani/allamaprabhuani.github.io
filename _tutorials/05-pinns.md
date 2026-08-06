@@ -149,7 +149,7 @@ and it's the engineering version of the "discover the laws of physics
 from data" pitch.
 
 This is the bridge between toy PINNs like this one and my own research
-on [PhAST](https://github.com/CEMS-Lab/PhAST)
+on [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
 — a PyTorch fracture-mechanics solver where the unknown isn't $$\omega_0$$
 but the material toughness $$G_c$$, recovered from a handful of
 displacement observations of a real cracked specimen. The maths is
