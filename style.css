@@ -928,11 +928,15 @@ ul.mottos li:hover { border-left-color: var(--accent); padding-left: 22px; }
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 0.85fr);
   gap: 28px;
   padding: 24px 0 26px;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
+}
+.footer-col,
+.site-footer ul.links li {
+  min-width: 0;
 }
 .footer-col h3 {
   margin: 0 0 10px;
@@ -960,6 +964,10 @@ ul.mottos li:hover { border-left-color: var(--accent); padding-left: 22px; }
 .site-footer ul.links li::before { content: ""; }
 .site-footer ul.links a {
   border-bottom-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   .site-footer { padding: 28px 18px 24px; }
