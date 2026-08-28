@@ -13,7 +13,7 @@ image: /assets/og/tutorials.png
 {% capture tutorial_items_json %}{{ tutorial_items_json }}{% if tutorial_items_json != '' %},{% endif %}{"@type":"ListItem","position":{{ tutorial_pos }},"url":{{ t.url | absolute_url | jsonify }},"name":{{ t.title | jsonify }}}{% endcapture %}
 {% endfor %}
 <header class="blog-header">
-  <h1>machine learning tutorials</h1>
+  <h1>Machine Learning Tutorials</h1>
   <p class="muted">A five-part path from the training loop to physics-informed neural networks. Every tutorial is a runnable notebook with visual explainers. The goal isn't just to run code, but to understand what the model is actually doing.</p>
   <p class="muted">I wrote these while assisting <a href="https://www.saponnusami.com/">Dr Sathiskumar Ponnusami</a> at <a href="https://www.qmul.ac.uk/">Queen Mary University of London</a>.</p>
 </header>
@@ -22,18 +22,6 @@ image: /assets/og/tutorials.png
   <a href="/tutorials/pytorch/">PyTorch tutorials</a>
   <a href="/tutorials/ml-fundamentals/">ML fundamentals</a>
   <a href="/tutorials/scientific-ml/">Scientific ML</a>
-</nav>
-
-<nav class="series-map" aria-label="Tutorial series map">
-  <p class="series-label">series map</p>
-  <ol>
-  {% for t in sorted %}
-    <li>
-      <span class="series-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-      <a href="{{ t.url }}">{{ t.title }}</a>
-    </li>
-  {% endfor %}
-  </ol>
 </nav>
 
 <ul class="post-list tutorial-list">
@@ -51,7 +39,6 @@ image: /assets/og/tutorials.png
     <p class="post-meta">
       <span class="t-level t-level-{{ t.level | default: 'intro' }}">{{ t.level | default: "intro" }}</span>
       {% if t.status != 'published' %}<span class="status status-{{ t.status | default: 'draft' }}">{{ t.status | default: "draft" }}</span>{% endif %}
-      {% if t.tags %} · {% for tag in t.tags %}<span class="tag-chip">{{ tag }}</span>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}
     </p>
     <h3>
       {% if t.status == 'coming-soon' %}
@@ -64,7 +51,7 @@ image: /assets/og/tutorials.png
     {% if t.hook %}<p class="tutorial-hook">{{ t.hook }}</p>{% endif %}
     <p class="tutorial-card-meta">
       {% if t.runtime %}<span>{{ t.runtime }}</span>{% endif %}
-      {% if t.notebook %}<span>Colab + notebook</span>{% endif %}
+      {% if t.notebook %}<span>Notebook included</span>{% endif %}
     </p>
   </div>
 </li>
