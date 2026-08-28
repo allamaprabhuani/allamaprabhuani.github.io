@@ -208,10 +208,25 @@ description: Allamaprabhu Ani is a PhD candidate in computational mechanics, pha
   justify-content: center;
   margin-top: 24px;
 }
-.hire-me-banner {
-  max-width: 700px;
-  margin: 40px auto;
-  text-align: center;
+.availability-note {
+  max-width: 620px;
+  margin: 34px auto 28px;
+  padding: 4px 0 4px 18px;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  text-align: left;
+}
+.availability-label {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+.availability-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
 }
 .about-text {
   text-align: left;
@@ -240,7 +255,7 @@ description: Allamaprabhu Ani is a PhD candidate in computational mechanics, pha
   .hero-text h1 { margin-bottom: 8px; }
   .hero-text .kannada { margin-bottom: 12px; }
   .hero .tag { font-size: 1rem; }
-  .hire-me-banner { margin: 20px auto; padding: 12px !important; }
+  .availability-note { margin: 22px auto 18px; padding-left: 14px; }
   .social-links { margin-top: 12px; }
   .about-text { font-size: 1rem; }
   #main-content h2 { font-size: 1.75rem; }
@@ -264,9 +279,10 @@ description: Allamaprabhu Ani is a PhD candidate in computational mechanics, pha
     </div>
   </div>
 
-  <div class="hire-me-banner" style="padding: 16px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid var(--accent); font-weight: 500;">
-    <strong>I am completing my PhD and open to research-engineering and applied-scientist roles in AI for engineering from late 2026.</strong>
-  </div>
+  <aside class="availability-note" aria-label="Availability">
+    <p class="availability-label">Available from late 2026</p>
+    <p class="availability-copy">I am exploring research engineer and applied scientist roles in scientific machine learning and AI for engineering.</p>
+  </aside>
 
   <div class="social-links" role="list" aria-label="Social and contact links">
     <a href="mailto:allamaprabhuani@gmail.com" aria-label="Email" class="social-link" role="listitem">
