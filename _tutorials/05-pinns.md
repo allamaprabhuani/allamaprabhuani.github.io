@@ -149,10 +149,10 @@ and it's the engineering version of the "discover the laws of physics
 from data" pitch.
 
 This is the bridge between toy PINNs like this one and my own research
-on [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
-— a PyTorch fracture-mechanics solver where the unknown isn't $$\omega_0$$
-but the material toughness $$G_c$$, recovered from a handful of
-displacement observations of a real cracked specimen. The maths is
+on [PhAST](https://cems-lab.github.io/PhAST/) — a PyTorch-native,
+differentiable fracture-mechanics solver whose public inverse benchmark
+recovers the material toughness $$G_c$$ from displacement observations.
+The maths is
 genuinely harder (the energy is non-convex, damage cannot heal, the
 time-stepping is conditionally stable) but the autograd pattern is
 literally what you wrote above.

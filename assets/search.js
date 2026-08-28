@@ -2,7 +2,7 @@
 (function () {
   let index = null;
   let suggestions = [];
-  let modal, input, results, hint;
+  let modal, input, results, hint, opener;
   let activeIdx = -1;
   let lastResults = [];
 
@@ -21,6 +21,9 @@
           </svg>
           <input type="search" class="search-input" placeholder="Search tutorials and posts…" autocomplete="off" spellcheck="false" />
           <kbd class="search-esc">esc</kbd>
+          <button class="search-close" type="button" data-close aria-label="Close search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
         </div>
         <div class="search-results" role="listbox"></div>
         <div class="search-hint">
@@ -34,14 +37,16 @@
     results = modal.querySelector('.search-results');
     hint = modal.querySelector('.search-hint');
     modal.addEventListener('click', (e) => {
-      if (e.target.dataset.close !== undefined) close();
+      if (e.target.closest('[data-close]')) close();
     });
     input.addEventListener('input', () => render(input.value));
     input.addEventListener('keydown', onKey);
+    modal.addEventListener('keydown', containFocus);
   }
 
   function open() {
     if (!modal) buildModal();
+    opener = document.activeElement;
     document.documentElement.classList.add('search-open');
     modal.classList.add('open');
     input.value = '';
@@ -55,6 +60,29 @@
     if (!modal) return;
     modal.classList.remove('open');
     document.documentElement.classList.remove('search-open');
+    if (opener && typeof opener.focus === 'function') opener.focus();
+    opener = null;
+  }
+
+  function containFocus(e) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(modal.querySelectorAll('input, button, a[href]'))
+      .filter((el) => !el.disabled && el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 
   function ensureIndex() {

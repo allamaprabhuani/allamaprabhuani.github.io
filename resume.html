@@ -9,7 +9,7 @@ permalink: /resume/
   <p class="muted">A brief history of my research, work, and education.</p>
 </header>
 
-<div class="social-links" role="list" aria-label="Primary contact links">
+<div class="social-links resume-actions" role="list" aria-label="CV and profile links">
   <a href="/narrative-cv/" aria-label="Narrative CV" class="social-link" role="listitem">
     <span style="font-size: 0.9rem;">Read narrative CV</span>
   </a>
@@ -20,6 +20,10 @@ permalink: /resume/
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/></svg>
     <span style="margin-left: 8px; font-size: 0.9rem;">Download PDF Resume</span>
   </a>
+  <a href="/assets/cv-academic.pdf" aria-label="Academic CV (PDF)" class="social-link" role="listitem" target="_blank" rel="noopener noreferrer">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/></svg>
+    <span style="margin-left: 8px; font-size: 0.9rem;">Download Academic CV</span>
+  </a>
 </div>
 
 <style>
@@ -27,6 +31,8 @@ permalink: /resume/
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin: 30px 0 50px 0;
 }
 .social-link {
@@ -35,11 +41,21 @@ permalink: /resume/
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 20px;
-  background: color-mix(in srgb, var(--text-color) 5%, transparent);
+  background: color-mix(in srgb, var(--card) 72%, transparent);
   transition: background 0.2s;
 }
 .social-link:hover {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.resume-actions .social-link {
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  white-space: normal;
+  text-align: center;
 }
 .timeline {
   position: relative;
@@ -55,7 +71,7 @@ permalink: /resume/
   bottom: 0;
   left: 20px;
   width: 2px;
-  background: color-mix(in srgb, var(--text-color) 15%, transparent);
+  background: color-mix(in srgb, var(--ink) 15%, transparent);
 }
 .timeline-item {
   position: relative;
@@ -63,18 +79,18 @@ permalink: /resume/
   padding-left: 60px;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUp 0.6s ease forwards;
+  animation: fadeUp 0.35s ease forwards;
 }
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }
-.timeline-item:nth-child(1) { animation-delay: 0.1s; }
-.timeline-item:nth-child(2) { animation-delay: 0.2s; }
-.timeline-item:nth-child(3) { animation-delay: 0.3s; }
-.timeline-item:nth-child(4) { animation-delay: 0.4s; }
-.timeline-item:nth-child(5) { animation-delay: 0.5s; }
-.timeline-item:nth-child(6) { animation-delay: 0.6s; }
-.timeline-item:nth-child(7) { animation-delay: 0.7s; }
+.timeline-item:nth-child(1) { animation-delay: 0.04s; }
+.timeline-item:nth-child(2) { animation-delay: 0.08s; }
+.timeline-item:nth-child(3) { animation-delay: 0.12s; }
+.timeline-item:nth-child(4) { animation-delay: 0.16s; }
+.timeline-item:nth-child(5) { animation-delay: 0.20s; }
+.timeline-item:nth-child(6) { animation-delay: 0.24s; }
+.timeline-item:nth-child(7) { animation-delay: 0.28s; }
 
 .timeline-dot {
   position: absolute;
@@ -83,7 +99,7 @@ permalink: /resume/
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--bg-color);
+  background: var(--bg);
   border: 2px solid var(--accent);
   z-index: 2;
   transition: transform 0.3s, background 0.3s;
@@ -107,7 +123,7 @@ permalink: /resume/
 }
 .timeline-org {
   font-size: 1.05rem;
-  color: color-mix(in srgb, var(--text-color) 70%, transparent);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
   margin-bottom: 12px;
 }
 .timeline-desc {
@@ -125,7 +141,7 @@ permalink: /resume/
 .skill-category h3 {
   font-size: 1.1rem;
   margin-bottom: 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--text-color) 15%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
   padding-bottom: 8px;
 }
 .skill-category ul {
@@ -137,17 +153,27 @@ permalink: /resume/
   margin-bottom: 6px;
   font-size: 0.95rem;
 }
+@media (max-width: 520px) {
+  .resume-actions { justify-content: flex-start; margin: 24px 0 36px; }
+  .resume-actions .social-link { max-width: 100%; }
+  .timeline { padding-top: 8px; }
+  .timeline::before { left: 8px; }
+  .timeline-item { padding-left: 34px; margin-bottom: 32px; }
+  .timeline-dot { left: 2px; }
+  .timeline-title { font-size: 1.16rem; }
+  .timeline-org { font-size: 1rem; }
+}
 </style>
 
 <div class="timeline">
   
   <div class="timeline-item">
     <div class="timeline-dot"></div>
-    <span class="timeline-date">2023 &mdash; 2026 (Expected)</span>
-    <h3 class="timeline-title">PhD in Computational Mechanics & AI</h3>
-    <div class="timeline-org">City, St George's, University of London & Queen Mary University of London</div>
+    <span class="timeline-date">Jul 2023 &mdash; present (writing-up status)</span>
+    <h3 class="timeline-title">PhD Student, Computational Mechanics and Machine Learning</h3>
+    <div class="timeline-org">City St George's, University of London</div>
     <div class="timeline-desc">
-      Researching Phase-Field Fracture and Scientific Machine Learning. Developing <code>PhAST</code>, a PyTorch-native GPU-accelerated differentiable physics engine for fracture mechanics, now available as an arXiv preprint. Published the field's first comprehensive review on ML for fracture mechanics (ranked #1 downloaded in EFM). Awarded the prestigious Tin Plate Workers Travelling Scholarship.
+      Lead developer and maintainer of <a href="https://cems-lab.github.io/PhAST/">PhAST</a>, a PyTorch-native, GPU-accelerated differentiable solver for phase-field fracture, with a public preprint covering formulation, benchmarks, and scalar inverse analysis. Lead author of the 2026 <em>Engineering Fracture Mechanics</em> review of machine learning for computational fracture and damage mechanics.
     </div>
   </div>
 
@@ -157,45 +183,45 @@ permalink: /resume/
     <h3 class="timeline-title">Visiting Researcher</h3>
     <div class="timeline-org">EPFL (Computational Solid Mechanics Lab)</div>
     <div class="timeline-desc">
-      Collaborated with Prof. Jean-François Molinari on scaling ML surrogate models for complex fracture topologies. Integrated data-driven techniques with massive finite-element datasets.
+      Worked with Prof. Jean-François Molinari and the LSMS group on differentiable methods for solid mechanics and collaborated on the <em>Engineering Fracture Mechanics</em> review.
     </div>
   </div>
 
   <div class="timeline-item">
     <div class="timeline-dot"></div>
     <span class="timeline-date">2023 &mdash; Present</span>
-    <h3 class="timeline-title">Teaching Assistant</h3>
-    <div class="timeline-org">Queen Mary University of London</div>
+    <h3 class="timeline-title">Graduate Teaching Assistant</h3>
+    <div class="timeline-org">City St George's, University of London</div>
     <div class="timeline-desc">
-      Assisted Dr. Sathiskumar Ponnusami in mechanics and machine learning courses. Authored comprehensive, runnable PyTorch tutorials used by students. Awarded SST Dean's Award for Outstanding Teaching Support.
+      Support mechanics, materials, manufacturing, wind-turbine tower design, and Siemens NX CAD activities. Created and maintain open PyTorch and scientific-machine-learning tutorials while assisting Dr Sathiskumar Anusuya Ponnusami's teaching at Queen Mary University of London. Received the 2026 Dean's Award for Outstanding Teaching Support.
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot"></div>
+    <span class="timeline-date">2020 &mdash; 2021</span>
+    <h3 class="timeline-title">Founder and Tool Developer</h3>
+    <div class="timeline-org">Aeroknacks India Ltd</div>
+    <div class="timeline-desc">
+      Built and shipped aerospace structural-analysis and hand-calculation automation in Excel-VBA, using E.F. Bruhn, Michael Niu, Boeing Design Manuals, and ESDU references.
     </div>
   </div>
 
   <div class="timeline-item">
     <div class="timeline-dot"></div>
     <span class="timeline-date">2021 &mdash; 2023</span>
-    <h3 class="timeline-title">Founder & Lead Engineer</h3>
-    <div class="timeline-org">Aeroknacks</div>
+    <h3 class="timeline-title">MTech in Design and Manufacturing</h3>
+    <div class="timeline-org">National Institute of Technology Silchar</div>
     <div class="timeline-desc">
-      Founded an engineering consultancy specializing in aerospace structural analysis tools. Built and shipped automated Python/MATLAB workflows that reduced 4-hour commercial structural sizing tasks to 5 minutes. Authored the BJSFM open-source bolted-joint stress-field solver.
+      Developed machine-learning surrogate models for fatigue-life prediction in aluminium alloys. Graduated with a CGPA of 9.88/10 and received the Best Student Award.
     </div>
   </div>
 
   <div class="timeline-item">
     <div class="timeline-dot"></div>
-    <span class="timeline-date">2019 &mdash; 2021</span>
-    <h3 class="timeline-title">MTech in Design Engineering</h3>
-    <div class="timeline-org">National Institute of Technology (NIT) Silchar</div>
-    <div class="timeline-desc">
-      Focus on solid mechanics, composite materials, and fatigue life prediction. Graduated top of the class. Read extensively from Bruhn and Niu for aircraft structural design principles.
-    </div>
-  </div>
-
-  <div class="timeline-item">
-    <div class="timeline-dot"></div>
-    <span class="timeline-date">2014 &mdash; 2018</span>
+    <span class="timeline-date">2016 &mdash; 2020</span>
     <h3 class="timeline-title">B.E. in Mechanical Engineering</h3>
-    <div class="timeline-org">Visvesvaraya Technological University (VTU)</div>
+    <div class="timeline-org">GM Institute of Technology, Visvesvaraya Technological University</div>
     <div class="timeline-desc">
       Foundational engineering mechanics, thermodynamics, and manufacturing.
     </div>
@@ -229,9 +255,9 @@ permalink: /resume/
     <div class="skill-category">
       <h3>Software Engineering</h3>
       <ul>
-        <li>Python, MATLAB, C++</li>
-        <li>GPU Acceleration (CUDA/MPS)</li>
-        <li>Git, CI/CD, Open Source</li>
+        <li>Python, MATLAB, Excel-VBA</li>
+        <li>GPU Acceleration (CUDA)</li>
+        <li>Slurm, Git, CI/CD, Sphinx</li>
         <li>Scientific Python (NumPy, SciPy)</li>
         <li>Web (HTML/CSS/JS, Jekyll)</li>
       </ul>

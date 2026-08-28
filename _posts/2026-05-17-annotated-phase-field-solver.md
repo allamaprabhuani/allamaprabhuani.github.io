@@ -68,7 +68,10 @@ functional as ℓ → 0. That theorem is the reason this whole field exists.
 The variational form is
 
 $$
-\mathcal{E}(u, d) = \underbrace{\int_\Omega g(d)\,\psi(\varepsilon(u))\,\mathrm{d}V}_{\text{degraded elastic energy}} + \underbrace{\frac{G_c}{c_w} \int_\Omega \left( \frac{w(d)}{\ell} + \ell\,|\nabla d|^2 \right) \mathrm{d}V}_{\text{surface (fracture) energy}}.
+\begin{aligned}
+\mathcal{E}(u,d) ={}& \underbrace{\int_\Omega g(d)\,\psi(\varepsilon(u))\,\mathrm{d}V}_{\text{degraded elastic energy}} \\
+&+ \underbrace{\frac{G_c}{c_w}\int_\Omega\left(\frac{w(d)}{\ell}+\ell\,|\nabla d|^2\right)\mathrm{d}V}_{\text{surface (fracture) energy}}.
+\end{aligned}
 $$
 
 Three blocks worth chewing on:
@@ -338,12 +341,11 @@ If you want to build one of these yourself:
   is the canonical implementation; Akantu has a maintained C++ phase-field
   module; [PhaFiDyn](https://github.com/Vinh-Tran/PhaFiDyn) is a
   validated explicit-dynamics FEniCS code worth reading end-to-end.
-- **My own work** — [`torch_pf_solver`](https://github.com/allamaprabhuani/torch_pf_solver)
-  is a GPU-native, matrix-free phase-field solver in pure PyTorch with
-  full adjoint + autograd + checkpoint differentiability. Currently
-  private (it's tied to in-flight thesis chapters); I'm carving out a
-  public adjoint-demo slice — the inverse-problem cartoon above will
-  be a runnable notebook in that repo.
+- **My own work** — [PhAST](https://cems-lab.github.io/PhAST/) is an open,
+  matrix-free, differentiable phase-field fracture solver in PyTorch. The
+  public release includes benchmark examples and scalar inverse recovery;
+  see the [source](https://github.com/CEMS-Lab/PhAST) and
+  [preprint](https://arxiv.org/abs/2606.23458).
 
 If you want to use one without building it: pick Akantu (C++, fast,
 limited Python interface), or write a thin wrapper around the
