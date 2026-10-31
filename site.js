@@ -186,39 +186,14 @@
     syncNeuralNet();
     new MutationObserver(syncNeuralNet).observe(document.documentElement, { attributes: true, attributeFilter: ['data-bg'] });
 
-    var visitEl = document.getElementById('visit-count');
-    var visitTally = document.querySelector('.visit-tally');
-    if (visitEl && visitTally) {
-      var CACHE_KEY = 'visit-count-cache';
-      var TTL_MS = 6 * 60 * 60 * 1000;
-      var cached = null;
-      try {
-        var raw = localStorage.getItem(CACHE_KEY);
-        if (raw) {
-          var obj = JSON.parse(raw);
-          if (obj && typeof obj.count === 'number' && (Date.now() - obj.t) < TTL_MS) cached = obj.count;
-        }
-      } catch(e) {}
-      if (cached !== null) {
-        visitEl.textContent = cached;
-      } else {
-        visitTally.style.opacity = '0';
-      }
-      var bumped = sessionStorage.getItem('site-visit-bumped') === '1';
-      var endpoint = bumped
-        ? 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/'
-        : 'https://api.counterapi.dev/v1/allamaprabhu-site/visits/up';
-      fetch(endpoint)
-        .then(function(r){ return r.json(); })
-        .then(function(d){
-          if (d && typeof d.count === 'number') {
-            visitEl.textContent = d.count;
-            visitTally.style.opacity = '';
-            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ count: d.count, t: Date.now() })); } catch(e) {}
-            if (!bumped) sessionStorage.setItem('site-visit-bumped', '1');
-          }
-        })
-        .catch(function(){ });
+    var viewCounters = document.getElementById('view-counters');
+    var siteViewCount = document.getElementById('site-view-count');
+    var pageViewCount = document.getElementById('page-view-count');
+    if (viewCounters && siteViewCount && pageViewCount && location.hostname === 'allamaprabhuani.github.io') {
+      siteViewCount.src = 'https://hits.sh/allamaprabhuani.github.io.svg?label=site%20views&color=2b6b85';
+      pageViewCount.src = 'https://hits.sh/allamaprabhuani.github.io/pages/' +
+        encodeURIComponent(location.pathname).replace(/%/g, '_') + '.svg?label=page%20views&color=2b6b85';
+      viewCounters.hidden = false;
     }
 
     var tocLinks = document.querySelectorAll('.toc a');
