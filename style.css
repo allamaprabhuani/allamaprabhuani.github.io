@@ -950,6 +950,22 @@ ul.mottos li:hover { border-left-color: var(--accent); padding-left: 22px; }
   margin: 18px 0 0;
   letter-spacing: 0.02em;
 }
+.view-counters:not([hidden]) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+}
+.view-counters img {
+  display: block;
+  height: 16px;
+  width: auto;
+  max-width: 100%;
+  filter: grayscale(1);
+  opacity: 0.68;
+}
 .site-footer ul.links {
   list-style: none;
   padding: 0;
