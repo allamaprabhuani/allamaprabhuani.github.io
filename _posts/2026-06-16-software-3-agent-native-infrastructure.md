@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Software 3.0: The Case for Agent-Native Infrastructure"
-subtitle: "Building the next generation of computational tools for AI orchestration"
+subtitle: "Why tools, documentation and verifiable actions matter when software agents help us work."
 date: 2026-06-16
 tags: [software-engineering, AI, infrastructure]
 ---

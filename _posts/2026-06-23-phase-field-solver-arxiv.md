@@ -1,10 +1,13 @@
 ---
 layout: post
 title: "Matrix-free differentiable phase-field fracture solver preprint"
-subtitle: "The PhAST solver paper is now online at arXiv."
+subtitle: "How a differentiable fracture solver connects simulation, GPU computing and inverse analysis."
 description: "A short note linking to the arXiv preprint on a matrix-free, differentiable PyTorch solver for phase-field fracture, benchmarks, and inverse analysis."
 tags: [phase-field, fracture, pytorch, differentiable-simulation, arxiv]
 ---
+
+**Publication update:** The PhAST paper was subsequently published in
+[*Computer Methods in Applied Mechanics and Engineering*](https://doi.org/10.1016/j.cma.2026.119547).
 
 The preprint for the matrix-free differentiable phase-field fracture solver is
 now online:

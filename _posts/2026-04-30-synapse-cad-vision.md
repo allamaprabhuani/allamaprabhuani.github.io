@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SynaCAD: the synapse, and what it's for"
-subtitle: "Why I'm building an AI design partner that's bound by validated solvers, not by what an LLM thinks sounds plausible."
+subtitle: "An archived idea for an engineering design assistant grounded in mechanics."
 description: "The archived OSV 2026 concept behind SynaCAD: an AI design partner for mechanical engineering, grounded in validated solvers rather than LLM plausibility."
 date: 2026-04-30
 tags: [synacad, vision, mechanics, ai]

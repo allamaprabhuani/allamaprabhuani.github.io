@@ -2,7 +2,7 @@
 layout: post
 title: "Contributing to Mac TV"
 date: 2026-10-31
-subtitle: "A weekend project I had been meaning to build for a while."
+subtitle: "A weekend contributing to a more comfortable way to use a Mac from the sofa."
 description: "A weekend spent contributing to Arunprakaash's open-source Mac TV project."
 ---
 
